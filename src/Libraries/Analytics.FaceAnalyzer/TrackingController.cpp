@@ -20,10 +20,14 @@ namespace Analytics
 
 TrackingController::TrackingController()
 {
+	m_backgroundLearningTLD = new Tracker_OpenTLD();
 }
 
 TrackingController::~TrackingController()
 {
+	if( m_backgroundLearningTLD != NULL )
+		delete m_backgroundLearningTLD;
+
 	// go through each of the trackers and destroy them
 	for(vector<Tracker_OpenTLD*>::iterator startIter=m_trackers.begin(); startIter != m_trackers.end(); ++startIter)
 		delete *startIter;
@@ -68,11 +72,13 @@ void TrackingController::AddNewTrack(const Mat &frame, Rect &objectLocation)
 	// to try and consolidate them, and again later just to be doubly sure
 
 	// for the moment we'll just add a new tracker for this person
-	Tracker_OpenTLD *newTracker = new Tracker_OpenTLD();
+	//Tracker_OpenTLD *newTracker = new Tracker_OpenTLD();
 
-	newTracker->InitialiseTrack(frame, objectLocation);
+	m_backgroundLearningTLD->InitialiseTrack(frame, objectLocation);
 
-	m_trackers.push_back( newTracker );
+	m_trackers.push_back( m_backgroundLearningTLD );
+
+	m_backgroundLearningTLD = NULL; // this ensures in the future we don't bother processing this tracker which was purely intended for learning the background
 }
 
 /*
@@ -81,6 +87,9 @@ void TrackingController::AddNewTrack(const Mat &frame, Rect &objectLocation)
 */
 void TrackingController::Process(const Mat &frame)
 {
+	if( m_backgroundLearningTLD != NULL )
+		m_backgroundLearningTLD->Process(frame); // allow it to learn the background
+
 	// could call each of these trackers in parallel assuming they are independent (they should 
 	// be at least when they are estimating the new position of the object/face)
 	for( auto startIter=m_trackers.begin(); startIter!=m_trackers.end(); ++startIter)

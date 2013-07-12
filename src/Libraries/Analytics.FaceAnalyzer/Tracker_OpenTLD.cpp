@@ -44,13 +44,18 @@ Tracker_OpenTLD::~Tracker_OpenTLD()
 
 void Tracker_OpenTLD::InitialiseTrack(const Mat &frame, Rect &boundingRegion)
 {
-	m_tldTracker->detectorCascade->imgWidth = frame.cols;
-    m_tldTracker->detectorCascade->imgHeight = frame.rows;
-    m_tldTracker->detectorCascade->imgWidthStep = frame.step;
+	// before we call the selectObject function we must call the Process function as it sets up
+	// a variety of internal parameters (internal to OpenTLD) used when selectObject is called
+	Process(frame);
 
-	
+	Mat gray;
+	cvtColor(frame, gray, CV_BGR2GRAY);
 
-	m_tldTracker->selectObject(frame, &boundingRegion);
+	m_tldTracker->detectorCascade->imgWidth = gray.cols;
+    m_tldTracker->detectorCascade->imgHeight = gray.rows;
+    m_tldTracker->detectorCascade->imgWidthStep = gray.step;
+
+	m_tldTracker->selectObject(gray, &boundingRegion);
 }
 
 void Tracker_OpenTLD::EnableAlternating()

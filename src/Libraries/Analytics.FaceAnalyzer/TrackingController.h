@@ -30,7 +30,7 @@ private:
 	TrackingController(const TrackingController&);
 	TrackingController& operator=(const TrackingController&);
 
-
+	Tracker_OpenTLD *m_backgroundLearningTLD;
 public:
 	TrackingController();
 	~TrackingController();
