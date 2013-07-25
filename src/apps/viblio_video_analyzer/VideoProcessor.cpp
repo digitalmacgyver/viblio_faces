@@ -78,7 +78,7 @@ bool VideoProcessor::PerformProcessing()
 
 		// pass to each of the analyzers - could be performed in parallel assuming each analyzer is independent (which it should be)
 		for(vector<Analytics::Analyzer*>::iterator startIter=m_analyzers.begin(); startIter != m_analyzers.end(); ++startIter)
-			(*startIter)->Process(currentFrame);
+			(*startIter)->Process(currentFrame, 0); // replace the 0 here with the actual frame timestamp
 
 		imshow("Current frame", currentFrame);
 		waitKey(5);

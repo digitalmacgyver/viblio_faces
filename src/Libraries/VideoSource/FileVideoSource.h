@@ -1,6 +1,7 @@
 #ifndef __FILE_VIDEOSOURCE__
 #define __FILE_VIDEOSOURCE__
 
+#include <memory>
 #include "VideoSource.h"
 
 namespace VideoSource
@@ -9,7 +10,11 @@ namespace VideoSource
 class FileVideoSource : public VideoSourceBase
 {
 private:
-	cv::VideoCapture *m_videoFile;
+	std::unique_ptr<cv::VideoCapture> m_videoFile;
+
+	// no copy constructor or assignment operator
+	FileVideoSource(const FileVideoSource&);
+	FileVideoSource& operator=(const FileVideoSource&);
 
 public:
 	FileVideoSource(const std::string &filename);

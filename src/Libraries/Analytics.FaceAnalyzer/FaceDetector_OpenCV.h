@@ -9,7 +9,8 @@
 #ifndef __FACEDETECTOR_OPENCV__
 #define __FACEDETECTOR_OPENCV__
 
-#include "opencv2/objdetect/objdetect.hpp"
+#include <memory>
+#include <opencv2/objdetect/objdetect.hpp>
 #include <string>
 //#include "EyeDetector_OpenCV.h"
 
@@ -27,7 +28,7 @@ private:
 	cv::CascadeClassifier m_faceCascade;
 
 	bool m_filterFacesByEyeDetections;
-	EyeDetector_OpenCV *m_eyeDetector;
+	std::unique_ptr<EyeDetector_OpenCV> m_eyeDetector;
 
 	// no copy constructor or assignment operator
 	FaceDetector_OpenCV(const FaceDetector_OpenCV&);

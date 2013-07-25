@@ -30,7 +30,7 @@ public:
 	Analyzer(){};
 	virtual ~Analyzer(){};
 
-	virtual void Process(const cv::Mat &frame) = 0;
+	virtual void Process(const cv::Mat &frame, uint64_t frameTimestamp) = 0;
 };
 
 // end of namespaces

@@ -57,6 +57,8 @@ int main(int argc, char* argv[])
 		return 1;
 	}
 
+	cout << "OpenCV version: " << CV_VERSION << endl;
+
 	JobConfiguration jobConfig;
 
 	if (variableMap.count("filename")) 

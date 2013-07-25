@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="EyeDetector_OpenCV.cpp" />
+    <ClCompile Include="Face.cpp" />
     <ClCompile Include="FaceAnalyzer.cpp" />
     <ClCompile Include="FaceAnalyzerConfiguration.cpp" />
     <ClCompile Include="FaceDetector_OpenCV.cpp" />
@@ -23,6 +24,7 @@
     <ClInclude Include="AnalyzerConfig.h" />
     <ClInclude Include="AnalyzerTypes.h" />
     <ClInclude Include="EyeDetector_OpenCV.h" />
+    <ClInclude Include="Face.h" />
     <ClInclude Include="FaceAnalyzer.h" />
     <ClInclude Include="FaceAnalyzerConfiguration.h" />
     <ClInclude Include="FaceDetector_OpenCV.h" />
@@ -66,7 +68,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..;..\..\..\libs\OpenCV-2.4.3\include;..\..\..\libs\OpenTLD\src\libopentld\tld</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..;..\..\..\libs\OpenCV-2.4.3\include;..\..\..\libs\OpenTLD\src\libopentld\tld;..\..\..\libs\boost_1_53_0\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -82,7 +84,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..;..\..\..\libs\OpenCV-2.4.3\include;..\..\..\libs\OpenTLD\src\libopentld\tld</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..;..\..\..\libs\OpenCV-2.4.3\include;..\..\..\libs\OpenTLD\src\libopentld\tld;..\..\..\libs\boost_1_53_0\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

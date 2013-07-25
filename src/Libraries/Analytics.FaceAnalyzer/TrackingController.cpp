@@ -10,6 +10,7 @@
 
 #include "TrackingController.h"
 #include "Tracker_OpenTLD.h"
+#include "Face.h"
 
 using namespace cv;
 
@@ -29,10 +30,10 @@ TrackingController::~TrackingController()
 		delete m_backgroundLearningTLD;
 
 	// go through each of the trackers and destroy them
-	for(vector<Tracker_OpenTLD*>::iterator startIter=m_trackers.begin(); startIter != m_trackers.end(); ++startIter)
+	for(auto startIter=m_trackedFaces.begin(); startIter != m_trackedFaces.end(); ++startIter)
 		delete *startIter;
 
-	m_trackers.clear();
+	m_trackedFaces.clear();
 
 }
 
@@ -42,7 +43,7 @@ TrackingController::~TrackingController()
 */
 bool TrackingController::IsAlreadyBeingTracked(const Rect &newObjectLocation)
 {
-	if( m_trackers.size() == 0 )
+	if( m_trackedFaces.size() == 0 )
 		return false;
 
 	// not yet implemented. Currently always assumes there should only be 1 track thus if we are tracking
@@ -74,9 +75,9 @@ void TrackingController::AddNewTrack(const Mat &frame, Rect &objectLocation)
 	// for the moment we'll just add a new tracker for this person
 	//Tracker_OpenTLD *newTracker = new Tracker_OpenTLD();
 
-	m_backgroundLearningTLD->InitialiseTrack(frame, objectLocation);
+	//m_backgroundLearningTLD->InitialiseTrack(frame, objectLocation);
 
-	m_trackers.push_back( m_backgroundLearningTLD );
+	m_trackedFaces.push_back( new Face(m_backgroundLearningTLD, frame, objectLocation) );
 
 	m_backgroundLearningTLD = NULL; // this ensures in the future we don't bother processing this tracker which was purely intended for learning the background
 }
@@ -85,16 +86,16 @@ void TrackingController::AddNewTrack(const Mat &frame, Rect &objectLocation)
 	Updates each of the trackers that are active so that they can estimate the new position of
 	the object/face they are tracking
 */
-void TrackingController::Process(const Mat &frame)
+void TrackingController::Process(const Mat &frame, uint64_t frameTimestamp)
 {
 	if( m_backgroundLearningTLD != NULL )
 		m_backgroundLearningTLD->Process(frame); // allow it to learn the background
 
 	// could call each of these trackers in parallel assuming they are independent (they should 
 	// be at least when they are estimating the new position of the object/face)
-	for( auto startIter=m_trackers.begin(); startIter!=m_trackers.end(); ++startIter)
+	for( auto startIter=m_trackedFaces.begin(); startIter!=m_trackedFaces.end(); ++startIter)
 	{
-		(*startIter)->Process( frame );
+		(*startIter)->Process( frame, frameTimestamp );
 	}
 }
 

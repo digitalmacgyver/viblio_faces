@@ -24,11 +24,10 @@ FileVideoSource::FileVideoSource(const string &filename) : VideoSourceBase()
 		throw runtime_error("File " + filename + " does not exist");
 
 	// it exists so now try and create the OpenCV VideoCapture which will provide access to reading 
-	m_videoFile = new VideoCapture(filename);
+	m_videoFile.reset( new VideoCapture(filename) );
 
 	if( !m_videoFile->isOpened() )
 	{
-		delete m_videoFile;
 		throw runtime_error("File " + filename + " could not be opened");
 	}
 
@@ -39,9 +38,6 @@ FileVideoSource::FileVideoSource(const string &filename) : VideoSourceBase()
 FileVideoSource::~FileVideoSource()
 {
 	m_videoFile->release();
-
-	// do we need to both release the VideoCapture device and delete it?
-	delete m_videoFile;
 }
 
 // Returns the next frame from the video source

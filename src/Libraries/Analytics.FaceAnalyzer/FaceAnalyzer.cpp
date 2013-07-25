@@ -38,29 +38,25 @@ FaceAnalysis::FaceAnalysis(FaceAnalyzerConfiguration *faceAnalyzerConfig)
 			throw runtime_error("Specified output thumbnail directory does not exist");
 	}
 
-	m_faceDetector = new FaceDetector_OpenCV(faceAnalyzerConfig->faceDetectorCascadeFile, faceAnalyzerConfig->eyeDetectorCascadeFile);
+	m_faceDetector.reset( new FaceDetector_OpenCV(faceAnalyzerConfig->faceDetectorCascadeFile, faceAnalyzerConfig->eyeDetectorCascadeFile) );
 
-	m_trackingController = new TrackingController();
+	m_trackingController.reset( new TrackingController() );
 }
 
 
 FaceAnalysis::~FaceAnalysis()
 {
-	if( m_faceDetector != NULL )
-		delete m_faceDetector;
-
-	if( m_trackingController != NULL )
-		delete m_trackingController;
+	
 }
 
-void FaceAnalysis::Process(const Mat &frame)
+void FaceAnalysis::Process(const Mat &frame, uint64_t frameTimestamp)
 {
 	// do 2 things in parallel here
 	// 1. Perform face detection
 	vector<Rect> detectedFaces = m_faceDetector->Detect( frame );
 
 	// 2. Pass the frame off to the tracking controller to update any active trackers
-	m_trackingController->Process(frame);
+	m_trackingController->Process(frame, frameTimestamp);
 
 	// Now examine any detected faces to determine if they are new faces or ones that are already being tracked (the tracking controller can tell you if they are new or not)
 	if( detectedFaces.size() > 0 )

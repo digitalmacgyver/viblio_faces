@@ -12,6 +12,7 @@
 #define __TRACKING_CONTROLLER__
 
 #include <opencv2/opencv.hpp>
+#include <stdint.h>
 
 namespace Analytics
 {
@@ -20,11 +21,12 @@ namespace Analytics
 
 // fwd declarations
 class Tracker_OpenTLD;
+class Face;
 
 class TrackingController
 {
 private:
-	std::vector<Tracker_OpenTLD*> m_trackers;
+	std::vector<Face*> m_trackedFaces;
 
 	// no copy constructor or assignment operator
 	TrackingController(const TrackingController&);
@@ -39,7 +41,7 @@ public:
 
 	void AddNewTrack(const cv::Mat &frame, cv::Rect &objectLocation);
 
-	void Process(const cv::Mat &frame);
+	void Process(const cv::Mat &frame, uint64_t frameTimestamp);
 };
 
 // end of namespaces

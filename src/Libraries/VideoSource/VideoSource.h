@@ -15,6 +15,11 @@ namespace VideoSource
 	
 class VideoSourceBase
 {
+private:
+	// no copy constructor or assignment operator
+	VideoSourceBase(const VideoSourceBase&);
+	VideoSourceBase& operator=(const VideoSourceBase&);
+
 public:
 	VideoSourceBase(){};
 	virtual ~VideoSourceBase(){};

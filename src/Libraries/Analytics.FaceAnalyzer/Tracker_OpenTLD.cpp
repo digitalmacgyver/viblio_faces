@@ -10,9 +10,11 @@ namespace Analytics
 
 Tracker_OpenTLD::Tracker_OpenTLD()
 {
+	m_confidence = 0.0f;
+
 	m_tldTracker = new TLD();
 	m_tldTracker->trackerEnabled = true;
-	m_tldTracker->alternating = false;
+	m_tldTracker->alternating = true;
 	m_tldTracker->learningEnabled = true;
 
 	// these parameters must be set before calling selectObject in the initialization function as
@@ -72,17 +74,17 @@ Rect Tracker_OpenTLD::Process(const Mat &frame)
 
 	Rect trackingRect = Rect(0,0,0,0);
 
+	m_confidence = m_tldTracker->currConf;
+
 	if( m_tldTracker->currBB != NULL )
 	{
 		trackingRect = Rect(*(m_tldTracker->currBB));
-
-		float confidence = m_tldTracker->currConf;
 
 		//return trackingRect;
 	}
 
 	double threshold = 0.7f;
-	int confident = (m_tldTracker->currConf >= threshold) ? 1 : 0;
+	int confident = (m_confidence >= threshold) ? 1 : 0;
 
 	char statusString[128];
 	char learningString[10] = "";

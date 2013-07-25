@@ -11,7 +11,7 @@
 #include "FaceDetector_OpenCV.h"
 #include "EyeDetector_OpenCV.h"
 
-#include "opencv2/opencv.hpp"
+#include <opencv2/opencv.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv/highgui.h>
 
@@ -40,7 +40,7 @@ FaceDetector_OpenCV::FaceDetector_OpenCV(const string &face_cascade_name, const 
 	{
 		try
 		{
-			m_eyeDetector = new EyeDetector_OpenCV(eyes_cascade_name);
+			m_eyeDetector.reset( new EyeDetector_OpenCV(eyes_cascade_name) );
 		}
 		catch(Exception e)
 		{
@@ -59,8 +59,6 @@ FaceDetector_OpenCV::FaceDetector_OpenCV(const string &face_cascade_name, const 
 
 FaceDetector_OpenCV::~FaceDetector_OpenCV()
 {
-	if( m_eyeDetector != NULL )
-		delete m_eyeDetector;
 }
 
 vector<Rect> FaceDetector_OpenCV::Detect(const Mat &frame)
@@ -83,7 +81,7 @@ vector<Rect> FaceDetector_OpenCV::Detect(const Mat &frame)
 	{
 		vector<Rect> filteredFaces;
 
-		for( int i = 0; i < faces.size(); i++ )
+		for( unsigned int i = 0; i < faces.size(); i++ )
 		{
 			Mat faceROI = frame_gray( faces[i] );
 
@@ -95,13 +93,13 @@ vector<Rect> FaceDetector_OpenCV::Detect(const Mat &frame)
 				filteredFaces.push_back(faces[i]);
 
 				//-- Draw the face
-				Point center( faces[i].x + faces[i].width*0.5, faces[i].y + faces[i].height*0.5 );
-				ellipse( frameCopy, center, Size( faces[i].width*0.5, faces[i].height*0.5), 0, 0, 360, Scalar( 255, 0, 0 ), 2, 8, 0 );
+				Point center( faces[i].x + int(faces[i].width*0.5f), faces[i].y + int(faces[i].height*0.5f) );
+				ellipse( frameCopy, center, Size( int(faces[i].width*0.5f), int(faces[i].height*0.5f)), 0, 0, 360, Scalar( 255, 0, 0 ), 2, 8, 0 );
 
-				for( int j = 0; j < eyes.size(); j++ )
+				for( unsigned int j = 0; j < eyes.size(); j++ )
 				{ //-- Draw the eyes
-					Point center( faces[i].x + eyes[j].x + eyes[j].width*0.5, faces[i].y + eyes[j].y + eyes[j].height*0.5 );
-					int radius = cvRound( (eyes[j].width + eyes[j].height)*0.25 );
+					Point center( faces[i].x + eyes[j].x + int(eyes[j].width*0.5f), faces[i].y + eyes[j].y + int(eyes[j].height*0.5f) );
+					int radius = cvRound( (eyes[j].width + eyes[j].height)*0.25f );
 					circle( frameCopy, center, radius, Scalar( 255, 0, 255 ), 3, 8, 0 );
 				}
 			}
@@ -115,8 +113,8 @@ vector<Rect> FaceDetector_OpenCV::Detect(const Mat &frame)
 	else
 	{
 		//-- Draw the face
-		Point center( faces[0].x + faces[0].width*0.5, faces[0].y + faces[0].height*0.5 );
-		ellipse( frameCopy, center, Size( faces[0].width*0.5, faces[0].height*0.5), 0, 0, 360, Scalar( 255, 0, 0 ), 2, 8, 0 );
+		Point center( faces[0].x + int(faces[0].width*0.5f), faces[0].y + int(faces[0].height*0.5f) );
+		ellipse( frameCopy, center, Size( int(faces[0].width*0.5f), int(faces[0].height*0.5f)), 0, 0, 360, Scalar( 255, 0, 0 ), 2, 8, 0 );
 
 		//-- Show what you got
 		imshow( "temp", frameCopy );

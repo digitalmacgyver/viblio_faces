@@ -9,6 +9,7 @@
 #ifndef __JOB_CONFIGURATION__
 #define __JOB_CONFIGURATION__
 
+#include <memory>
 #include "VideoSource/VideoSourceTypes.h"
 
 // forward declarations of all the various configuration types we will be using in this class
