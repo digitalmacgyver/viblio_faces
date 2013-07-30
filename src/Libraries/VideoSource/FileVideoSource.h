@@ -28,6 +28,9 @@ public:
 
 	// Returns the total number of frames in this file
 	virtual int NumberFrames();
+	
+	//Returns the timestamp in milliseconds
+	virtual uint64_t GetTimestamp();
 };
 
 } // end of namespace

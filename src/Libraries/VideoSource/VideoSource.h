@@ -31,6 +31,7 @@ public:
 	virtual cv::Mat GetNextFrame() = 0;
 
 	virtual int NumberFrames() = 0;
+	virtual uint64_t GetTimestamp() = 0;
 };
 
 // end of namespaces

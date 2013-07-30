@@ -69,16 +69,19 @@ bool VideoProcessor::PerformProcessing()
 {
 	// go through each frame from the video source and pass it along to each of the analyzers
 	Mat currentFrame;
+	uint64_t timestamp;
 	while(true)
 	{
 		currentFrame = m_videoSource->GetNextFrame();
-		
+		timestamp = m_videoSource->GetTimestamp();
+		// Printing the current Timestamp
+		cout<< "Time stamp : " << timestamp<<endl;
 		if( currentFrame.empty() )
 			break;
 
 		// pass to each of the analyzers - could be performed in parallel assuming each analyzer is independent (which it should be)
 		for(vector<Analytics::Analyzer*>::iterator startIter=m_analyzers.begin(); startIter != m_analyzers.end(); ++startIter)
-			(*startIter)->Process(currentFrame, 0); // replace the 0 here with the actual frame timestamp
+			(*startIter)->Process(currentFrame,timestamp); // replace the 0 here with the actual frame timestamp
 
 		imshow("Current frame", currentFrame);
 		waitKey(5);
