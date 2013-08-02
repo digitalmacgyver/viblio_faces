@@ -50,7 +50,7 @@ private:
 	Tracker_OpenTLD *m_faceTracker;
 
 public:
-	Face(Tracker_OpenTLD *m_trackerToInitializeFrom, const cv::Mat frame, cv::Rect initialFaceRegion);
+	Face(Tracker_OpenTLD *m_trackerToInitializeFrom, const cv::Mat frame, uint64_t frameTimestamp, cv::Rect initialFaceRegion);
 	~Face();
 
 	bool Process(const cv::Mat &frame, uint64_t frameTimestamp);

@@ -13,7 +13,7 @@ namespace Analytics
 	{
 
 
-Face::Face(Tracker_OpenTLD *m_trackerToInitializeFrom, const Mat frame, Rect initialFaceRegion)
+Face::Face(Tracker_OpenTLD *m_trackerToInitializeFrom, const Mat frame, uint64_t frameTimestamp, Rect initialFaceRegion)
 	// generate a random UUID for the unique face identifier
 	: m_faceId(boost::uuids::random_generator()()),
 	  m_isLost(false),
@@ -24,6 +24,9 @@ Face::Face(Tracker_OpenTLD *m_trackerToInitializeFrom, const Mat frame, Rect ini
 	m_faceTracker = m_trackerToInitializeFrom;
 
 	m_faceTracker->InitialiseTrack(frame, initialFaceRegion);
+
+	// this is the start of a new time measurement pair
+	m_currentFaceVisiblePair.first = frameTimestamp;
 }
 
 

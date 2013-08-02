@@ -59,7 +59,7 @@ bool TrackingController::IsAlreadyBeingTracked(const Rect &newObjectLocation)
 	Adds a new tracker which is initialised using the provided object/face location that was detected
 	in the provided frame
 */
-void TrackingController::AddNewTrack(const Mat &frame, Rect &objectLocation)
+void TrackingController::AddNewTrack(const Mat &frame, uint64_t frameTimestamp, Rect &objectLocation)
 {
 	// It is possible that the new track is one we had previously, we should examine this
 	// possibility here depending on the tracker and how discriminative it is (can it tell
@@ -77,7 +77,7 @@ void TrackingController::AddNewTrack(const Mat &frame, Rect &objectLocation)
 
 	//m_backgroundLearningTLD->InitialiseTrack(frame, objectLocation);
 
-	m_trackedFaces.push_back( new Face(m_backgroundLearningTLD, frame, objectLocation) );
+	m_trackedFaces.push_back( new Face(m_backgroundLearningTLD, frame, frameTimestamp, objectLocation) );
 
 	m_backgroundLearningTLD = NULL; // this ensures in the future we don't bother processing this tracker which was purely intended for learning the background
 }

@@ -68,7 +68,7 @@ void FaceAnalysis::Process(const Mat &frame, uint64_t frameTimestamp)
 			if( !m_trackingController->IsAlreadyBeingTracked(*startIter) )
 			{
 				// we've found a new object, better start tracking it
-				m_trackingController->AddNewTrack(frame, *startIter);
+				m_trackingController->AddNewTrack(frame, frameTimestamp, *startIter);
 			}
 			// else do nothing as we are already tracking this one
 		}

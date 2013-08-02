@@ -59,7 +59,7 @@ uint64_t FileVideoSource::GetTimestamp()
 	// returns timestamp in milliseconds appended with "Frame_"
 	//std::string frame_timestamp;
 	//frame_timestamp="Frame_"+std::to_string(m_videoFile->get(CV_CAP_PROP_POS_MSEC));
-	return m_videoFile->get(CV_CAP_PROP_POS_MSEC);
+	return (uint16_t)m_videoFile->get(CV_CAP_PROP_POS_MSEC);
 }
 
 }

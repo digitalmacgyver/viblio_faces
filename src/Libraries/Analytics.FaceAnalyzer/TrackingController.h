@@ -39,7 +39,7 @@ public:
 
 	bool IsAlreadyBeingTracked(const cv::Rect &newObjectLocation);
 
-	void AddNewTrack(const cv::Mat &frame, cv::Rect &objectLocation);
+	void AddNewTrack(const cv::Mat &frame, uint64_t frameTimestamp, cv::Rect &objectLocation);
 
 	void Process(const cv::Mat &frame, uint64_t frameTimestamp);
 };
