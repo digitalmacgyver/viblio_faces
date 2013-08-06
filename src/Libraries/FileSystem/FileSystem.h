@@ -17,4 +17,6 @@ namespace FileSystem
 	bool FileExists(const std::string &filename);
 
 	bool DirectoryExists(const std::string &path);
+
+	bool CreateDirectory(const std::string &dir_name);
 }

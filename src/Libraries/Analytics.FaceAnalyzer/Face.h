@@ -9,6 +9,8 @@
 #ifndef __TRACKING_FACE__
 #define __TRACKING_FACE__
 
+#include "FaceAnalyzerConfiguration.h"
+
 #include <opencv2/opencv.hpp>
 #include <boost/uuid/uuid.hpp>
 
@@ -48,9 +50,9 @@ private:
 
 	// the tracker that will be used to track this face
 	Tracker_OpenTLD *m_faceTracker;
-
+	std::string Thumbnail_path;
 public:
-	Face(Tracker_OpenTLD *m_trackerToInitializeFrom, const cv::Mat frame, cv::Rect initialFaceRegion);
+   	Face(Tracker_OpenTLD *m_trackerToInitializeFrom, const cv::Mat frame, cv::Rect initialFaceRegion,FaceAnalyzerConfiguration *faceAnalyzerConfig);
 	~Face();
 
 	bool Process(const cv::Mat &frame, uint64_t frameTimestamp);

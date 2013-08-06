@@ -1,5 +1,6 @@
 #include "Face.h"
 #include "Tracker_OpenTLD.h"
+#include "FaceAnalyzerConfiguration.h"
 
 #include <boost/uuid/uuid.hpp>
 #include <boost/uuid/uuid_generators.hpp>
@@ -13,7 +14,7 @@ namespace Analytics
 	{
 
 
-Face::Face(Tracker_OpenTLD *m_trackerToInitializeFrom, const Mat frame, Rect initialFaceRegion)
+Face::Face(Tracker_OpenTLD *m_trackerToInitializeFrom, const Mat frame, Rect initialFaceRegion,FaceAnalyzerConfiguration *faceAnalyzerConfig)
 	// generate a random UUID for the unique face identifier
 	: m_faceId(boost::uuids::random_generator()()),
 	  m_isLost(false),
@@ -24,6 +25,7 @@ Face::Face(Tracker_OpenTLD *m_trackerToInitializeFrom, const Mat frame, Rect ini
 	m_faceTracker = m_trackerToInitializeFrom;
 
 	m_faceTracker->InitialiseTrack(frame, initialFaceRegion);
+	Thumbnail_path = faceAnalyzerConfig->faceThumbnailOutputPath;
 }
 
 
@@ -40,6 +42,9 @@ Face::~Face()
 bool Face::Process(const Mat &frame, uint64_t frameTimestamp)
 {
 	Rect estimatedPosition = m_faceTracker->Process(frame);
+	
+	std::ostringstream oss;
+	std::string imagepath;
 
 	if( m_isLost && m_faceTracker->GetConfidence() > 0.0f )
 	{
@@ -48,6 +53,7 @@ bool Face::Process(const Mat &frame, uint64_t frameTimestamp)
 
 		// this is the start of a new time measurement pair
 		m_currentFaceVisiblePair.first = frameTimestamp;
+		cout << " First visible at : " << m_currentFaceVisiblePair.first << endl;
 	}
 	else if( !m_isLost && m_faceTracker->GetConfidence() == 0.0f )
 	{
@@ -57,7 +63,7 @@ bool Face::Process(const Mat &frame, uint64_t frameTimestamp)
 
 		// this is the end of the time measurement pair
 		m_currentFaceVisiblePair.second = frameTimestamp;
-
+		cout << " Last visible at : " << m_currentFaceVisiblePair.second << endl;
 		// add it to the list
 		m_timesWhenFaceVisible.push_back(m_currentFaceVisiblePair);
 	}
@@ -80,6 +86,17 @@ bool Face::Process(const Mat &frame, uint64_t frameTimestamp)
 		// 2) Determine if we need to apply recognition to the face
 		// 3) Store the face's location in the location history map
 
+		// Saving a frame for every 800 milliseconds for a tracked frame when Thumbnail path is provided
+		if( !Thumbnail_path.empty() )
+		{
+			if((frameTimestamp-m_currentFaceVisiblePair.first)%800 ==0)
+				{
+				oss << frameTimestamp;
+				imagepath =Thumbnail_path+ "/image"+oss.str()+".png";
+				imwrite( imagepath,frame(estimatedPosition));
+				cout << " Tracking for every 800 milli sec. Frame saved at : "<<  (frameTimestamp-m_currentFaceVisiblePair.first)<<  endl;
+			    }
+		}
 		if( m_faceLocationHistory.size() >= m_factLocationHistorySize )
 			// make some space in the history map by removing the oldest item
 			m_faceLocationHistory.erase( m_faceLocationHistory.begin() );

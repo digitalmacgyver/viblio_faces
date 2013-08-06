@@ -54,4 +54,19 @@ bool DirectoryExists(const string &path)
 	return exists( path ) && is_directory(path);
 }
 
+
+bool CreateDirectory(const string &dir_name)
+{ 
+	path dir(dir_name);
+	if(create_directory(dir)) {
+		cout <<" Created Directory at path: " << current_path().string() << endl;
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+
 } // end of filesystem

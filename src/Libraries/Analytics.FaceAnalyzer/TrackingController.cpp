@@ -19,9 +19,10 @@ namespace Analytics
 	namespace FaceAnalyzer
 	{
 
-TrackingController::TrackingController()
+TrackingController::TrackingController(FaceAnalyzerConfiguration *faceAnalyzerConfiguration)
 {
 	m_backgroundLearningTLD = new Tracker_OpenTLD();
+	faceAnalyzerConfig = faceAnalyzerConfiguration;
 }
 
 TrackingController::~TrackingController()
@@ -77,7 +78,7 @@ void TrackingController::AddNewTrack(const Mat &frame, Rect &objectLocation)
 
 	//m_backgroundLearningTLD->InitialiseTrack(frame, objectLocation);
 
-	m_trackedFaces.push_back( new Face(m_backgroundLearningTLD, frame, objectLocation) );
+	m_trackedFaces.push_back( new Face(m_backgroundLearningTLD, frame, objectLocation,faceAnalyzerConfig) );
 
 	m_backgroundLearningTLD = NULL; // this ensures in the future we don't bother processing this tracker which was purely intended for learning the background
 }
