@@ -59,6 +59,12 @@ int main(int argc, char* argv[])
 
 	cout << "OpenCV version: " << CV_VERSION << endl;
 
+	// If we want to test directory creation..............
+	//std::string folder= "RamsriGolla";
+	//	bool file;
+	//FileSystem::CreateDirectory(folder);
+	//
+
 	JobConfiguration jobConfig;
 
 	if (variableMap.count("filename")) 
@@ -73,6 +79,8 @@ int main(int argc, char* argv[])
 		cout << "Input filename not specified, nothing to do" << endl;
 		return 1;
 	}
+
+
 
 	
 	// Analyzer config extraction from parameters and config file

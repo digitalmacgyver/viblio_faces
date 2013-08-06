@@ -28,7 +28,7 @@ private:
 
 	// the video source that will be supplying us with frames for analysis
 	VideoSource::VideoSourceBase *m_videoSource;
-
+	
 	bool SetupAnalyzers(const JobConfiguration &jobConfig);
 
 public:
