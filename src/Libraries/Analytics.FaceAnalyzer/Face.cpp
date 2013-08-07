@@ -17,7 +17,8 @@ Face::Face(Tracker_OpenTLD *m_trackerToInitializeFrom, const Mat frame, uint64_t
 	// generate a random UUID for the unique face identifier
 	: m_faceId(boost::uuids::random_generator()()),
 	  m_isLost(false),
-	  m_factLocationHistorySize(60) // currently hardcoded, should be passed as an input parameter in the future
+	  m_faceLocationHistorySize(60), // currently hardcoded, should be passed as an input parameter in the future
+	  m_overlapThresholdForSameFace(0.5f)
 {
 	// in a real system we will probably take a copy of the tracker to initialize the face from as it has learned the background,
 	// however this is yet TBD
@@ -42,7 +43,7 @@ Face::~Face()
 
 bool Face::Process(const Mat &frame, uint64_t frameTimestamp)
 {
-	Rect estimatedPosition = m_faceTracker->Process(frame);
+	m_currentEstimatedPosition = m_faceTracker->Process(frame);
 
 	if( m_isLost && m_faceTracker->GetConfidence() > 0.0f )
 	{
@@ -83,15 +84,29 @@ bool Face::Process(const Mat &frame, uint64_t frameTimestamp)
 		// 2) Determine if we need to apply recognition to the face
 		// 3) Store the face's location in the location history map
 
-		if( m_faceLocationHistory.size() >= m_factLocationHistorySize )
+		if( m_faceLocationHistory.size() >= m_faceLocationHistorySize )
 			// make some space in the history map by removing the oldest item
 			m_faceLocationHistory.erase( m_faceLocationHistory.begin() );
-		m_faceLocationHistory.insert (m_faceLocationHistory.end(), pair<uint64_t,Rect>(frameTimestamp,estimatedPosition));
+		m_faceLocationHistory.insert (m_faceLocationHistory.end(), pair<uint64_t,Rect>(frameTimestamp,m_currentEstimatedPosition));
 	}
 
 	m_mostRecentFrameTimestamp = frameTimestamp;
 
 	return true;
+}
+
+/*
+*	Determines if the rectangle passed in as 'otherFaceLocation' overlaps enough with the current face's estimated position
+*	to be considered the same face
+*/
+bool Face::IsSameFace(const Rect &otherFaceLocation)
+{
+	Rect intersectionRect = m_currentEstimatedPosition & otherFaceLocation;
+
+	// determine the percentage overlap between this face and the otherface
+	float percentageOverlap = intersectionRect.area() / (float)m_currentEstimatedPosition.area();
+
+	return percentageOverlap > m_overlapThresholdForSameFace;
 }
 
 // end of namespaces

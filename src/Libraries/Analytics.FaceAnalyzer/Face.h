@@ -37,8 +37,14 @@ private:
 	// indicates whether the face has had recognition applied to them yet
 	bool m_hasBeenRecognized;
 
+	// the most recent estimate for the face's position
+	cv::Rect m_currentEstimatedPosition;
+
+	// the amount of overlap between a potential detection of this face and the most recent estimated position of the face required for us to consider them one and then same
+	float m_overlapThresholdForSameFace;
+
 	// stores a history of the frames location in recent frames (the number of frames in the past it will store is based on the face location history size parameter)
-	int m_factLocationHistorySize;
+	int m_faceLocationHistorySize;
 	std::map<uint64_t, cv::Rect> m_faceLocationHistory;
 
 	// a vector of times when the face was visible in the scene. It is a vector of pairs of timestamps when the face entered and left (or was lost track of)
@@ -54,6 +60,8 @@ public:
 	~Face();
 
 	bool Process(const cv::Mat &frame, uint64_t frameTimestamp);
+
+	bool IsSameFace(const cv::Rect &otherFaceLocation);
 
 	boost::uuids::uuid GetFaceId(){ return m_faceId; }
 };

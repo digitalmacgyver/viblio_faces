@@ -12,6 +12,8 @@
 #include "Tracker_OpenTLD.h"
 #include "Face.h"
 
+#include <thread>
+
 using namespace cv;
 
 namespace Analytics
@@ -47,12 +49,26 @@ bool TrackingController::IsAlreadyBeingTracked(const Rect &newObjectLocation)
 		return false;
 
 	// not yet implemented. Currently always assumes there should only be 1 track thus if we are tracking
-	// something the the new object is simply this same object that we are tracking already.
+	// something then the new object is simply this same object that we are tracking already.
 	//		Eventually this will go through each of the trackers in m_trackers and determine if the newObjectLocation
 	//		is the same as any of the given trackers (by examining the overlap of the trackers estimated location
 	//		and the new objects location
 
-	return true;
+	// perform this process in parallel... compare the newObjectLocation with each of the face's estimated position
+	bool isAlreadyBeingTracked = false;
+	for( auto startIter=m_trackedFaces.begin(); startIter!=m_trackedFaces.end(); ++startIter)
+	{
+		bool isCurrentFaceTheSame = (*startIter)->IsSameFace( newObjectLocation );
+		if( isCurrentFaceTheSame )
+		{
+			// as soon as we find a face that says it is the same then we have our answer
+
+			isAlreadyBeingTracked = true;
+			break;
+		}
+	}
+
+	return isAlreadyBeingTracked;
 }
 
 /*
