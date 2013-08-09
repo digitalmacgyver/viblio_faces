@@ -112,10 +112,12 @@ vector<Rect> FaceDetector_OpenCV::Detect(const Mat &frame)
 	}
 	else
 	{
+		if(!faces.empty())
+		{
 		//-- Draw the face
 		Point center( faces[0].x + int(faces[0].width*0.5f), faces[0].y + int(faces[0].height*0.5f) );
 		ellipse( frameCopy, center, Size( int(faces[0].width*0.5f), int(faces[0].height*0.5f)), 0, 0, 360, Scalar( 255, 0, 0 ), 2, 8, 0 );
-
+		}
 		//-- Show what you got
 		imshow( "temp", frameCopy );
 

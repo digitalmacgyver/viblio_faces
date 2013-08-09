@@ -89,13 +89,13 @@ bool Face::Process(const Mat &frame, uint64_t frameTimestamp)
 		// Saving a frame for every 800 milliseconds for a tracked frame when Thumbnail path is provided
 		if( !Thumbnail_path.empty() )
 		{
-			if((frameTimestamp-m_currentFaceVisiblePair.first)%800 ==0)
-				{
+			//if((frameTimestamp-m_currentFaceVisiblePair.first)%800 ==0)
+				//{
 				oss << frameTimestamp;
 				imagepath =Thumbnail_path+ "/image"+oss.str()+".png";
 				imwrite( imagepath,frame(estimatedPosition));
-				cout << " Tracking for every 800 milli sec. Frame saved at : "<<  (frameTimestamp-m_currentFaceVisiblePair.first)<<  endl;
-			    }
+				cout << " Tracking for frame extracted. Frame saved at : "<<  (frameTimestamp-m_currentFaceVisiblePair.first)<<  endl;
+			   // }
 		}
 		if( m_faceLocationHistory.size() >= m_factLocationHistorySize )
 			// make some space in the history map by removing the oldest item
