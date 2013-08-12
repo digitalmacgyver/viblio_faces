@@ -12,6 +12,7 @@
 #define __TRACKING_CONTROLLER__
 
 #include <opencv2/opencv.hpp>
+#include "FaceAnalyzerConfiguration.h"
 #include <stdint.h>
 
 namespace Analytics
@@ -33,8 +34,10 @@ private:
 	TrackingController& operator=(const TrackingController&);
 
 	Tracker_OpenTLD *m_backgroundLearningTLD;
+
+	FaceAnalyzerConfiguration *faceAnalyzerConfig;
 public:
-	TrackingController();
+	TrackingController(FaceAnalyzerConfiguration *faceAnalyzerConfiguration);
 	~TrackingController();
 
 	bool IsAlreadyBeingTracked(const cv::Rect &newObjectLocation);
@@ -42,6 +45,8 @@ public:
 	void AddNewTrack(const cv::Mat &frame, uint64_t frameTimestamp, cv::Rect &objectLocation);
 
 	void Process(const cv::Mat &frame, uint64_t frameTimestamp);
+
+	std::string GetOutput();
 };
 
 // end of namespaces

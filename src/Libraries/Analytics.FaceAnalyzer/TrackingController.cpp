@@ -21,9 +21,10 @@ namespace Analytics
 	namespace FaceAnalyzer
 	{
 
-TrackingController::TrackingController()
+TrackingController::TrackingController(FaceAnalyzerConfiguration *faceAnalyzerConfiguration)
 {
 	m_backgroundLearningTLD = new Tracker_OpenTLD();
+	faceAnalyzerConfig = faceAnalyzerConfiguration;
 }
 
 TrackingController::~TrackingController()
@@ -47,6 +48,9 @@ bool TrackingController::IsAlreadyBeingTracked(const Rect &newObjectLocation)
 {
 	if( m_trackedFaces.size() == 0 )
 		return false;
+
+	if( m_trackedFaces.size() == 1 )
+		return true; // for the moment we will force only a single face to be tracked
 
 	// not yet implemented. Currently always assumes there should only be 1 track thus if we are tracking
 	// something then the new object is simply this same object that we are tracking already.
@@ -93,7 +97,7 @@ void TrackingController::AddNewTrack(const Mat &frame, uint64_t frameTimestamp, 
 
 	//m_backgroundLearningTLD->InitialiseTrack(frame, objectLocation);
 
-	m_trackedFaces.push_back( new Face(m_backgroundLearningTLD, frame, frameTimestamp, objectLocation) );
+	m_trackedFaces.push_back( new Face(m_backgroundLearningTLD, frame, frameTimestamp, objectLocation, faceAnalyzerConfig) );
 
 	m_backgroundLearningTLD = NULL; // this ensures in the future we don't bother processing this tracker which was purely intended for learning the background
 }
@@ -113,6 +117,18 @@ void TrackingController::Process(const Mat &frame, uint64_t frameTimestamp)
 	{
 		(*startIter)->Process( frame, frameTimestamp );
 	}
+}
+
+string TrackingController::GetOutput()
+{
+	string facesArrayJson = "";
+
+	for( auto startIter=m_trackedFaces.begin(); startIter!=m_trackedFaces.end(); ++startIter)
+	{
+		facesArrayJson += (*startIter)->GetOutput();
+	}
+
+	return facesArrayJson;
 }
 
 // end of namespaces

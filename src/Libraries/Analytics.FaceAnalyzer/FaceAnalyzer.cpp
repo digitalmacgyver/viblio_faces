@@ -40,7 +40,7 @@ FaceAnalysis::FaceAnalysis(FaceAnalyzerConfiguration *faceAnalyzerConfig)
 
 	m_faceDetector.reset( new FaceDetector_OpenCV(faceAnalyzerConfig->faceDetectorCascadeFile, faceAnalyzerConfig->eyeDetectorCascadeFile) );
 
-	m_trackingController.reset( new TrackingController() );
+	m_trackingController.reset( new TrackingController(faceAnalyzerConfig) );
 }
 
 
@@ -51,6 +51,7 @@ FaceAnalysis::~FaceAnalysis()
 
 void FaceAnalysis::Process(const Mat &frame, uint64_t frameTimestamp)
 {
+
 	// do 2 things in parallel here
 	// 1. Perform face detection
 	vector<Rect> detectedFaces = m_faceDetector->Detect( frame );
@@ -74,6 +75,11 @@ void FaceAnalysis::Process(const Mat &frame, uint64_t frameTimestamp)
 		}
 	}
 
+}
+
+std::string FaceAnalysis::GetOutput()
+{
+	return "";
 }
 
 // end of namespaces

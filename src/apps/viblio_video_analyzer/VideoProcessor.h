@@ -28,7 +28,7 @@ private:
 
 	// the video source that will be supplying us with frames for analysis
 	VideoSource::VideoSourceBase *m_videoSource;
-
+	
 	bool SetupAnalyzers(const JobConfiguration &jobConfig);
 
 public:
@@ -37,6 +37,9 @@ public:
 	
 	// Do the main work of the job. Takes in each frame, decodes it and then passes it along for analysis and then encoding
 	bool PerformProcessing();
+
+	// Dump the output data for this job
+	bool DumpOutput();
 };
 
 #endif

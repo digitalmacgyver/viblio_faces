@@ -9,6 +9,8 @@
 #ifndef __TRACKING_FACE__
 #define __TRACKING_FACE__
 
+#include "FaceAnalyzerConfiguration.h"
+
 #include <opencv2/opencv.hpp>
 #include <boost/uuid/uuid.hpp>
 
@@ -43,6 +45,9 @@ private:
 	// the amount of overlap between a potential detection of this face and the most recent estimated position of the face required for us to consider them one and then same
 	float m_overlapThresholdForSameFace;
 
+	// the minimum confidence level required before we consider the track lost
+	float m_faceTrackerConfidenceThreshold;
+
 	// stores a history of the frames location in recent frames (the number of frames in the past it will store is based on the face location history size parameter)
 	int m_faceLocationHistorySize;
 	std::map<uint64_t, cv::Rect> m_faceLocationHistory;
@@ -54,14 +59,16 @@ private:
 
 	// the tracker that will be used to track this face
 	Tracker_OpenTLD *m_faceTracker;
-
+	std::string Thumbnail_path;
 public:
-	Face(Tracker_OpenTLD *m_trackerToInitializeFrom, const cv::Mat frame, uint64_t frameTimestamp, cv::Rect initialFaceRegion);
+   	Face(Tracker_OpenTLD *m_trackerToInitializeFrom, const cv::Mat frame, uint64_t frameTimestamp, cv::Rect initialFaceRegion,FaceAnalyzerConfiguration *faceAnalyzerConfig);
 	~Face();
 
 	bool Process(const cv::Mat &frame, uint64_t frameTimestamp);
 
 	bool IsSameFace(const cv::Rect &otherFaceLocation);
+
+	std::string GetOutput();
 
 	boost::uuids::uuid GetFaceId(){ return m_faceId; }
 };
