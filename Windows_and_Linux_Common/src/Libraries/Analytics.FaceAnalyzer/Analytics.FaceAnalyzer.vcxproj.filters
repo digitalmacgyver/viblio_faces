@@ -1,0 +1,90 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Header Files\Detection">
+      <UniqueIdentifier>{bf18914e-677c-4b36-8174-268d568d85a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Tracking">
+      <UniqueIdentifier>{60e0e392-5f2e-4784-87dd-30ad6f07b0c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Recognition">
+      <UniqueIdentifier>{a3d5c094-b9b8-4e9f-b80d-3d9dcfb22ea9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Detection">
+      <UniqueIdentifier>{93dc2ed3-747a-41b1-ab80-bbaeca157f5a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Tracking">
+      <UniqueIdentifier>{d0158736-be62-428e-abfe-1ee35e662398}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Recognition">
+      <UniqueIdentifier>{e2b2113b-2351-4dc1-b735-2288872f8084}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="FaceAnalyzer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FaceAnalyzerConfiguration.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="EyeDetector_OpenCV.cpp">
+      <Filter>Source Files\Detection</Filter>
+    </ClCompile>
+    <ClCompile Include="FaceDetector_OpenCV.cpp">
+      <Filter>Source Files\Detection</Filter>
+    </ClCompile>
+    <ClCompile Include="Tracker_OpenTLD.cpp">
+      <Filter>Source Files\Tracking</Filter>
+    </ClCompile>
+    <ClCompile Include="TrackingController.cpp">
+      <Filter>Source Files\Tracking</Filter>
+    </ClCompile>
+    <ClCompile Include="Face.cpp">
+      <Filter>Source Files\Tracking</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="FaceAnalyzer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Analyzer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AnalyzerTypes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AnalyzerConfig.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FaceAnalyzerConfiguration.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EyeDetector_OpenCV.h">
+      <Filter>Header Files\Detection</Filter>
+    </ClInclude>
+    <ClInclude Include="FaceDetector_OpenCV.h">
+      <Filter>Header Files\Detection</Filter>
+    </ClInclude>
+    <ClInclude Include="Tracker_OpenTLD.h">
+      <Filter>Header Files\Tracking</Filter>
+    </ClInclude>
+    <ClInclude Include="TrackingController.h">
+      <Filter>Header Files\Tracking</Filter>
+    </ClInclude>
+    <ClInclude Include="Face.h">
+      <Filter>Header Files\Tracking</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
