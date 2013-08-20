@@ -5,7 +5,8 @@ FaceAnalyzer.cpp\
 Face.cpp\
 FaceDetector_OpenCV.cpp\
 Tracker_OpenTLD.cpp\
-TrackingController.cpp
+TrackingController.cpp\
+Jzon.cpp
 
 OBJS=$(SOURCES:.cpp=.o)
 CFLAGS=-std=c++0x -I../ -I../../../OpenTLD/src/libopentld/tld/

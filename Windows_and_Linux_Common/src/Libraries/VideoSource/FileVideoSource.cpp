@@ -7,60 +7,59 @@
 */
 
 #include "FileVideoSource.h"
+
 #include "FileSystem/FileSystem.h"
 #include <stdexcept>
-
 using namespace cv;
 using namespace std;
-
 
 namespace VideoSource
 {
 
-  FileVideoSource::FileVideoSource(const string &filename) : VideoSourceBase()
-  {
-    // check to make sure the file actually exists otherwise throw an exception
-    // ensure the input file actually exists
-    if( !FileSystem::FileExists( filename ) )
-      throw runtime_error("File " + filename + " does not exist");
+FileVideoSource::FileVideoSource(const string &filename) : VideoSourceBase()
+{
+	// check to make sure the file actually exists otherwise throw an exception
+	// ensure the input file actually exists
+	if( !FileSystem::FileExists( filename ) )
+		throw runtime_error("File " + filename + " does not exist");
 
-    // it exists so now try and create the OpenCV VideoCapture which will provide access to reading 
-    m_videoFile.reset( new VideoCapture(filename) );
+	// it exists so now try and create the OpenCV VideoCapture which will provide access to reading 
+	m_videoFile.reset( new VideoCapture(filename) );
 
-    if( !m_videoFile->isOpened() )
-      {
-	throw runtime_error("File " + filename + " could not be opened");
-      }
+	if( !m_videoFile->isOpened() )
+	{
+		throw runtime_error("File " + filename + " could not be opened");
+	}
+
+	
+}
 
 
-  }
+FileVideoSource::~FileVideoSource()
+{
+	m_videoFile->release();
+}
 
+// Returns the next frame from the video source
+cv::Mat FileVideoSource::GetNextFrame()
+{
+	Mat newFrame;
+	m_videoFile->read(newFrame);
+	return newFrame;
+}
 
-  FileVideoSource::~FileVideoSource()
-  {
-    m_videoFile->release();
-  }
+int FileVideoSource::NumberFrames()
+{
+	// not yet implemented
+	return -1;
+}
 
-  // Returns the next frame from the video source
-  cv::Mat FileVideoSource::GetNextFrame()
-  {
-    Mat newFrame;
-    m_videoFile->read(newFrame);
-    return newFrame;
-  }
-
-  int FileVideoSource::NumberFrames()
-  {
-    // not yet implemented
-    return -1;
-  }
-
-  uint64_t FileVideoSource::GetTimestamp()
-  {
-    // returns timestamp in milliseconds appended with "Frame_"
-    //std::string frame_timestamp;
-    //frame_timestamp="Frame_"+std::to_string(m_videoFile->get(CV_CAP_PROP_POS_MSEC));
-    return m_videoFile->get(CV_CAP_PROP_POS_MSEC);
-  }
+uint64_t FileVideoSource::GetTimestamp()
+{
+	// returns timestamp in milliseconds appended with "Frame_"
+	//std::string frame_timestamp;
+	//frame_timestamp="Frame_"+std::to_string(m_videoFile->get(CV_CAP_PROP_POS_MSEC));
+	return (uint16_t)m_videoFile->get(CV_CAP_PROP_POS_MSEC);
+}
 
 }

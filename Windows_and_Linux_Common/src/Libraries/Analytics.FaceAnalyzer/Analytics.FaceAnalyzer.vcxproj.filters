@@ -54,6 +54,9 @@
     <ClCompile Include="Face.cpp">
       <Filter>Source Files\Tracking</Filter>
     </ClCompile>
+    <ClCompile Include="Jzon.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FaceAnalyzer.h">
@@ -85,6 +88,9 @@
     </ClInclude>
     <ClInclude Include="Face.h">
       <Filter>Header Files\Tracking</Filter>
+    </ClInclude>
+    <ClInclude Include="Jzon.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

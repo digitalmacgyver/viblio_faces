@@ -30,6 +30,8 @@ private:
 	bool m_filterFacesByEyeDetections;
 	std::unique_ptr<EyeDetector_OpenCV> m_eyeDetector;
 
+	cv::Rect ConstrainRect(const cv::Rect &rectToConstrain, const cv::Size &imageSize);
+
 	// no copy constructor or assignment operator
 	FaceDetector_OpenCV(const FaceDetector_OpenCV&);
 	FaceDetector_OpenCV& operator=(const FaceDetector_OpenCV&);
