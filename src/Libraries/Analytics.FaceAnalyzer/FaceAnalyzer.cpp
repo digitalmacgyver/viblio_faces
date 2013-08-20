@@ -8,6 +8,7 @@
 
 */
 
+
 #include "FaceAnalyzer.h"
 #include "FaceAnalyzerConfiguration.h"
 #include "TrackingController.h"
@@ -55,13 +56,15 @@ void FaceAnalysis::Process(const Mat &frame, uint64_t frameTimestamp)
 	// do 2 things in parallel here
 	// 1. Perform face detection
 	vector<Rect> detectedFaces = m_faceDetector->Detect( frame );
-
+	
 	// 2. Pass the frame off to the tracking controller to update any active trackers
 	m_trackingController->Process(frame, frameTimestamp);
 
 	// Now examine any detected faces to determine if they are new faces or ones that are already being tracked (the tracking controller can tell you if they are new or not)
 	if( detectedFaces.size() > 0 )
 	{
+		cout <<"Detected Faces: "<<detectedFaces.size()<<endl;
+
 		// iterate over all the new detections for this frame
 		for( auto startIter=detectedFaces.begin(); startIter!=detectedFaces.end(); ++startIter)
 		{
@@ -79,7 +82,7 @@ void FaceAnalysis::Process(const Mat &frame, uint64_t frameTimestamp)
 
 std::string FaceAnalysis::GetOutput()
 {
-	return "";
+	return m_trackingController->GetOutput();
 }
 
 // end of namespaces

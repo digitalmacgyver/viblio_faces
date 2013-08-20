@@ -86,6 +86,7 @@ void TrackingController::AddNewTrack(const Mat &frame, uint64_t frameTimestamp, 
 	// that this new object is the one it was tracking previously). Alternatively, we could
 	// use the face recognition module to help us determine this (assuming we had enough images
 	// of the person we were tracking previously to be able to recognize them again in this
+
 	// 'new' detection). Lastly we could simply consider every person new and try and consolidate
 	// the people we are detected and tracked at the end of the processing (the problem with this
 	// approach is we might only have a few thumbnails of each person to work with. Probably best
@@ -121,6 +122,7 @@ void TrackingController::Process(const Mat &frame, uint64_t frameTimestamp)
 
 string TrackingController::GetOutput()
 {
+
 	string facesArrayJson = "";
 
 	for( auto startIter=m_trackedFaces.begin(); startIter!=m_trackedFaces.end(); ++startIter)

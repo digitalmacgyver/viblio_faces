@@ -16,6 +16,7 @@
 #include "Analytics.FaceAnalyzer/Analyzer.h"
 #include "VideoSource/VideoSource.h"
 
+
 class VideoProcessor
 {
 private:
@@ -39,7 +40,7 @@ public:
 	bool PerformProcessing();
 
 	// Dump the output data for this job
-	bool DumpOutput();
+	bool DumpOutput(const JobConfiguration &jobConfig);
 };
 
 #endif

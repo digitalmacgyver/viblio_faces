@@ -8,6 +8,8 @@
 
 */
 
+
+
 #include "boost/program_options.hpp"
 
 #include <iostream>
@@ -22,6 +24,7 @@
 #include "JobConfiguration.h"
 #include "Analytics.FaceAnalyzer/FaceAnalyzerConfiguration.h"
 #include "VideoProcessor.h"
+
 
 namespace po = boost::program_options;
 using namespace std;
@@ -61,9 +64,12 @@ int main(int argc, char* argv[])
 
 	// If we want to test directory creation..............
 	//std::string folder= "RamsriGolla";
-	//	bool file;
+	//bool file;
 	//FileSystem::CreateDirectory(folder);
-	//
+	//Jzon::Object root;
+	
+
+
 
 	JobConfiguration jobConfig;
 
@@ -124,7 +130,7 @@ int main(int argc, char* argv[])
 
 	videoProcessor.PerformProcessing();
 
-	videoProcessor.DumpOutput();
+	videoProcessor.DumpOutput(jobConfig);
 
 	return 0;
 }

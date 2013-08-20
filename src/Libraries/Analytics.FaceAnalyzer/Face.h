@@ -50,6 +50,7 @@ private:
 
 	// stores a history of the frames location in recent frames (the number of frames in the past it will store is based on the face location history size parameter)
 	int m_faceLocationHistorySize;
+	int no_of_thumbnails;
 	std::map<uint64_t, cv::Rect> m_faceLocationHistory;
 
 	// a vector of times when the face was visible in the scene. It is a vector of pairs of timestamps when the face entered and left (or was lost track of)
