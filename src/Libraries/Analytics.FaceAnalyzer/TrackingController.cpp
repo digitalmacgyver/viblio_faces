@@ -49,8 +49,8 @@ bool TrackingController::IsAlreadyBeingTracked(const Rect &newObjectLocation)
 	if( m_trackedFaces.size() == 0 )
 		return false;
 
-	if( m_trackedFaces.size() == 1 )
-		return true; // for the moment we will force only a single face to be tracked
+	//if( m_trackedFaces.size() == 1 )
+	//	return true; // for the moment we will force only a single face to be tracked
 
 	// not yet implemented. Currently always assumes there should only be 1 track thus if we are tracking
 	// something then the new object is simply this same object that we are tracking already.
@@ -108,8 +108,8 @@ void TrackingController::AddNewTrack(const Mat &frame, uint64_t frameTimestamp, 
 */
 void TrackingController::Process(const Mat &frame, uint64_t frameTimestamp)
 {
-	if( m_backgroundLearningTLD != NULL )
-		m_backgroundLearningTLD->Process(frame); // allow it to learn the background
+	//if( m_backgroundLearningTLD != NULL )
+	//	m_backgroundLearningTLD->Process(frame); // allow it to learn the background
 
 	// could call each of these trackers in parallel assuming they are independent (they should 
 	// be at least when they are estimating the new position of the object/face)
@@ -117,6 +117,89 @@ void TrackingController::Process(const Mat &frame, uint64_t frameTimestamp)
 	{
 		(*startIter)->Process( frame, frameTimestamp );
 	}
+
+	// check to make sure we don't have any face tracks that are actually of the same person. This can
+	// happen. If we start tracking person A and then we lose track of them (if they leave the scene) and
+	// then they come back in and we redetect using the face detector, setup a new tracker and start tracking
+	// only to later find that the original face tracker for A picks their track up again then we will have
+	// two trackers tracking the same person... we must detect this and consolidate them
+	int duplicateFaceIndex1 = 0;
+	int duplicateFaceIndex2 = 0;
+	while( DuplicateFacesDetected(duplicateFaceIndex1, duplicateFaceIndex2) )
+	{
+		// we may have to resolve more than 1 duplicate face in one iteration of the loop, hence the while loop
+
+		ResolveDuplicates(duplicateFaceIndex1, duplicateFaceIndex2);
+	}
+}
+
+/* 
+	Check to see if there are any face tracks that are actually of the same person
+*/
+bool TrackingController::DuplicateFacesDetected(int &redetectedFaceTrackerIndex, int &duplicateFaceIndex)
+{
+	redetectedFaceTrackerIndex = 0;
+	duplicateFaceIndex = 0;
+
+	if( m_trackedFaces.size() <= 1 )
+		return false; // we certainly can't have duplicate faces if we have 0 or 1 trackers
+
+	// now go through and check to see if any of the trackers were once lost and now are found. If they
+	// are we need to double check to ensure we don't have duplicate trackers
+	//		- if we do find duplicates we need to determine the older of the two and then call Merge on that one and pass it the newer one... we can then destroy the newer one
+	bool redetectedFacePresent = false;
+	for( auto startIter=m_trackedFaces.begin(); startIter!=m_trackedFaces.end(); ++startIter)
+	{
+		bool currentFaceWasLostNowFound = (*startIter)->WasLostNowFound();
+		if( currentFaceWasLostNowFound )
+		{
+			redetectedFacePresent = true; // we will have to do extra work to ensure this redetected face isn't now a duplicate
+			break;
+		}
+
+		redetectedFaceTrackerIndex++;
+	}
+
+	// we don't even have any faces which have recently been refound after being lost so we don't have
+	// a chance of any duplicates
+	if( !redetectedFacePresent )
+		return false;
+
+	// we have a track that was lost but is not found, lets make sure its not a duplicate
+	bool duplicateFound = false;
+	for(duplicateFaceIndex=0; duplicateFaceIndex<m_trackedFaces.size(); duplicateFaceIndex++)
+	{
+		if( duplicateFaceIndex != redetectedFaceTrackerIndex )
+		{
+			if( m_trackedFaces[redetectedFaceTrackerIndex]->IsSameFace( m_trackedFaces[duplicateFaceIndex]->GetMostRecentFacePosition() ) )
+			{
+				duplicateFound = true;
+				break;
+			}
+		}
+	}
+
+	return duplicateFound;
+}
+
+void TrackingController::ResolveDuplicates(int duplicateFaceIndex1, int duplicateFaceIndex2)
+{
+	std::cout << "About to resolve duplicates, number faces " << m_trackedFaces.size() << std::endl;
+	// we have found a face which is a duplicate, lets determine which of the two faces is the older
+	uint64_t age1 = m_trackedFaces[duplicateFaceIndex1]->Age();
+	uint64_t age2 = m_trackedFaces[duplicateFaceIndex2]->Age();
+
+	if( age1 < age2 )
+	{
+		m_trackedFaces[duplicateFaceIndex1]->Merge( m_trackedFaces[duplicateFaceIndex2] );
+		m_trackedFaces.erase(m_trackedFaces.begin()+duplicateFaceIndex2); // erase the newer one with index duplicateFaceIndex2
+	}
+	else
+	{
+		m_trackedFaces[duplicateFaceIndex2]->Merge( m_trackedFaces[duplicateFaceIndex1] );
+		m_trackedFaces.erase(m_trackedFaces.begin()+duplicateFaceIndex1); // erase the newer one with index duplicateFaceIndex1
+	}
+	std::cout << "Finished resolving duplicates, number faces " << m_trackedFaces.size() << std::endl;
 }
 
 string TrackingController::GetOutput()
@@ -129,6 +212,14 @@ string TrackingController::GetOutput()
 	}
 
 	return facesArrayJson;
+}
+
+void TrackingController::RenderVisualization(Mat &frame)
+{
+	for( auto startIter=m_trackedFaces.begin(); startIter!=m_trackedFaces.end(); ++startIter)
+	{
+		(*startIter)->RenderVisualization( frame );
+	}
 }
 
 // end of namespaces

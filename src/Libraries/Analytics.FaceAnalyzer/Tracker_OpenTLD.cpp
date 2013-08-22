@@ -67,7 +67,7 @@ void Tracker_OpenTLD::EnableAlternating()
 
 Rect Tracker_OpenTLD::Process(const Mat &frame)
 {
-	Mat frameCopy = frame.clone();
+	//Mat frameCopy = frame.clone();
 	static int currentFrameNumber = 1;
 
 	m_tldTracker->processImage(frame);
@@ -83,37 +83,37 @@ Rect Tracker_OpenTLD::Process(const Mat &frame)
 		//return trackingRect;
 	}
 
-	double threshold = 0.7f;
-	int confident = (m_confidence >= threshold) ? 1 : 0;
+	//double threshold = 0.7f;
+	//int confident = (m_confidence >= threshold) ? 1 : 0;
 
-	char statusString[128];
-	char learningString[10] = "";
-	double fps = 0.0f;
+	//char statusString[128];
+	//char learningString[10] = "";
+	//double fps = 0.0f;
 
-	if(m_tldTracker->learning)
-	{
-		strcpy(learningString, "Learning");
-	}
+	//if(m_tldTracker->learning)
+	//{
+	//	strcpy(learningString, "Learning");
+	//}
 
-	sprintf(statusString, "#%d,Posterior %.2f; fps: %.2f, #numwindows:%d, %s", currentFrameNumber - 1, m_tldTracker->currConf, fps, m_tldTracker->detectorCascade->numWindows, learningString);
-	CvScalar yellow = CV_RGB(255, 255, 0);
-	CvScalar blue = CV_RGB(0, 0, 255);
-	CvScalar black = CV_RGB(0, 0, 0);
-	CvScalar white = CV_RGB(255, 255, 255);
+	//sprintf(statusString, "#%d,Posterior %.2f; fps: %.2f, #numwindows:%d, %s", currentFrameNumber - 1, m_tldTracker->currConf, fps, m_tldTracker->detectorCascade->numWindows, learningString);
+	//CvScalar yellow = CV_RGB(255, 255, 0);
+	//CvScalar blue = CV_RGB(0, 0, 255);
+	//CvScalar black = CV_RGB(0, 0, 0);
+	//CvScalar white = CV_RGB(255, 255, 255);
 
-	if(m_tldTracker->currBB != NULL)
-	{
-		CvScalar rectangleColor = (confident) ? blue : yellow;
-		rectangle(frameCopy, *(m_tldTracker->currBB), rectangleColor, 8, 8, 0);
-	}
+	//if(m_tldTracker->currBB != NULL)
+	//{
+	//	CvScalar rectangleColor = (confident) ? blue : yellow;
+	//	rectangle(frameCopy, *(m_tldTracker->currBB), rectangleColor, 8, 8, 0);
+	//}
 
 
-	//CvFont font;
-	//cvInitFont(&font, CV_FONT_HERSHEY_SIMPLEX, .5, .5, 0, 1, 8);
-	rectangle(frameCopy, cvPoint(0, 0), cvPoint(frameCopy.cols, 50), black, CV_FILLED, 8, 0);
-	putText(frameCopy, statusString, cvPoint(25, 25), FONT_HERSHEY_SIMPLEX, 1.0f, white);
+	////CvFont font;
+	////cvInitFont(&font, CV_FONT_HERSHEY_SIMPLEX, .5, .5, 0, 1, 8);
+	//rectangle(frameCopy, cvPoint(0, 0), cvPoint(frameCopy.cols, 50), black, CV_FILLED, 8, 0);
+	//putText(frameCopy, statusString, cvPoint(25, 25), FONT_HERSHEY_SIMPLEX, 1.0f, white);
 
-	imshow("Tracking Window", frameCopy);
+	//imshow("Tracking Window", frameCopy);
 
 	return trackingRect;
 }

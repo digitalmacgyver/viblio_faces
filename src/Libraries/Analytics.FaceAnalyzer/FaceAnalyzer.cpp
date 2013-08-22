@@ -41,6 +41,8 @@ FaceAnalysis::FaceAnalysis(FaceAnalyzerConfiguration *faceAnalyzerConfig)
 	m_faceDetector.reset( new FaceDetector_OpenCV(faceAnalyzerConfig->faceDetectorCascadeFile, faceAnalyzerConfig->eyeDetectorCascadeFile) );
 
 	m_trackingController.reset( new TrackingController(faceAnalyzerConfig) );
+
+	m_renderVisualization = faceAnalyzerConfig->renderVisualization;
 }
 
 
@@ -75,6 +77,17 @@ void FaceAnalysis::Process(const Mat &frame, uint64_t frameTimestamp)
 		}
 	}
 
+	// now see if we need to render any visualizations
+	if( m_renderVisualization )
+	{
+		Mat frameCopy = frame.clone();
+
+		m_trackingController->RenderVisualization(frameCopy);
+
+		namedWindow("Visualization");
+		imshow("Visualization", frameCopy);
+		waitKey(2);
+	}
 }
 
 std::string FaceAnalysis::GetOutput()
