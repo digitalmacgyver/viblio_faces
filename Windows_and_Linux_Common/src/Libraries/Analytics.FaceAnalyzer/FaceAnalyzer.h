@@ -33,6 +33,8 @@ public:
 	~FaceAnalysis();
 
 	void Process(const cv::Mat &frame, uint64_t frameTimestamp);
+
+	std::string GetOutput();
 };
 
 // end of namespaces

@@ -11,9 +11,9 @@
 #include "EyeDetector_OpenCV.h"
 
 #include <string>
-#include <stdexcept>
 #include "opencv2/opencv.hpp"
 
+#include <stdexcept>
 using namespace std;
 using namespace cv;
 

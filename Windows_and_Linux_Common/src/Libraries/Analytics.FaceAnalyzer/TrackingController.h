@@ -12,44 +12,45 @@
 #define __TRACKING_CONTROLLER__
 
 #include <opencv2/opencv.hpp>
-#include <stdint.h>
 #include "FaceAnalyzerConfiguration.h"
-
+#include <stdint.h>
 
 namespace Analytics
 {
-  namespace FaceAnalyzer
-  {
+	namespace FaceAnalyzer
+	{
 
-    // fwd declarations
-    class Tracker_OpenTLD;
-    class Face;
+// fwd declarations
+class Tracker_OpenTLD;
+class Face;
 
 class TrackingController
 {
- private:
-  std::vector<Face*> m_trackedFaces;
+private:
+	std::vector<Face*> m_trackedFaces;
 
-  // no copy constructor or assignment operator
-  TrackingController(const TrackingController&);
-  TrackingController& operator=(const TrackingController&);
+	// no copy constructor or assignment operator
+	TrackingController(const TrackingController&);
+	TrackingController& operator=(const TrackingController&);
 
-  Tracker_OpenTLD *m_backgroundLearningTLD;
+	Tracker_OpenTLD *m_backgroundLearningTLD;
 
-  FaceAnalyzerConfiguration *faceAnalyzerConfig;
- public:
-  TrackingController(FaceAnalyzerConfiguration *faceAnalyzerConfiguration);
-  ~TrackingController();
+	FaceAnalyzerConfiguration *faceAnalyzerConfig;
+public:
+	TrackingController(FaceAnalyzerConfiguration *faceAnalyzerConfiguration);
+	~TrackingController();
 
-  bool IsAlreadyBeingTracked(const cv::Rect &newObjectLocation);
+	bool IsAlreadyBeingTracked(const cv::Rect &newObjectLocation);
 
-  void AddNewTrack(const cv::Mat &frame, cv::Rect &objectLocation);
+	void AddNewTrack(const cv::Mat &frame, uint64_t frameTimestamp, cv::Rect &objectLocation);
 
-  void Process(const cv::Mat &frame, uint64_t frameTimestamp);
+	void Process(const cv::Mat &frame, uint64_t frameTimestamp);
+
+	std::string GetOutput();
 };
 
 // end of namespaces
-  }
+	}
 }
 
 #endif

@@ -10,14 +10,13 @@
 
 #include <map>
 
-
 namespace FileSystem
 {
-  bool GetDirectoryContents(const std::string &directory, std::map<std::string,bool> &contents);
+	bool GetDirectoryContents(const std::string &directory, std::map<std::string,bool> &contents);
 
-  bool FileExists(const std::string &filename);
+	bool FileExists(const std::string &filename);
 
-  bool DirectoryExists(const std::string &path);
+	bool DirectoryExists(const std::string &path);
 
-  bool CreateDirectory(const std::string &dir_name);
+	bool CreateDirectory(const std::string &dir_name);
 }

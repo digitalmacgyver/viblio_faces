@@ -16,6 +16,7 @@
     <ClCompile Include="FaceAnalyzer.cpp" />
     <ClCompile Include="FaceAnalyzerConfiguration.cpp" />
     <ClCompile Include="FaceDetector_OpenCV.cpp" />
+    <ClCompile Include="Jzon.cpp" />
     <ClCompile Include="Tracker_OpenTLD.cpp" />
     <ClCompile Include="TrackingController.cpp" />
   </ItemGroup>
@@ -28,6 +29,7 @@
     <ClInclude Include="FaceAnalyzer.h" />
     <ClInclude Include="FaceAnalyzerConfiguration.h" />
     <ClInclude Include="FaceDetector_OpenCV.h" />
+    <ClInclude Include="Jzon.h" />
     <ClInclude Include="Tracker_OpenTLD.h" />
     <ClInclude Include="TrackingController.h" />
   </ItemGroup>
@@ -68,7 +70,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..;..\..\..\libs\OpenCV-2.4.5\include;..\..\..\libs\OpenTLD\src\libopentld\tld;..\..\..\libs\boost_1_53_0\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..;..\..\..\libs\OpenCV-2.4.5\include;..\..\..\libs\OpenTLD\src\libopentld\tld;..\..\..\libs\boost_1_53_0\include;..\..\..\libs\json_spirit_v4.06\json_spirit</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

@@ -12,6 +12,10 @@
 #include "VideoSource/FileVideoSource.h"
 #include "Analytics.FaceAnalyzer/FaceAnalyzer.h"
 #include "FileSystem/FileSystem.h"
+#include "Jzon.h"
+#include <boost/uuid/uuid.hpp>            // uuid class
+#include <boost/uuid/uuid_generators.hpp> // generators
+#include <boost/uuid/uuid_io.hpp>         // streaming operators etc.
 
 #include <opencv2/opencv.hpp>
 #include <string>
@@ -92,7 +96,7 @@ bool VideoProcessor::PerformProcessing()
 	return true;
 }
 
-bool VideoProcessor::DumpOutput()
+bool VideoProcessor::DumpOutput(const JobConfiguration &jobConfig)
 {
 	/*
 	{
@@ -117,6 +121,19 @@ bool VideoProcessor::DumpOutput()
 
 	for(auto startIter=m_analyzers.begin(); startIter != m_analyzers.end(); ++startIter)
 		outputJsonData += (*startIter)->GetOutput();
+	
+	Jzon::Object rootNode;
+        Jzon::Parser parser(rootNode,outputJsonData);
+		if (!parser.Parse())
+        {
+                std::cout << "Error: " << parser.GetError() << std::endl;
+        }
+
+		rootNode.Add("video_file_processed",jobConfig.videoSourceFilename);
+		boost::uuids::uuid uuid = boost::uuids::random_generator()();
+		std::stringstream ss;
+		ss << uuid;
+		Jzon::FileWriter::WriteFile(ss.str()+".json", rootNode, Jzon::StandardFormat);
 
 	// now open a file (perhaps using the unique Job ID as the file name, with a .json extension) and dump the data to it
 

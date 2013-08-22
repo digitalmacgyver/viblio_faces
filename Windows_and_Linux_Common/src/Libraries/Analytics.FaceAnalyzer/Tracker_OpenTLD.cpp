@@ -113,7 +113,7 @@ Rect Tracker_OpenTLD::Process(const Mat &frame)
 	rectangle(frameCopy, cvPoint(0, 0), cvPoint(frameCopy.cols, 50), black, CV_FILLED, 8, 0);
 	putText(frameCopy, statusString, cvPoint(25, 25), FONT_HERSHEY_SIMPLEX, 1.0f, white);
 
-	  //imshow("Tracking Window", frameCopy);
+	imshow("Tracking Window", frameCopy);
 
 	return trackingRect;
 }

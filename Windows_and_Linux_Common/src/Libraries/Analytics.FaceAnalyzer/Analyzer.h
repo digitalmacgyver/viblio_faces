@@ -31,6 +31,8 @@ public:
 	virtual ~Analyzer(){};
 
 	virtual void Process(const cv::Mat &frame, uint64_t frameTimestamp) = 0;
+
+	virtual std::string GetOutput() = 0;
 };
 
 // end of namespaces

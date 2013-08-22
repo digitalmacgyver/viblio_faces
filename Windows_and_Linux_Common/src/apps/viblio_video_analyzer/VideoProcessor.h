@@ -19,25 +19,28 @@
 
 class VideoProcessor
 {
- private:
-  // no copy constructor or assignment operator
-  VideoProcessor(const VideoProcessor&);
-  VideoProcessor& operator=(const VideoProcessor&);
+private:
+	// no copy constructor or assignment operator
+	VideoProcessor(const VideoProcessor&);
+	VideoProcessor& operator=(const VideoProcessor&);
 
-  // the vector of analyzers that will be used for this video processing job
-  std::vector<Analytics::Analyzer*> m_analyzers;
+	// the vector of analyzers that will be used for this video processing job
+	std::vector<Analytics::Analyzer*> m_analyzers;
 
-  // the video source that will be supplying us with frames for analysis
-  VideoSource::VideoSourceBase *m_videoSource;
+	// the video source that will be supplying us with frames for analysis
+	VideoSource::VideoSourceBase *m_videoSource;
+	
+	bool SetupAnalyzers(const JobConfiguration &jobConfig);
 
-  bool SetupAnalyzers(const JobConfiguration &jobConfig);
+public:
+	VideoProcessor(const JobConfiguration &jobConfig);
+	~VideoProcessor();
+	
+	// Do the main work of the job. Takes in each frame, decodes it and then passes it along for analysis and then encoding
+	bool PerformProcessing();
 
- public:
-  VideoProcessor(const JobConfiguration &jobConfig);
-  ~VideoProcessor();
-
-  // Do the main work of the job. Takes in each frame, decodes it and then passes it along for analysis and then encoding
-  bool PerformProcessing();
+	// Dump the output data for this job
+	bool DumpOutput(const JobConfiguration &jobConfig);
 };
 
 #endif
