@@ -32,7 +32,7 @@ Face::Face(Tracker_OpenTLD *m_trackerToInitializeFrom, const Mat frame, uint64_t
 	// however this is yet TBD
 	m_faceTracker = new Tracker_OpenTLD();//m_trackerToInitializeFrom;
 	
-	
+	face_detector_check.reset( new FaceDetector_OpenCV(faceAnalyzerConfig->faceDetectorCascadeFile, faceAnalyzerConfig->eyeDetectorCascadeFile) );
 	m_faceTracker->InitialiseTrack(frame, initialFaceRegion);
 	Thumbnail_path = faceAnalyzerConfig->faceThumbnailOutputPath;
 
@@ -154,16 +154,24 @@ bool Face::Process(const Mat &frame, uint64_t frameTimestamp)
 		// Saving a frame for every 800 milliseconds for a tracked frame when Thumbnail path is provided
 		if( !Thumbnail_path.empty() )
 		{
-			if(!has_thumbnails)
-			{
-				std::stringstream ss;
-				ss << m_faceId;
-				std::string path =Thumbnail_path+"/"+ss.str();
-				FileSystem::CreateDirectory(path);
-			}
-			has_thumbnails = true;
+			
 			//if((frameTimestamp-m_currentFaceVisiblePair.first)%800 ==0)
 				//{
+			
+			    Mat thumbnail_temp =  frame(m_currentEstimatedPosition);
+				vector<Rect> faces_detected =face_detector_check->Detect(thumbnail_temp);
+				if(faces_detected.size()>0 && no_of_thumbnails<10)
+				{
+					if(!has_thumbnails)
+					{
+					std::stringstream ss;
+					ss << m_faceId;
+					std::string path =Thumbnail_path+"/"+ss.str();
+					FileSystem::CreateDirectory(path);
+					}
+					has_thumbnails = true;
+
+					
 				oss << frameTimestamp;
 				std::stringstream uuid;
 				uuid << m_faceId;
@@ -172,6 +180,7 @@ bool Face::Process(const Mat &frame, uint64_t frameTimestamp)
 				imwrite( imagepath,frame(m_currentEstimatedPosition));
 				cout << " Tracking for frame extracted. Frame saved at : "<<  (frameTimestamp-m_currentFaceVisiblePair.first)<<  endl;
 				no_of_thumbnails = no_of_thumbnails+1;
+				}
 			   // }
 		}
 		if( m_faceLocationHistory.size() >= m_faceLocationHistorySize )

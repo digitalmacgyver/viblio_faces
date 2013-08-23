@@ -21,14 +21,14 @@ namespace Analytics
 
 // fwd declarations
 class Tracker_OpenTLD;
-
+class FaceDetector_OpenCV;
 class Face
 {
 private:
 	// no copy constructor or assignment operator
 	Face(const Face&);
 	Face& operator=(const Face&);
-
+	std::unique_ptr<FaceDetector_OpenCV> face_detector_check;
 	// a unique identifier for this face
 	boost::uuids::uuid m_faceId;
 

@@ -108,7 +108,7 @@ vector<Rect> FaceDetector_OpenCV::Detect(const Mat &frame)
 		}
 
 		//-- Show what you got
-		imshow( "temp", frameCopy );
+		//imshow( "temp", frameCopy );
 
 		return filteredFaces;
 	}
@@ -121,7 +121,7 @@ vector<Rect> FaceDetector_OpenCV::Detect(const Mat &frame)
 			ellipse( frameCopy, center, Size( int(faces[0].width*0.5f), int(faces[0].height*0.5f)), 0, 0, 360, Scalar( 255, 0, 0 ), 2, 8, 0 );
 		}
 		//-- Show what you got
-		imshow( "temp", frameCopy );
+	//	imshow( "temp", frameCopy );
 
 		// no filtering so just return the found faces
 		return faces;
