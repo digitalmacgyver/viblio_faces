@@ -36,7 +36,8 @@ FaceAnalysis::FaceAnalysis(FaceAnalyzerConfiguration *faceAnalyzerConfig)
 		// if they specified an output path for thumbnails then make sure it exists, if it doesn't
 		// its an error so we will throw an exception (perhaps in future we could create the path?)
 		if( !FileSystem::DirectoryExists(faceAnalyzerConfig->faceThumbnailOutputPath) )
-			throw runtime_error("Specified output thumbnail directory does not exist");
+			FileSystem::CreateDirectory(faceAnalyzerConfig->faceThumbnailOutputPath);
+			//throw runtime_error("Specified output thumbnail directory does not exist");
 	}
 
 	m_faceDetector.reset( new FaceDetector_OpenCV(faceAnalyzerConfig->faceDetectorCascadeFile, faceAnalyzerConfig->eyeDetectorCascadeFile) );
