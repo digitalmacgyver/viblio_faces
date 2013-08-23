@@ -5,9 +5,10 @@
 
 	Author: Jason Catchpole (jason@viblio.com)
 */
-#include "boost/filesystem.hpp"
+
 #include "FileSystem.h"
-#include <string>
+#include "boost/filesystem.hpp"
+//#include <string>
 
 using namespace std;
 using namespace boost::filesystem;

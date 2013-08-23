@@ -24,6 +24,8 @@ private:
 
 	std::unique_ptr<TrackingController> m_trackingController;
 
+	bool m_renderVisualization;
+
 	// no copy constructor or assignment operator
 	FaceAnalysis(const FaceAnalysis&);
 	FaceAnalysis& operator=(const FaceAnalysis&);

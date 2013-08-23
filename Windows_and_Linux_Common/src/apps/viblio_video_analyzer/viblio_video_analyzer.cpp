@@ -47,6 +47,7 @@ int main(int argc, char* argv[])
 		("face_detector_cascade_file", po::value<string>(), "the path to the cascade file to use for face detection")
 		("eye_detector_cascade_file", po::value<string>(), "the path to the cascade file to use for eye detection")
 		("face_thumbnail_path", po::value<string>(), "the location to put output facial thumbnails generated")
+		("render_visualization", "determines whether visualizations will be rendered")
 		;
 
 	po::variables_map variableMap;
@@ -153,6 +154,12 @@ void ExtractFaceAnalysisParameters( po::variables_map variableMap, Analytics::Fa
 	if (variableMap.count("face_thumbnail_path")) 
 	{
 		faceAnalyzerConfig->faceThumbnailOutputPath = variableMap["face_thumbnail_path"].as<string>();
+
+	}
+
+	if (variableMap.count("render_visualization")) 
+	{
+		faceAnalyzerConfig->renderVisualization = true;
 	}
 }
 

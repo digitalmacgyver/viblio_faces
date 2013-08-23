@@ -13,9 +13,8 @@
 #include "FaceAnalyzerConfiguration.h"
 #include "TrackingController.h"
 #include "FileSystem/FileSystem.h"
-
-#include <opencv2/opencv.hpp>
 #include <stdexcept>
+#include <opencv2/opencv.hpp>
 
 using namespace std;
 using namespace cv;
@@ -37,12 +36,15 @@ FaceAnalysis::FaceAnalysis(FaceAnalyzerConfiguration *faceAnalyzerConfig)
 		// if they specified an output path for thumbnails then make sure it exists, if it doesn't
 		// its an error so we will throw an exception (perhaps in future we could create the path?)
 		if( !FileSystem::DirectoryExists(faceAnalyzerConfig->faceThumbnailOutputPath) )
-			throw runtime_error("Specified output thumbnail directory does not exist");
+			FileSystem::CreateDirectory(faceAnalyzerConfig->faceThumbnailOutputPath);
+			//throw runtime_error("Specified output thumbnail directory does not exist");
 	}
 
 	m_faceDetector.reset( new FaceDetector_OpenCV(faceAnalyzerConfig->faceDetectorCascadeFile, faceAnalyzerConfig->eyeDetectorCascadeFile) );
 
 	m_trackingController.reset( new TrackingController(faceAnalyzerConfig) );
+
+	m_renderVisualization = faceAnalyzerConfig->renderVisualization;
 }
 
 
@@ -79,6 +81,17 @@ void FaceAnalysis::Process(const Mat &frame, uint64_t frameTimestamp)
 		}
 	}
 
+	// now see if we need to render any visualizations
+	if( m_renderVisualization )
+	{
+		Mat frameCopy = frame.clone();
+
+		m_trackingController->RenderVisualization(frameCopy);
+
+		namedWindow("Visualization");
+		imshow("Visualization", frameCopy);
+		waitKey(2);
+	}
 }
 
 std::string FaceAnalysis::GetOutput()

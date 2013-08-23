@@ -40,6 +40,9 @@ public:
 
 	// a path to the location where to write the thumbnails that are extracted
 	std::string faceThumbnailOutputPath;
+
+	// if enabled visualizations of the detection, tracking and recognition will be displayed during processing
+	bool renderVisualization;
 };
 
 

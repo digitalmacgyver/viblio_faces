@@ -36,6 +36,10 @@ private:
 	Tracker_OpenTLD *m_backgroundLearningTLD;
 
 	FaceAnalyzerConfiguration *faceAnalyzerConfig;
+
+	// check to see if there are any face tracks that are actually of the same person
+	bool DuplicateFacesDetected(int &redetectedFaceTrackerIndex, int &duplicateFaceIndex);
+	void ResolveDuplicates(int duplicateFaceIndex1, int duplicateFaceIndex2);
 public:
 	TrackingController(FaceAnalyzerConfiguration *faceAnalyzerConfiguration);
 	~TrackingController();
@@ -47,6 +51,8 @@ public:
 	void Process(const cv::Mat &frame, uint64_t frameTimestamp);
 
 	std::string GetOutput();
+
+	void RenderVisualization(cv::Mat &frame);
 };
 
 // end of namespaces

@@ -9,7 +9,7 @@
 #pragma once
 
 #include <map>
-
+#include <string>
 namespace FileSystem
 {
 	bool GetDirectoryContents(const std::string &directory, std::map<std::string,bool> &contents);
