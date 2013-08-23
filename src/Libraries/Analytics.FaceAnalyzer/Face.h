@@ -36,6 +36,8 @@ private:
 	// are simply out of view of the camera (occluded etc)
 	bool m_isLost;
 
+	bool has_thumbnails;
+
 	// this bool is set to true when this face track was lost but is then found again, this can
 	// happen with a discriminative tracker with the capability to automatically redetect & track
 	// an object (face) even after it was lost

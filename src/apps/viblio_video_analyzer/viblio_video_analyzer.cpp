@@ -154,6 +154,7 @@ void ExtractFaceAnalysisParameters( po::variables_map variableMap, Analytics::Fa
 	if (variableMap.count("face_thumbnail_path")) 
 	{
 		faceAnalyzerConfig->faceThumbnailOutputPath = variableMap["face_thumbnail_path"].as<string>();
+
 	}
 
 	if (variableMap.count("render_visualization")) 

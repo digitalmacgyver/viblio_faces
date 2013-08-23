@@ -2,6 +2,7 @@
 #include "Tracker_OpenTLD.h"
 #include "FaceAnalyzerConfiguration.h"
 #include "Jzon.h"
+#include "FileSystem/FileSystem.h"
 
 #include <boost/uuid/uuid.hpp>
 #include <boost/uuid/uuid_generators.hpp>
@@ -24,13 +25,14 @@ Face::Face(Tracker_OpenTLD *m_trackerToInitializeFrom, const Mat frame, uint64_t
 	  m_faceLocationHistorySize(1296000), // we theoretically store the face location history information for every frame we have tracked, in practice we have an upper bounds to prevent the size of this map going silly. Max size for video @30fps for 12 hrs ~ 40MB of RAM
 	  m_overlapThresholdForSameFace(0.5f),
 	  m_faceTrackerConfidenceThreshold(0.5f),
-	  no_of_thumbnails(0)
+	  no_of_thumbnails(0),
+	  has_thumbnails(false)
 {
 	// in a real system we will probably take a copy of the tracker to initialize the face from as it has learned the background,
 	// however this is yet TBD
 	m_faceTracker = new Tracker_OpenTLD();//m_trackerToInitializeFrom;
 	
-	cout << "Hello " << endl;
+	
 	m_faceTracker->InitialiseTrack(frame, initialFaceRegion);
 	Thumbnail_path = faceAnalyzerConfig->faceThumbnailOutputPath;
 
@@ -106,6 +108,7 @@ bool Face::Process(const Mat &frame, uint64_t frameTimestamp)
 
 	if( m_isLost && m_faceTracker->GetConfidence() >= m_faceTrackerConfidenceThreshold )
 	{
+		
 		// the face was lost but not anymore
 		m_isLost = false;
 
@@ -146,14 +149,26 @@ bool Face::Process(const Mat &frame, uint64_t frameTimestamp)
 		// 1) Determine if we need to produce a thumbnail
 		// 2) Determine if we need to apply recognition to the face
 		// 3) Store the face's location in the location history map
+		
 
 		// Saving a frame for every 800 milliseconds for a tracked frame when Thumbnail path is provided
 		if( !Thumbnail_path.empty() )
 		{
+			if(!has_thumbnails)
+			{
+				std::stringstream ss;
+				ss << m_faceId;
+				std::string path =Thumbnail_path+"/"+ss.str();
+				FileSystem::CreateDirectory(path);
+			}
+			has_thumbnails = true;
 			//if((frameTimestamp-m_currentFaceVisiblePair.first)%800 ==0)
 				//{
 				oss << frameTimestamp;
-				imagepath =Thumbnail_path+ "/image"+oss.str()+".png";
+				std::stringstream uuid;
+				uuid << m_faceId;
+
+				imagepath =Thumbnail_path+"/"+uuid.str()+ "/image"+oss.str()+".png";
 				imwrite( imagepath,frame(m_currentEstimatedPosition));
 				cout << " Tracking for frame extracted. Frame saved at : "<<  (frameTimestamp-m_currentFaceVisiblePair.first)<<  endl;
 				no_of_thumbnails = no_of_thumbnails+1;
