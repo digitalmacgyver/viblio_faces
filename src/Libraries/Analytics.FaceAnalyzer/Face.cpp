@@ -32,7 +32,7 @@ Face::Face(Tracker_OpenTLD *m_trackerToInitializeFrom, const Mat frame, uint64_t
 	// in a real system we will probably take a copy of the tracker to initialize the face from as it has learned the background,
 	// however this is yet TBD
 	m_faceTracker = new Tracker_OpenTLD();//m_trackerToInitializeFrom;
-	
+
 	face_detector_check.reset( new FaceDetector_OpenCV(faceAnalyzerConfig->faceDetectorCascadeFile, faceAnalyzerConfig->eyeDetectorCascadeFile) );
 	m_faceTracker->InitialiseTrack(frame, initialFaceRegion);
 	Thumbnail_path = faceAnalyzerConfig->faceThumbnailOutputPath;
@@ -48,7 +48,7 @@ Face::Face(Tracker_OpenTLD *m_trackerToInitializeFrom, const Mat frame, uint64_t
 
 Face::~Face()
 {
-	
+
 	if( !m_isLost )
 	{
 		// before we finished we were tracking a face so close off our last measurement using the last seen frame timestamp
@@ -103,13 +103,13 @@ bool Face::Process(const Mat &frame, uint64_t frameTimestamp)
 	m_wasLostIsNowFound = false;
 
 	m_currentEstimatedPosition = m_faceTracker->Process(frame);
-		
+
 	std::ostringstream oss;
 	std::string imagepath;
 
 	if( m_isLost && m_faceTracker->GetConfidence() >= m_faceTrackerConfidenceThreshold )
 	{
-		
+
 		// the face was lost but not anymore
 		m_isLost = false;
 
@@ -142,7 +142,7 @@ bool Face::Process(const Mat &frame, uint64_t frameTimestamp)
 
 		// nothing really to do here
 	}
-	
+
 
 	if( !m_isLost )
 	{
@@ -150,16 +150,16 @@ bool Face::Process(const Mat &frame, uint64_t frameTimestamp)
 		// 1) Determine if we need to produce a thumbnail
 		// 2) Determine if we need to apply recognition to the face
 		// 3) Store the face's location in the location history map
-		
+
 
 		// Saving a frame for every 800 milliseconds for a tracked frame when Thumbnail path is provided
 		if( !Thumbnail_path.empty() )
 		{
-			
+
 			//if((frameTimestamp-m_currentFaceVisiblePair.first)%800 ==0)
 				//{
-			
-			
+
+
 			Mat thumbnail_temp =  frame(m_currentEstimatedPosition).clone();
 				vector<Rect> faces_detected =face_detector_check->Detect(thumbnail_temp);
 				//if(faces_detected.size()>0 && no_of_thumbnails<10)
@@ -320,13 +320,13 @@ string Face::GetOutput()
 			   imagepath =Thumbnail_path+"/"+ss.str()+ "/image"+oss.str()+".png";
 				imwrite( imagepath,k);
 					}
-	
+
 
     // Defining a jason object and adding some attributes and their values
 	 Jzon::Object root;
         root.Add("UUID", ss.str());
         root.Add("number_of_thumbnails", no_of_thumbnails);
-		
+
    // Adding visibility information as an array under visibilty info attribute
 	 Jzon::Array visibilty_info;
 	 std::vector<std::pair<uint64_t, uint64_t>>::iterator iter = m_timesWhenFaceVisible.begin();
@@ -355,7 +355,7 @@ string Face::GetOutput()
 			rect_info.Add(each_rect);
 		}
 		root.Add("face_rectangles",rect_info);
-		
+
 		Jzon::Writer writer(root, Jzon::StandardFormat);
         writer.Write();
 		// Writing everything ot a string to export

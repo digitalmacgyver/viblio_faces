@@ -11,7 +11,7 @@
 
 #include <memory>
 #include "VideoSource/VideoSourceTypes.h"
-
+#include <string>
 // forward declarations of all the various configuration types we will be using in this class
 namespace Analytics {
 	namespace FaceAnalyzer {

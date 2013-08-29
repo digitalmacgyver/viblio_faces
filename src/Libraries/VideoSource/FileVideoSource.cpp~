@@ -7,7 +7,7 @@
 */
 
 #include "FileVideoSource.h"
-#include <stdexcept>
+
 #include "FileSystem/FileSystem.h"
 
 using namespace cv;
