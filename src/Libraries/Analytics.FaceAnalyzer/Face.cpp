@@ -25,6 +25,7 @@ Face::Face(Tracker_OpenTLD *m_trackerToInitializeFrom, const Mat frame, uint64_t
 	  m_faceLocationHistorySize(1296000), // we theoretically store the face location history information for every frame we have tracked, in practice we have an upper bounds to prevent the size of this map going silly. Max size for video @30fps for 12 hrs ~ 40MB of RAM
 	  m_overlapThresholdForSameFace(0.5f),
 	  m_faceTrackerConfidenceThreshold(0.5f),
+	  m_thumbnailConfidenceSize(5),
 	  no_of_thumbnails(0),
 	  has_thumbnails(false)
 {
@@ -158,9 +159,11 @@ bool Face::Process(const Mat &frame, uint64_t frameTimestamp)
 			//if((frameTimestamp-m_currentFaceVisiblePair.first)%800 ==0)
 				//{
 			
-			    Mat thumbnail_temp =  frame(m_currentEstimatedPosition);
+			
+			Mat thumbnail_temp =  frame(m_currentEstimatedPosition).clone();
 				vector<Rect> faces_detected =face_detector_check->Detect(thumbnail_temp);
-				if(faces_detected.size()>0 && no_of_thumbnails<10)
+				//if(faces_detected.size()>0 && no_of_thumbnails<10)
+				if(faces_detected.size()>0)
 				{
 					if(!has_thumbnails)
 					{
@@ -171,7 +174,23 @@ bool Face::Process(const Mat &frame, uint64_t frameTimestamp)
 					}
 					has_thumbnails = true;
 
-					
+					if( m_thumbnailConfidence.size() == m_thumbnailConfidenceSize && (m_faceTracker->GetConfidence()>m_thumbnailConfidence.begin()->first))
+					{m_thumbnailConfidence.erase( m_thumbnailConfidence.begin() );
+					 m_thumbnailConfidence.insert (m_thumbnailConfidence.end(), pair<float,Mat>(m_faceTracker->GetConfidence(),thumbnail_temp));
+					}
+					else if (m_thumbnailConfidence.size() != m_thumbnailConfidenceSize)
+					m_thumbnailConfidence.insert (m_thumbnailConfidence.end(), pair<float,Mat>(m_faceTracker->GetConfidence(),thumbnail_temp));
+				/*	
+				for(std::map<float,Mat>::iterator iter = m_thumbnailConfidence.begin(); iter != m_thumbnailConfidence.end(); ++iter)
+					{
+						float k =  iter->first;
+						cout << k << " ";
+						//ignore value
+						//Value v = iter->second;
+					}
+				cout << endl;
+				
+			
 				oss << frameTimestamp;
 				std::stringstream uuid;
 				uuid << m_faceId;
@@ -179,6 +198,8 @@ bool Face::Process(const Mat &frame, uint64_t frameTimestamp)
 				imagepath =Thumbnail_path+"/"+uuid.str()+ "/image"+oss.str()+".png";
 				imwrite( imagepath,frame(m_currentEstimatedPosition));
 				cout << " Tracking for frame extracted. Frame saved at : "<<  (frameTimestamp-m_currentFaceVisiblePair.first)<<  endl;
+				  */
+
 				no_of_thumbnails = no_of_thumbnails+1;
 				}
 			   // }
@@ -285,6 +306,21 @@ string Face::GetOutput()
 	// Getting UUid to string
 	std::stringstream ss;
 		ss << m_faceId;
+	// Store the top five thumbnails
+		string imagepath;
+		int count=0;
+		cout << " No of faces : " << m_thumbnailConfidence.size();
+	for(std::map<float,Mat>::iterator iter = m_thumbnailConfidence.begin(); iter != m_thumbnailConfidence.end(); ++iter)
+					{
+						count++;
+						Mat k =  iter->second;
+					std::stringstream oss;
+				//oss << frameTimestamp;
+					oss << count;
+			   imagepath =Thumbnail_path+"/"+ss.str()+ "/image"+oss.str()+".png";
+				imwrite( imagepath,k);
+					}
+	
 
     // Defining a jason object and adding some attributes and their values
 	 Jzon::Object root;

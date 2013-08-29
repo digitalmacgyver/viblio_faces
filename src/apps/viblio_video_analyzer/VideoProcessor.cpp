@@ -78,10 +78,15 @@ bool VideoProcessor::PerformProcessing()
 	// go through each frame from the video source and pass it along to each of the analyzers
 	Mat currentFrame;
 	uint64_t timestamp;
+	int TotalFrames;
+	int CurrentFrameNumber;
 	while(true)
 	{
 		currentFrame = m_videoSource->GetNextFrame();
 		timestamp = m_videoSource->GetTimestamp();
+		TotalFrames=m_videoSource->NumberFrames();
+		CurrentFrameNumber=m_videoSource->CurrentFrameNo();
+		cout<<"Processing Frame no : " <<CurrentFrameNumber << " of " << TotalFrames << " Total " <<endl;
 		// Printing the current Timestamp
 		//cout<< "Time stamp : " << timestamp<<endl;
 		if( currentFrame.empty() )

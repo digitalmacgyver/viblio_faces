@@ -45,15 +45,20 @@ cv::Mat FileVideoSource::GetNextFrame()
 {
 	Mat newFrame;
 	m_videoFile->read(newFrame);
+	
 	return newFrame;
 }
 
 int FileVideoSource::NumberFrames()
 {
 	// not yet implemented
-	return -1;
+	return m_videoFile->get(CV_CAP_PROP_FRAME_COUNT); 
 }
 
+int FileVideoSource::CurrentFrameNo()
+{
+	return m_videoFile->get(CV_CAP_PROP_POS_FRAMES);
+}
 uint64_t FileVideoSource::GetTimestamp()
 {
 	// returns timestamp in milliseconds appended with "Frame_"

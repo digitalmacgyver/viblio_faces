@@ -66,7 +66,7 @@ void FaceAnalysis::Process(const Mat &frame, uint64_t frameTimestamp)
 	// Now examine any detected faces to determine if they are new faces or ones that are already being tracked (the tracking controller can tell you if they are new or not)
 	if( detectedFaces.size() > 0 )
 	{
-		cout <<"Detected Faces: "<<detectedFaces.size()<<endl;
+		//cout <<"Detected Faces: "<<detectedFaces.size()<<endl;
 
 		// iterate over all the new detections for this frame
 		for( auto startIter=detectedFaces.begin(); startIter!=detectedFaces.end(); ++startIter)

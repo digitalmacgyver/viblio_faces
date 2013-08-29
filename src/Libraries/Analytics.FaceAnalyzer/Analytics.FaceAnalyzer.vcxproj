@@ -17,6 +17,7 @@
     <ClCompile Include="FaceAnalyzerConfiguration.cpp" />
     <ClCompile Include="FaceDetector_OpenCV.cpp" />
     <ClCompile Include="Jzon.cpp" />
+    <ClCompile Include="ThumbNail.cpp" />
     <ClCompile Include="Tracker_OpenTLD.cpp" />
     <ClCompile Include="TrackingController.cpp" />
   </ItemGroup>
@@ -30,6 +31,7 @@
     <ClInclude Include="FaceAnalyzerConfiguration.h" />
     <ClInclude Include="FaceDetector_OpenCV.h" />
     <ClInclude Include="Jzon.h" />
+    <ClInclude Include="ThumbNail.h" />
     <ClInclude Include="Tracker_OpenTLD.h" />
     <ClInclude Include="TrackingController.h" />
   </ItemGroup>
