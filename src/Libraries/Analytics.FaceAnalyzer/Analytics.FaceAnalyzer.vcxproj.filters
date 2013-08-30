@@ -57,9 +57,6 @@
     <ClCompile Include="Jzon.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ThumbNail.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FaceAnalyzer.h">
@@ -93,9 +90,6 @@
       <Filter>Header Files\Tracking</Filter>
     </ClInclude>
     <ClInclude Include="Jzon.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ThumbNail.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
