@@ -1,5 +1,6 @@
 #include "Face.h"
 #include "Tracker_OpenTLD.h"
+#include "Thumbnail.h"
 #include "FaceAnalyzerConfiguration.h"
 #include "Jzon.h"
 #include "FileSystem/FileSystem.h"
@@ -36,7 +37,7 @@ Face::Face(Tracker_OpenTLD *m_trackerToInitializeFrom, const Mat frame, uint64_t
 	face_detector_check.reset( new FaceDetector_OpenCV(faceAnalyzerConfig->faceDetectorCascadeFile, faceAnalyzerConfig->eyeDetectorCascadeFile) );
 	m_faceTracker->InitialiseTrack(frame, initialFaceRegion);
 	Thumbnail_path = faceAnalyzerConfig->faceThumbnailOutputPath;
-
+	Thumbnail_generator = new Thumbnail();
 	// this is the start of a new time measurement pair
 	m_currentFaceVisiblePair.first = frameTimestamp;
 
@@ -158,9 +159,10 @@ bool Face::Process(const Mat &frame, uint64_t frameTimestamp)
 
 			//if((frameTimestamp-m_currentFaceVisiblePair.first)%800 ==0)
 				//{
-
-
-			Mat thumbnail_temp =  frame(m_currentEstimatedPosition).clone();
+			
+			
+			//Mat thumbnail_temp =  frame(m_currentEstimatedPosition).clone();
+		  	Mat thumbnail_temp = Thumbnail_generator->ExtractThumbnail(frame.clone(),m_currentEstimatedPosition);
 				vector<Rect> faces_detected =face_detector_check->Detect(thumbnail_temp);
 				//if(faces_detected.size()>0 && no_of_thumbnails<10)
 				if(faces_detected.size()>0)
@@ -169,8 +171,7 @@ bool Face::Process(const Mat &frame, uint64_t frameTimestamp)
 					{
 					std::stringstream ss;
 					ss << m_faceId;
-					std::string path =Thumbnail_path+"/"+ss.str();
-					FileSystem::CreateDirectory(path);
+					
 					}
 					has_thumbnails = true;
 
@@ -310,6 +311,11 @@ string Face::GetOutput()
 		string imagepath;
 		int count=0;
 		cout << " No of faces : " << m_thumbnailConfidence.size();
+		if(m_thumbnailConfidence.size()>0)
+		{
+		std::string path =Thumbnail_path+"/"+ss.str();
+					FileSystem::CreateDirectory(path);
+		}
 	for(std::map<float,Mat>::iterator iter = m_thumbnailConfidence.begin(); iter != m_thumbnailConfidence.end(); ++iter)
 					{
 						count++;

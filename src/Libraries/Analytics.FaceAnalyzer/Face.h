@@ -22,6 +22,7 @@ namespace Analytics
 // fwd declarations
 class Tracker_OpenTLD;
 class FaceDetector_OpenCV;
+class Thumbnail;
 class Face
 {
 private:
@@ -69,6 +70,7 @@ private:
 
 	// the tracker that will be used to track this face
 	Tracker_OpenTLD *m_faceTracker;
+	Thumbnail *Thumbnail_generator;
 	std::string Thumbnail_path;
 
 	cv::Scalar m_visualizationColor;

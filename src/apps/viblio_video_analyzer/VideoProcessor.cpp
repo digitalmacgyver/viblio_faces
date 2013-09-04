@@ -29,6 +29,7 @@ VideoProcessor::VideoProcessor(const JobConfiguration &jobConfig)
 	// If there are any problems log it and then throw an exception
 
 	// setup the video source based on the type of the source specified by the job
+	frames_to_skip = jobConfig.skipframes;
 	try
 	{
 		m_videoSource = new VideoSource::FileVideoSource(jobConfig.videoSourceFilename);
@@ -81,8 +82,11 @@ bool VideoProcessor::PerformProcessing()
 	int TotalFrames;
 	int CurrentFrameNumber;
 	while(true)
-	{
+	{   int counter;
+
+		for ( counter = 0;counter<frames_to_skip; counter++)
 		currentFrame = m_videoSource->GetNextFrame();
+
 		timestamp = m_videoSource->GetTimestamp();
 		TotalFrames=m_videoSource->NumberFrames();
 		CurrentFrameNumber=m_videoSource->CurrentFrameNo();

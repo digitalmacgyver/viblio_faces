@@ -40,7 +40,7 @@ public:
 	// information about the video source that we will be getting the frames from
 	VideoSource::VideoSourceTypes videoSourceType;
 	std::string videoSourceFilename;
-	
+	int skipframes;
 	// ANALYZER INFORMATION
 	// information about all the Analyzers that will be used in this job and specific configuration for each analyzer
 
