@@ -24,6 +24,9 @@ private:
 
 	std::unique_ptr<TrackingController> m_trackingController;
 
+	int m_faceDetectionFrequency;
+	int m_currentFrameNumber;
+
 	bool m_renderVisualization;
 
 	// no copy constructor or assignment operator

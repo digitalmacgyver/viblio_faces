@@ -64,7 +64,7 @@ private:
 	uint64_t m_mostRecentFrameTimestamp;
 
 	// the tracker that will be used to track this face
-	Tracker_OpenTLD *m_faceTracker;
+	std::unique_ptr<Tracker_OpenTLD> m_faceTracker;
 	std::string Thumbnail_path;
 
 	cv::Scalar m_visualizationColor;
@@ -74,7 +74,7 @@ private:
 
 	cv::Scalar RandomColor( cv::RNG& rng );
 public:
-   	Face(Tracker_OpenTLD *m_trackerToInitializeFrom, const cv::Mat frame, uint64_t frameTimestamp, cv::Rect initialFaceRegion,FaceAnalyzerConfiguration *faceAnalyzerConfig);
+   	Face(const cv::Mat frame, uint64_t frameTimestamp, cv::Rect initialFaceRegion,FaceAnalyzerConfiguration *faceAnalyzerConfig);
 	~Face();
 
 	// This face and 'theOtherFace' passed in are actually the same face. Take the useful

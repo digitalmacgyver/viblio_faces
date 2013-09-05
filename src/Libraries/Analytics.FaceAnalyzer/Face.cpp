@@ -16,7 +16,7 @@ namespace Analytics
 	{
 
 
-Face::Face(Tracker_OpenTLD *m_trackerToInitializeFrom, const Mat frame, uint64_t frameTimestamp, Rect initialFaceRegion,FaceAnalyzerConfiguration *faceAnalyzerConfig)
+Face::Face(const Mat frame, uint64_t frameTimestamp, Rect initialFaceRegion,FaceAnalyzerConfiguration *faceAnalyzerConfig)
 	// generate a random UUID for the unique face identifier
 	: m_faceId(boost::uuids::random_generator()()),
 	  m_isLost(false),
@@ -28,7 +28,7 @@ Face::Face(Tracker_OpenTLD *m_trackerToInitializeFrom, const Mat frame, uint64_t
 {
 	// in a real system we will probably take a copy of the tracker to initialize the face from as it has learned the background,
 	// however this is yet TBD
-	m_faceTracker = new Tracker_OpenTLD();//m_trackerToInitializeFrom;
+	m_faceTracker.reset(new Tracker_OpenTLD());//m_trackerToInitializeFrom;
 	
 	cout << "Hello " << endl;
 	m_faceTracker->InitialiseTrack(frame, initialFaceRegion);
@@ -51,12 +51,6 @@ Face::~Face()
 		// before we finished we were tracking a face so close off our last measurement using the last seen frame timestamp
 		m_currentFaceVisiblePair.second = m_mostRecentFrameTimestamp;
 		m_timesWhenFaceVisible.push_back(m_currentFaceVisiblePair);
-	}
-
-	if( m_faceTracker )
-	{
-		delete m_faceTracker;
-		m_faceTracker = NULL;
 	}
 }
 
@@ -90,8 +84,7 @@ void Face::Merge(Face *theOtherFace)
 	// destroy this->m_faceTracker and take theOtherFace->m_faceTracker and use that instead as it is more up to date...
 	// would be ideal here if we could exploit the current tracks slightly outdated knowledge as to the model of the tracked
 	// subject, not sure we can shoe horn this in
-	delete m_faceTracker;
-	m_faceTracker = theOtherFace->m_faceTracker;
+	m_faceTracker = std::move(theOtherFace->m_faceTracker);
 	theOtherFace->m_faceTracker = NULL; // make sure when we destroy the other face we don't kill the tracker as well because now we will be using it
 }
 
