@@ -34,7 +34,6 @@ using namespace cv;
 void ExtractFaceAnalysisParameters( po::variables_map variableMap, Analytics::FaceAnalyzer::FaceAnalyzerConfiguration *faceAnalyzer);
 
 int g_verbosityLevel = 0;
-int skip_frames=1;
 
 int main(int argc, char* argv[])
 {
@@ -44,21 +43,18 @@ int main(int argc, char* argv[])
 		("help", "produce help message")
 		("filename,f", po::value<string>(), "specify the input video filename to analyze")
 		("verbosity,v", po::value<int>(&g_verbosityLevel)->default_value(0), "set the verbosity level (between 0-3, 0 is off, 3 is most verbose)")
-		("skip", po::value<int>(&skip_frames)->default_value(1), "set the no of frames to skip")
 		("analyzers", po::value< vector<string> >(), "analyzers to use. Options include \"FaceAnalysis\"")
 		("face_detector_cascade_file", po::value<string>(), "the path to the cascade file to use for face detection")
 		("eye_detector_cascade_file", po::value<string>(), "the path to the cascade file to use for eye detection")
 		("face_thumbnail_path", po::value<string>(), "the location to put output facial thumbnails generated")
 		("face_detection_frequency", po::value<int>()->default_value(3), "set how often we should perform face detection, e.g. a value of 3 means we only check every third frame, lower numbers means we check more frequently but this will be slower")
+		("lost_track_process_frequency", po::value<int>()->default_value(5), "set how often a lost face should perform processing when attempting to regain the track, e.g. a value of 5 means we only check every fifth frame, lower numbers means we check more frequently but this will be slower")
 		("render_visualization", "determines whether visualizations will be rendered")
 		;
 
-	
 	po::variables_map variableMap;
 	po::store(po::parse_command_line(argc, argv, desc), variableMap);
 	po::notify(variableMap);    
-
-	skip_frames = variableMap["skip"].as<int>();
 
 	// they asked for help, lets give it to them
 	if (variableMap.count("help")) 
@@ -93,10 +89,6 @@ int main(int argc, char* argv[])
 		return 1;
 	}
 
-		jobConfig.skipframes=skip_frames;
-
-
-	
 	// Analyzer config extraction from parameters and config file
 	if( variableMap.count("analyzers") )
 	{
@@ -161,12 +153,16 @@ void ExtractFaceAnalysisParameters( po::variables_map variableMap, Analytics::Fa
 	if (variableMap.count("face_thumbnail_path")) 
 	{
 		faceAnalyzerConfig->faceThumbnailOutputPath = variableMap["face_thumbnail_path"].as<string>();
-
 	}
 
 	if (variableMap.count("face_detection_frequency")) 
 	{
 		faceAnalyzerConfig->faceDetectionFrequency = variableMap["face_detection_frequency"].as<int>();
+	}
+
+	if (variableMap.count("lost_track_process_frequency")) 
+	{
+		faceAnalyzerConfig->lostFaceProcessFrequency = variableMap["lost_track_process_frequency"].as<int>();
 	}
 
 	if (variableMap.count("render_visualization")) 

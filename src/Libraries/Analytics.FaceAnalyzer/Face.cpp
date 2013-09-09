@@ -28,7 +28,8 @@ Face::Face(const Mat frame, uint64_t frameTimestamp, Rect initialFaceRegion,Face
 	  m_faceTrackerConfidenceThreshold(0.5f),
 	  m_thumbnailConfidenceSize(5),
 	  no_of_thumbnails(0),
-	  has_thumbnails(false)
+	  has_thumbnails(false),
+	  m_frameProcessedNumber(0)
 {
 	// in a real system we will probably take a copy of the tracker to initialize the face from as it has learned the background,
 	// however this is yet TBD
@@ -38,6 +39,9 @@ Face::Face(const Mat frame, uint64_t frameTimestamp, Rect initialFaceRegion,Face
 	m_faceTracker->InitialiseTrack(frame, initialFaceRegion);
 	Thumbnail_path = faceAnalyzerConfig->faceThumbnailOutputPath;
 	Thumbnail_generator = new Thumbnail();
+
+	m_lostFaceProcessingInterval = faceAnalyzerConfig->lostFaceProcessFrequency;
+
 	// this is the start of a new time measurement pair
 	m_currentFaceVisiblePair.first = frameTimestamp;
 
@@ -49,7 +53,6 @@ Face::Face(const Mat frame, uint64_t frameTimestamp, Rect initialFaceRegion,Face
 
 Face::~Face()
 {
-
 	if( !m_isLost )
 	{
 		// before we finished we were tracking a face so close off our last measurement using the last seen frame timestamp
@@ -95,6 +98,11 @@ void Face::Merge(Face *theOtherFace)
 bool Face::Process(const Mat &frame, uint64_t frameTimestamp)
 {
 	m_wasLostIsNowFound = false;
+
+	m_frameProcessedNumber++;
+	if( m_isLost && m_frameProcessedNumber % m_lostFaceProcessingInterval != 0)
+		return true; // all good, we are just going to skip processing of this frame because this face is lost and we don't process every frame for lost faces otherwise it slows us down
+
 
 	m_currentEstimatedPosition = m_faceTracker->Process(frame);
 		
@@ -169,11 +177,12 @@ bool Face::Process(const Mat &frame, uint64_t frameTimestamp)
 					has_thumbnails = true;
 
 					if( m_thumbnailConfidence.size() == m_thumbnailConfidenceSize && (m_faceTracker->GetConfidence()>m_thumbnailConfidence.begin()->first))
-					{m_thumbnailConfidence.erase( m_thumbnailConfidence.begin() );
-					 m_thumbnailConfidence.insert (m_thumbnailConfidence.end(), pair<float,Mat>(m_faceTracker->GetConfidence(),thumbnail_temp));
+					{
+						m_thumbnailConfidence.erase( m_thumbnailConfidence.begin() );
+						m_thumbnailConfidence.insert (m_thumbnailConfidence.end(), pair<float,Mat>(m_faceTracker->GetConfidence(),thumbnail_temp));
 					}
 					else if (m_thumbnailConfidence.size() != m_thumbnailConfidenceSize)
-					m_thumbnailConfidence.insert (m_thumbnailConfidence.end(), pair<float,Mat>(m_faceTracker->GetConfidence(),thumbnail_temp));
+						m_thumbnailConfidence.insert (m_thumbnailConfidence.end(), pair<float,Mat>(m_faceTracker->GetConfidence(),thumbnail_temp));
 				/*	
 				for(std::map<float,Mat>::iterator iter = m_thumbnailConfidence.begin(); iter != m_thumbnailConfidence.end(); ++iter)
 					{
