@@ -39,6 +39,7 @@ public:
 	// Do the main work of the job. Takes in each frame, decodes it and then passes it along for analysis and then encoding
 	bool PerformProcessing();
 
+	int frames_to_skip;
 	// Dump the output data for this job
 	bool DumpOutput(const JobConfiguration &jobConfig);
 };

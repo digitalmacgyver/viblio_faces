@@ -29,6 +29,9 @@ public:
 	// Returns the total number of frames in this file
 	virtual int NumberFrames();
 	
+	//Return current frame number
+	virtual int CurrentFrameNo();
+
 	//Returns the timestamp in milliseconds
 	virtual uint64_t GetTimestamp();
 };

@@ -9,7 +9,7 @@
 */
 
 #include "EyeDetector_OpenCV.h"
-
+#include <stdexcept>
 #include <string>
 #include "opencv2/opencv.hpp"
 
@@ -42,7 +42,7 @@ vector<Rect> EyeDetector_OpenCV::Detect(const Mat &frame)
 {
 	vector<Rect> eyes;
 
-	m_eyesCascade.detectMultiScale( frame, eyes, 1.1, 2, 0 |CV_HAAR_SCALE_IMAGE, Size(30, 30) );
+	m_eyesCascade.detectMultiScale( frame, eyes, 1.1, 2, 0 |CV_HAAR_SCALE_IMAGE, Size(10, 10) );
 	
 	return eyes;
 }

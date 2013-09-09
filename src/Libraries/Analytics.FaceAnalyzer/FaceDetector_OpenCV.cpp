@@ -14,7 +14,7 @@
 #include <opencv2/opencv.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv/highgui.h>
-
+#include <stdexcept>
 #include <vector>
 
 using namespace std;
@@ -75,7 +75,7 @@ vector<Rect> FaceDetector_OpenCV::Detect(const Mat &frame)
 
 	//-- Detect faces
 	// If you end up using a HAAR cascade here then you should use face_cascade.detectMultiScale( frame_gray, faces, 1.1, 2, 0|CV_HAAR_SCALE_IMAGE, Size(30, 30) );
-	m_faceCascade.detectMultiScale( frame_gray, faces, 1.1, 3, 0, Size(80, 80) );
+	m_faceCascade.detectMultiScale( frame_gray, faces, 1.1, 3, 0, Size(50, 50) );
 
 	if( m_filterFacesByEyeDetections )
 	{
@@ -108,7 +108,7 @@ vector<Rect> FaceDetector_OpenCV::Detect(const Mat &frame)
 		}
 
 		//-- Show what you got
-		imshow( "temp", frameCopy );
+		//imshow( "temp", frameCopy );
 
 		return filteredFaces;
 	}
@@ -121,7 +121,7 @@ vector<Rect> FaceDetector_OpenCV::Detect(const Mat &frame)
 			ellipse( frameCopy, center, Size( int(faces[0].width*0.5f), int(faces[0].height*0.5f)), 0, 0, 360, Scalar( 255, 0, 0 ), 2, 8, 0 );
 		}
 		//-- Show what you got
-		imshow( "temp", frameCopy );
+	//	imshow( "temp", frameCopy );
 
 		// no filtering so just return the found faces
 		return faces;

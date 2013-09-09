@@ -1,7 +1,9 @@
 #include "Face.h"
 #include "Tracker_OpenTLD.h"
+#include "Thumbnail.h"
 #include "FaceAnalyzerConfiguration.h"
 #include "Jzon.h"
+#include "FileSystem/FileSystem.h"
 
 #include <boost/uuid/uuid.hpp>
 #include <boost/uuid/uuid_generators.hpp>
@@ -24,16 +26,18 @@ Face::Face(const Mat frame, uint64_t frameTimestamp, Rect initialFaceRegion,Face
 	  m_faceLocationHistorySize(1296000), // we theoretically store the face location history information for every frame we have tracked, in practice we have an upper bounds to prevent the size of this map going silly. Max size for video @30fps for 12 hrs ~ 40MB of RAM
 	  m_overlapThresholdForSameFace(0.5f),
 	  m_faceTrackerConfidenceThreshold(0.5f),
-	  no_of_thumbnails(0)
+	  m_thumbnailConfidenceSize(5),
+	  no_of_thumbnails(0),
+	  has_thumbnails(false)
 {
 	// in a real system we will probably take a copy of the tracker to initialize the face from as it has learned the background,
 	// however this is yet TBD
 	m_faceTracker.reset(new Tracker_OpenTLD());//m_trackerToInitializeFrom;
-	
-	cout << "Hello " << endl;
+
+	face_detector_check.reset( new FaceDetector_OpenCV(faceAnalyzerConfig->faceDetectorCascadeFile, faceAnalyzerConfig->eyeDetectorCascadeFile) );
 	m_faceTracker->InitialiseTrack(frame, initialFaceRegion);
 	Thumbnail_path = faceAnalyzerConfig->faceThumbnailOutputPath;
-
+	Thumbnail_generator = new Thumbnail();
 	// this is the start of a new time measurement pair
 	m_currentFaceVisiblePair.first = frameTimestamp;
 
@@ -45,7 +49,7 @@ Face::Face(const Mat frame, uint64_t frameTimestamp, Rect initialFaceRegion,Face
 
 Face::~Face()
 {
-	
+
 	if( !m_isLost )
 	{
 		// before we finished we were tracking a face so close off our last measurement using the last seen frame timestamp
@@ -133,6 +137,7 @@ bool Face::Process(const Mat &frame, uint64_t frameTimestamp)
 	}
 	
 
+
 	if( !m_isLost )
 	{
 		// if the face isn't lost then we can do several things here
@@ -140,16 +145,57 @@ bool Face::Process(const Mat &frame, uint64_t frameTimestamp)
 		// 2) Determine if we need to apply recognition to the face
 		// 3) Store the face's location in the location history map
 
+
 		// Saving a frame for every 800 milliseconds for a tracked frame when Thumbnail path is provided
 		if( !Thumbnail_path.empty() )
 		{
+
 			//if((frameTimestamp-m_currentFaceVisiblePair.first)%800 ==0)
 				//{
+			
+			
+			//Mat thumbnail_temp =  frame(m_currentEstimatedPosition).clone();
+		  	Mat thumbnail_temp = Thumbnail_generator->ExtractThumbnail(frame.clone(),m_currentEstimatedPosition);
+				vector<Rect> faces_detected =face_detector_check->Detect(thumbnail_temp);
+				//if(faces_detected.size()>0 && no_of_thumbnails<10)
+				if(faces_detected.size()>0)
+				{
+					if(!has_thumbnails)
+					{
+					std::stringstream ss;
+					ss << m_faceId;
+					
+					}
+					has_thumbnails = true;
+
+					if( m_thumbnailConfidence.size() == m_thumbnailConfidenceSize && (m_faceTracker->GetConfidence()>m_thumbnailConfidence.begin()->first))
+					{m_thumbnailConfidence.erase( m_thumbnailConfidence.begin() );
+					 m_thumbnailConfidence.insert (m_thumbnailConfidence.end(), pair<float,Mat>(m_faceTracker->GetConfidence(),thumbnail_temp));
+					}
+					else if (m_thumbnailConfidence.size() != m_thumbnailConfidenceSize)
+					m_thumbnailConfidence.insert (m_thumbnailConfidence.end(), pair<float,Mat>(m_faceTracker->GetConfidence(),thumbnail_temp));
+				/*	
+				for(std::map<float,Mat>::iterator iter = m_thumbnailConfidence.begin(); iter != m_thumbnailConfidence.end(); ++iter)
+					{
+						float k =  iter->first;
+						cout << k << " ";
+						//ignore value
+						//Value v = iter->second;
+					}
+				cout << endl;
+				
+			
 				oss << frameTimestamp;
-				imagepath =Thumbnail_path+ "/image"+oss.str()+".png";
+				std::stringstream uuid;
+				uuid << m_faceId;
+
+				imagepath =Thumbnail_path+"/"+uuid.str()+ "/image"+oss.str()+".png";
 				imwrite( imagepath,frame(m_currentEstimatedPosition));
 				cout << " Tracking for frame extracted. Frame saved at : "<<  (frameTimestamp-m_currentFaceVisiblePair.first)<<  endl;
+				  */
+
 				no_of_thumbnails = no_of_thumbnails+1;
+				}
 			   // }
 		}
 		if( m_faceLocationHistory.size() >= m_faceLocationHistorySize )
@@ -254,12 +300,32 @@ string Face::GetOutput()
 	// Getting UUid to string
 	std::stringstream ss;
 		ss << m_faceId;
+	// Store the top five thumbnails
+		string imagepath;
+		int count=0;
+		cout << " No of faces : " << m_thumbnailConfidence.size();
+		if(m_thumbnailConfidence.size()>0)
+		{
+		std::string path =Thumbnail_path+"/"+ss.str();
+					FileSystem::CreateDirectory(path);
+		}
+	for(std::map<float,Mat>::iterator iter = m_thumbnailConfidence.begin(); iter != m_thumbnailConfidence.end(); ++iter)
+					{
+						count++;
+						Mat k =  iter->second;
+					std::stringstream oss;
+				//oss << frameTimestamp;
+					oss << count;
+			   imagepath =Thumbnail_path+"/"+ss.str()+ "/image"+oss.str()+".png";
+				imwrite( imagepath,k);
+					}
+
 
     // Defining a jason object and adding some attributes and their values
 	 Jzon::Object root;
         root.Add("UUID", ss.str());
         root.Add("number_of_thumbnails", no_of_thumbnails);
-		
+
    // Adding visibility information as an array under visibilty info attribute
 	 Jzon::Array visibilty_info;
 	 std::vector<std::pair<uint64_t, uint64_t>>::iterator iter = m_timesWhenFaceVisible.begin();
@@ -288,7 +354,7 @@ string Face::GetOutput()
 			rect_info.Add(each_rect);
 		}
 		root.Add("face_rectangles",rect_info);
-		
+
 		Jzon::Writer writer(root, Jzon::StandardFormat);
         writer.Write();
 		// Writing everything ot a string to export
