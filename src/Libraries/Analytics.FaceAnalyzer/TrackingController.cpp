@@ -13,8 +13,10 @@
 #include "Face.h"
 
 #include <thread>
+#include <future>
 
 using namespace cv;
+using namespace std;
 
 namespace Analytics
 {
@@ -23,15 +25,11 @@ namespace Analytics
 
 TrackingController::TrackingController(FaceAnalyzerConfiguration *faceAnalyzerConfiguration)
 {
-	m_backgroundLearningTLD = new Tracker_OpenTLD();
 	faceAnalyzerConfig = faceAnalyzerConfiguration;
 }
 
 TrackingController::~TrackingController()
 {
-	if( m_backgroundLearningTLD != NULL )
-		delete m_backgroundLearningTLD;
-
 	// go through each of the trackers and destroy them
 	for(auto startIter=m_trackedFaces.begin(); startIter != m_trackedFaces.end(); ++startIter)
 		delete *startIter;
@@ -98,9 +96,7 @@ void TrackingController::AddNewTrack(const Mat &frame, uint64_t frameTimestamp, 
 
 	//m_backgroundLearningTLD->InitialiseTrack(frame, objectLocation);
 
-	m_trackedFaces.push_back( new Face(m_backgroundLearningTLD, frame, frameTimestamp, objectLocation, faceAnalyzerConfig) );
-
-	m_backgroundLearningTLD = NULL; // this ensures in the future we don't bother processing this tracker which was purely intended for learning the background
+	m_trackedFaces.push_back( new Face(frame, frameTimestamp, objectLocation, faceAnalyzerConfig) );
 }
 
 /*
@@ -109,15 +105,24 @@ void TrackingController::AddNewTrack(const Mat &frame, uint64_t frameTimestamp, 
 */
 void TrackingController::Process(const Mat &frame, uint64_t frameTimestamp)
 {
-	//if( m_backgroundLearningTLD != NULL )
-	//	m_backgroundLearningTLD->Process(frame); // allow it to learn the background
-
 	// could call each of these trackers in parallel assuming they are independent (they should 
 	// be at least when they are estimating the new position of the object/face)
+	//vector<future<bool>> futures; // multithreading
 	for( auto startIter=m_trackedFaces.begin(); startIter!=m_trackedFaces.end(); ++startIter)
 	{
+		// multithreading
+		//futures.push_back(async(std::launch::async, &Analytics::FaceAnalyzer::Face::Process, (*startIter), frame, frameTimestamp));
+
+		// single threaded
 		(*startIter)->Process( frame, frameTimestamp );
 	}
+
+	// multithreaded
+	//for(auto &e : futures) 
+	//{
+	//	e.wait();
+	//	//std::cout << e.get() << std::endl;
+	//}
 
 	// check to make sure we don't have any face tracks that are actually of the same person. This can
 	// happen. If we start tracking person A and then we lose track of them (if they leave the scene) and

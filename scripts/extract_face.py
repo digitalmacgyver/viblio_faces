@@ -11,7 +11,7 @@ work_dir = '/tmp/faces-' + str( os.getpid() )
 
 os.makedirs( work_dir )
 
-cmd = '/home/viblio/bin/viblio_video_analyzer -f %s --analyzers FaceAnalysis --face_detector_cascade_file /home/viblio/bin/haarcascade_frontalface_alt.xml --face_thumbnail_path %s' % ( video_file, work_dir )
+cmd = '/viblio/bin/viblio_video_analyzer -f %s --analyzers FaceAnalysis --face_detector_cascade_file /viblio/bin/lbpcascade_frontalface.xml --eye_detector_cascade_file /viblio/bin/haarcascade_eye_tree_eyeglasses.xml --face_thumbnail_path %s' % ( video_file, work_dir )
 
 os.system( cmd )
 

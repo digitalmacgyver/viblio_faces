@@ -33,8 +33,6 @@ private:
 	TrackingController(const TrackingController&);
 	TrackingController& operator=(const TrackingController&);
 
-	Tracker_OpenTLD *m_backgroundLearningTLD;
-
 	FaceAnalyzerConfiguration *faceAnalyzerConfig;
 
 	// check to see if there are any face tracks that are actually of the same person

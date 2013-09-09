@@ -10,6 +10,7 @@ namespace Analytics
 FaceAnalyzerConfiguration::FaceAnalyzerConfiguration()
 {
 	// set default values for the configuration options
+	faceDetectionFrequency = 3;
 
 	renderVisualization = false;
 }
