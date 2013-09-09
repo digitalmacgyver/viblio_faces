@@ -54,9 +54,6 @@
     <ClCompile Include="Face.cpp">
       <Filter>Source Files\Tracking</Filter>
     </ClCompile>
-    <ClCompile Include="Jzon.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Thumbnail.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -92,11 +89,8 @@
     <ClInclude Include="Face.h">
       <Filter>Header Files\Tracking</Filter>
     </ClInclude>
-    <ClInclude Include="Jzon.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Thumbnail.h">
-      <Filter>Header Files</Filter>
+      <Filter>Resource Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

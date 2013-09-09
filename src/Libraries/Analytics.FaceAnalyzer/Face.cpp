@@ -2,7 +2,7 @@
 #include "Tracker_OpenTLD.h"
 #include "Thumbnail.h"
 #include "FaceAnalyzerConfiguration.h"
-#include "Jzon.h"
+#include "Jzon/Jzon.h"
 #include "FileSystem/FileSystem.h"
 
 #include <boost/uuid/uuid.hpp>

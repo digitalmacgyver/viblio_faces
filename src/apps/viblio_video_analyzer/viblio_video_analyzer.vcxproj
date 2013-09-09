@@ -11,13 +11,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Jzon.cpp" />
     <ClCompile Include="viblio_video_analyzer.cpp" />
     <ClCompile Include="VideoProcessor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="JobConfiguration.h" />
-    <ClInclude Include="Jzon.h" />
     <ClInclude Include="VideoProcessor.h" />
   </ItemGroup>
   <ItemGroup>
@@ -26,6 +24,9 @@
     </ProjectReference>
     <ProjectReference Include="..\..\Libraries\FileSystem\FileSystem.vcxproj">
       <Project>{a4732737-7ae6-43a2-9f49-81fee1afd0d3}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\Jzon\Jzon.vcxproj">
+      <Project>{090c3291-036c-44c2-a566-3d7c5b1a5fb6}</Project>
     </ProjectReference>
     <ProjectReference Include="..\..\Libraries\VideoSource\VideoSource.vcxproj">
       <Project>{794d716d-a220-4f45-bac3-7db66afe652c}</Project>

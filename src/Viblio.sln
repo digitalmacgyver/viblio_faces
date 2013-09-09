@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio Express 2012 for Windows Desktop
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{744F89A3-52DA-4195-A121-64415E1A3F42}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "apps", "apps", "{54872B2D-44AE-4C09-A367-9F99E2BAFE28}"
@@ -15,6 +15,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Analytics.FaceAnalyzer", "Libraries\Analytics.FaceAnalyzer\Analytics.FaceAnalyzer.vcxproj", "{DF7B3B8E-8EC9-4A5B-A44B-78CD2D006E95}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Viblio.VideoSource", "Libraries\VideoSource\VideoSource.vcxproj", "{794D716D-A220-4F45-BAC3-7DB66AFE652C}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Jzon", "Libraries\Jzon\Jzon.vcxproj", "{090C3291-036C-44C2-A566-3D7C5B1A5FB6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -38,14 +40,19 @@ Global
 		{794D716D-A220-4F45-BAC3-7DB66AFE652C}.Debug|Win32.Build.0 = Debug|Win32
 		{794D716D-A220-4F45-BAC3-7DB66AFE652C}.Release|Win32.ActiveCfg = Release|Win32
 		{794D716D-A220-4F45-BAC3-7DB66AFE652C}.Release|Win32.Build.0 = Release|Win32
+		{090C3291-036C-44C2-A566-3D7C5B1A5FB6}.Debug|Win32.ActiveCfg = Debug|Win32
+		{090C3291-036C-44C2-A566-3D7C5B1A5FB6}.Debug|Win32.Build.0 = Debug|Win32
+		{090C3291-036C-44C2-A566-3D7C5B1A5FB6}.Release|Win32.ActiveCfg = Release|Win32
+		{090C3291-036C-44C2-A566-3D7C5B1A5FB6}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{7B464463-5226-463E-82AD-C0E4A0E7264E} = {54872B2D-44AE-4C09-A367-9F99E2BAFE28}
 		{A4732737-7AE6-43A2-9F49-81FEE1AFD0D3} = {744F89A3-52DA-4195-A121-64415E1A3F42}
 		{DF7B3B8E-8EC9-4A5B-A44B-78CD2D006E95} = {744F89A3-52DA-4195-A121-64415E1A3F42}
 		{794D716D-A220-4F45-BAC3-7DB66AFE652C} = {744F89A3-52DA-4195-A121-64415E1A3F42}
+		{090C3291-036C-44C2-A566-3D7C5B1A5FB6} = {744F89A3-52DA-4195-A121-64415E1A3F42}
+		{7B464463-5226-463E-82AD-C0E4A0E7264E} = {54872B2D-44AE-4C09-A367-9F99E2BAFE28}
 	EndGlobalSection
 EndGlobal

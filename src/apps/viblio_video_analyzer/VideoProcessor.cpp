@@ -12,7 +12,8 @@
 #include "VideoSource/FileVideoSource.h"
 #include "Analytics.FaceAnalyzer/FaceAnalyzer.h"
 #include "FileSystem/FileSystem.h"
-#include "Jzon.h"
+#include "Jzon/Jzon.h"
+
 #include <boost/uuid/uuid.hpp>            // uuid class
 #include <boost/uuid/uuid_generators.hpp> // generators
 #include <boost/uuid/uuid_io.hpp>         // streaming operators etc.
