@@ -30,7 +30,7 @@ private:
 	Face(const Face&);
 	Face& operator=(const Face&);
 
-	std::unique_ptr<FaceDetector_OpenCV> face_detector_check;
+	
 
 	// a unique identifier for this face
 	boost::uuids::uuid m_faceId;
