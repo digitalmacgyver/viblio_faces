@@ -1,3 +1,6 @@
+
+
+
 #include "FaceAnalyzerConfiguration.h"
 #include "Thumbnail.h"
 
@@ -10,8 +13,9 @@ namespace Analytics
 	{
 
 
-Thumbnail::Thumbnail(void)
+Thumbnail::Thumbnail(FaceAnalyzerConfiguration *faceAnalyzerConfig)
 {
+	face_detector_check.reset( new FaceDetector_OpenCV(faceAnalyzerConfig->faceDetectorCascadeFile, faceAnalyzerConfig->eyeDetectorCascadeFile));
 }
 
 
@@ -37,7 +41,20 @@ cv::Mat Thumbnail::ExtractThumbnail( const cv::Mat &frame, const cv::Rect &Thumb
 }
 
 
+float Thumbnail::GetConfidencevalue(const cv::Mat &Thumbnail,bool &has_thumbnails,const float &tracker_confidence )
+{
+	vector<Rect> faces_detected =face_detector_check->Detect(Thumbnail);
+	float confidence;
+	confidence = tracker_confidence;
+	if(faces_detected.size()>0)
+				{
+					
+					has_thumbnails = true;
+					confidence = confidence + 0.3 ;
+				}
+	return confidence;
 
+}
 
 // Ensures that the rect passed in is valid based on the image size it is supposedly from. Returns
 // a rect that is sure to be inside the bounds of the image
