@@ -48,7 +48,7 @@ private:
 
 	int m_frameProcessedNumber; // a count of the number of frames we have processed
 	int m_lostFaceProcessingInterval;
-
+	int Thumbnail_frequency;
 	// indicates whether the face has had recognition applied to them yet
 	bool m_hasBeenRecognized;
 
