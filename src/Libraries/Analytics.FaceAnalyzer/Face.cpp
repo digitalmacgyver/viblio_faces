@@ -35,7 +35,7 @@ Face::Face(const Mat frame, uint64_t frameTimestamp, Rect initialFaceRegion,Face
 	// however this is yet TBD
 	m_faceTracker.reset(new Tracker_OpenTLD());//m_trackerToInitializeFrom;
 
-	
+    Thumbnail_frequency = faceAnalyzerConfig->Thumbnail_generation_frequency;
 	m_faceTracker->InitialiseTrack(frame, initialFaceRegion);
 	Thumbnail_path = faceAnalyzerConfig->faceThumbnailOutputPath;
 	Thumbnail_generator = new Thumbnail(faceAnalyzerConfig);
@@ -160,8 +160,10 @@ bool Face::Process(const Mat &frame, uint64_t frameTimestamp)
 
 			//if((frameTimestamp-m_currentFaceVisiblePair.first)%800 ==0)
 				
-		  	Mat thumbnail_temp = Thumbnail_generator->ExtractThumbnail(frame.clone(),m_currentEstimatedPosition);
-			float confidence =Thumbnail_generator->GetConfidencevalue(thumbnail_temp,has_thumbnails,m_faceTracker->GetConfidence());
+			if(no_of_thumbnails%Thumbnail_frequency==0)
+			{
+		  		Mat thumbnail_temp = Thumbnail_generator->ExtractThumbnail(frame.clone(),m_currentEstimatedPosition);
+				float confidence =Thumbnail_generator->GetConfidencevalue(thumbnail_temp,has_thumbnails,m_faceTracker->GetConfidence());
 				
 			       if(has_thumbnails)
 				   {
@@ -173,9 +175,12 @@ bool Face::Process(const Mat &frame, uint64_t frameTimestamp)
 					else if (m_thumbnailConfidence.size() != m_thumbnailConfidenceSize)
 						m_thumbnailConfidence.insert (m_thumbnailConfidence.end(), pair<float,Mat>(confidence,thumbnail_temp));
 				
-
-				no_of_thumbnails = no_of_thumbnails+1;
 				   }
+			}
+
+				   no_of_thumbnails = no_of_thumbnails+1;
+
+
 				
 		}
 		if( m_faceLocationHistory.size() >= m_faceLocationHistorySize )
