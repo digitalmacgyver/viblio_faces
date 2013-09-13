@@ -25,6 +25,8 @@ class FaceDetector_OpenCV;
 class Thumbnail;
 class Face
 {
+	friend class FaceTests;
+
 private:
 	// no copy constructor or assignment operator
 	Face(const Face&);

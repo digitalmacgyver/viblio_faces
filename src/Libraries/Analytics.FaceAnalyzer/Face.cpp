@@ -44,6 +44,7 @@ Face::Face(const Mat frame, uint64_t frameTimestamp, Rect initialFaceRegion,Face
 
 	// this is the start of a new time measurement pair
 	m_currentFaceVisiblePair.first = frameTimestamp;
+	m_currentFaceVisiblePair.second = 0;
 
 	m_visualizationColor = Scalar(0.0f, 0.0f, 0.0f, 0.0f);
 
@@ -119,6 +120,7 @@ bool Face::Process(const Mat &frame, uint64_t frameTimestamp)
 
 		// this is the start of a new time measurement pair
 		m_currentFaceVisiblePair.first = frameTimestamp;
+		m_currentFaceVisiblePair.second = 0; // reset the 2nd element to 0
 		//cout << " Face visible at : " << m_currentFaceVisiblePair.first << endl;
 	}
 	else if( !m_isLost && m_faceTracker->GetConfidence() < m_faceTrackerConfidenceThreshold )
@@ -300,6 +302,14 @@ void Face::MergeFaceVisibleTimes(vector<pair<uint64_t, uint64_t>> otherFaceTimes
 
 string Face::GetOutput()
 {
+	// before we dump the data make sure we don't have another visibility pair to dump
+	if( !m_isLost )
+	{
+		// before we finished we were tracking a face so close off our last measurement using the last seen frame timestamp
+		m_currentFaceVisiblePair.second = m_mostRecentFrameTimestamp;
+		m_timesWhenFaceVisible.push_back(m_currentFaceVisiblePair);
+	}
+
 	/*
 		- Each face will store the number of thumbnails generated
 		- Each face will store the UUID
