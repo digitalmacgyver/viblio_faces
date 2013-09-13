@@ -49,7 +49,8 @@ public:
 	// frame (or every nth frame, where n is lostFaceProcessFrequency). Higher values indicate faster processing
 	// at the potential expense of missing a chance to regather a once lost track
 	int lostFaceProcessFrequency;
-
+	
+	int Thumbnail_generation_frequency;
 	// if enabled visualizations of the detection, tracking and recognition will be displayed during processing
 	bool renderVisualization;
 };

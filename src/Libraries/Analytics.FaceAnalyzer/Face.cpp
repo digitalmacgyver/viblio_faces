@@ -35,10 +35,10 @@ Face::Face(const Mat frame, uint64_t frameTimestamp, Rect initialFaceRegion,Face
 	// however this is yet TBD
 	m_faceTracker.reset(new Tracker_OpenTLD());//m_trackerToInitializeFrom;
 
-	face_detector_check.reset( new FaceDetector_OpenCV(faceAnalyzerConfig->faceDetectorCascadeFile, faceAnalyzerConfig->eyeDetectorCascadeFile) );
+    Thumbnail_frequency = faceAnalyzerConfig->Thumbnail_generation_frequency;
 	m_faceTracker->InitialiseTrack(frame, initialFaceRegion);
 	Thumbnail_path = faceAnalyzerConfig->faceThumbnailOutputPath;
-	Thumbnail_generator = new Thumbnail();
+	Thumbnail_generator = new Thumbnail(faceAnalyzerConfig);
 
 	m_lostFaceProcessingInterval = faceAnalyzerConfig->lostFaceProcessFrequency;
 
@@ -161,53 +161,29 @@ bool Face::Process(const Mat &frame, uint64_t frameTimestamp)
 		{
 
 			//if((frameTimestamp-m_currentFaceVisiblePair.first)%800 ==0)
-				//{
-			
-			
-			//Mat thumbnail_temp =  frame(m_currentEstimatedPosition).clone();
-		  	Mat thumbnail_temp = Thumbnail_generator->ExtractThumbnail(frame.clone(),m_currentEstimatedPosition);
-				vector<Rect> faces_detected =face_detector_check->Detect(thumbnail_temp);
-				//if(faces_detected.size()>0 && no_of_thumbnails<10)
-				if(faces_detected.size()>0)
-				{
-					if(!has_thumbnails)
-					{
-					std::stringstream ss;
-					ss << m_faceId;
-					
-					}
-					has_thumbnails = true;
-
-					if( m_thumbnailConfidence.size() == m_thumbnailConfidenceSize && (m_faceTracker->GetConfidence()>m_thumbnailConfidence.begin()->first))
+				
+			if(no_of_thumbnails%Thumbnail_frequency==0)
+			{
+		  		Mat thumbnail_temp = Thumbnail_generator->ExtractThumbnail(frame.clone(),m_currentEstimatedPosition);
+				float confidence =Thumbnail_generator->GetConfidencevalue(thumbnail_temp,has_thumbnails,m_faceTracker->GetConfidence());
+				
+			       if(has_thumbnails)
+				   {
+					if( m_thumbnailConfidence.size() == m_thumbnailConfidenceSize && (confidence>m_thumbnailConfidence.begin()->first))
 					{
 						m_thumbnailConfidence.erase( m_thumbnailConfidence.begin() );
-						m_thumbnailConfidence.insert (m_thumbnailConfidence.end(), pair<float,Mat>(m_faceTracker->GetConfidence(),thumbnail_temp));
+						m_thumbnailConfidence.insert (m_thumbnailConfidence.end(), pair<float,Mat>(confidence,thumbnail_temp));
 					}
 					else if (m_thumbnailConfidence.size() != m_thumbnailConfidenceSize)
-						m_thumbnailConfidence.insert (m_thumbnailConfidence.end(), pair<float,Mat>(m_faceTracker->GetConfidence(),thumbnail_temp));
-				/*	
-				for(std::map<float,Mat>::iterator iter = m_thumbnailConfidence.begin(); iter != m_thumbnailConfidence.end(); ++iter)
-					{
-						float k =  iter->first;
-						cout << k << " ";
-						//ignore value
-						//Value v = iter->second;
-					}
-				cout << endl;
+						m_thumbnailConfidence.insert (m_thumbnailConfidence.end(), pair<float,Mat>(confidence,thumbnail_temp));
 				
-			
-				oss << frameTimestamp;
-				std::stringstream uuid;
-				uuid << m_faceId;
+				   }
+			}
 
-				imagepath =Thumbnail_path+"/"+uuid.str()+ "/image"+oss.str()+".png";
-				imwrite( imagepath,frame(m_currentEstimatedPosition));
-				cout << " Tracking for frame extracted. Frame saved at : "<<  (frameTimestamp-m_currentFaceVisiblePair.first)<<  endl;
-				  */
+				   no_of_thumbnails = no_of_thumbnails+1;
 
-				no_of_thumbnails = no_of_thumbnails+1;
-				}
-			   // }
+
+				
 		}
 		if( m_faceLocationHistory.size() >= m_faceLocationHistorySize )
 			// make some space in the history map by removing the oldest item

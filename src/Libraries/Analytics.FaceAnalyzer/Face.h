@@ -32,7 +32,7 @@ private:
 	Face(const Face&);
 	Face& operator=(const Face&);
 
-	std::unique_ptr<FaceDetector_OpenCV> face_detector_check;
+	
 
 	// a unique identifier for this face
 	boost::uuids::uuid m_faceId;
@@ -50,7 +50,7 @@ private:
 
 	int m_frameProcessedNumber; // a count of the number of frames we have processed
 	int m_lostFaceProcessingInterval;
-
+	int Thumbnail_frequency;
 	// indicates whether the face has had recognition applied to them yet
 	bool m_hasBeenRecognized;
 
