@@ -93,22 +93,8 @@ vector<Rect> FaceDetector_OpenCV::Detect(const Mat &frame)
 			if( eyes.size() == 2) // means we found the two eyes
 			{
 				filteredFaces.push_back(constrainedRect);
-
-				//-- Draw the face
-				Point center( constrainedRect.x + int(constrainedRect.width*0.5f), constrainedRect.y + int(constrainedRect.height*0.5f) );
-				ellipse( frameCopy, center, Size( int(constrainedRect.width*0.5f), int(constrainedRect.height*0.5f)), 0, 0, 360, Scalar( 255, 0, 0 ), 2, 8, 0 );
-
-				for( unsigned int j = 0; j < eyes.size(); j++ )
-				{ //-- Draw the eyes
-					Point center( constrainedRect.x + eyes[j].x + int(eyes[j].width*0.5f), constrainedRect.y + eyes[j].y + int(eyes[j].height*0.5f) );
-					int radius = cvRound( (eyes[j].width + eyes[j].height)*0.25f );
-					circle( frameCopy, center, radius, Scalar( 255, 0, 255 ), 3, 8, 0 );
-				}
 			}
 		}
-
-		//-- Show what you got
-		//imshow( "temp", frameCopy );
 
 		return filteredFaces;
 	}
@@ -120,9 +106,7 @@ vector<Rect> FaceDetector_OpenCV::Detect(const Mat &frame)
 			Point center( faces[0].x + int(faces[0].width*0.5f), faces[0].y + int(faces[0].height*0.5f) );
 			ellipse( frameCopy, center, Size( int(faces[0].width*0.5f), int(faces[0].height*0.5f)), 0, 0, 360, Scalar( 255, 0, 0 ), 2, 8, 0 );
 		}
-		//-- Show what you got
-	//	imshow( "temp", frameCopy );
-
+		
 		// no filtering so just return the found faces
 		return faces;
 	}
@@ -163,6 +147,20 @@ Rect FaceDetector_OpenCV::ConstrainRect(const Rect &rectToConstrain, const Size 
 	}
 
 	return constrainedRect;
+}
+
+void FaceDetector_OpenCV::RenderVisualization(Mat &frame, const vector<Rect> &detectedFaces)
+{
+	// iterate over each of the faces
+	auto faceIter = detectedFaces.begin();
+	auto faceIterEnd = detectedFaces.end();
+
+	for(; faceIter != faceIterEnd; faceIter++)
+	{
+		// Draw the face
+		Point center( (*faceIter).x + int((*faceIter).width*0.5f), (*faceIter).y + int((*faceIter).height*0.5f) );
+		ellipse( frame, center, Size( int((*faceIter).width*0.5f), int((*faceIter).height*0.5f)), 0, 0, 360, Scalar( 255, 0, 0 ), 2, 8, 0 );
+	}
 }
 
 // end of namespaces

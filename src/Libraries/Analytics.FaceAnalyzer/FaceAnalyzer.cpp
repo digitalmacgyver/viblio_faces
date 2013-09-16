@@ -137,6 +137,9 @@ void FaceAnalysis::Process(const Mat &frame, uint64_t frameTimestamp)
 
 		m_trackingController->RenderVisualization(frameCopy);
 
+		if( detectedFaces.size() > 0 )
+			m_faceDetector->RenderVisualization(frameCopy, detectedFaces);
+
 		namedWindow("Visualization");
 		imshow("Visualization", frameCopy);
 		waitKey(2);

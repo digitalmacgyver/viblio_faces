@@ -44,6 +44,11 @@ public:
 		Performs detection on the opencv frame passed in. Returns a vector of rects with the locations of any faces detected (empty if no faces detected)
 	*/
 	std::vector<cv::Rect> Detect(const cv::Mat &frame);
+
+	/*
+		Renders a visualization of where the faces were detected (assuming they were)
+	*/
+	void RenderVisualization(cv::Mat &frame, const std::vector<cv::Rect> &detectedFaces);
 };
 
 // end of namespaces
