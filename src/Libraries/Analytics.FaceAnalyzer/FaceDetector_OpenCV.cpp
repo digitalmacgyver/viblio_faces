@@ -75,7 +75,7 @@ vector<Rect> FaceDetector_OpenCV::Detect(const Mat &frame)
 
 	//-- Detect faces
 	// If you end up using a HAAR cascade here then you should use face_cascade.detectMultiScale( frame_gray, faces, 1.1, 2, 0|CV_HAAR_SCALE_IMAGE, Size(30, 30) );
-	m_faceCascade.detectMultiScale( frame_gray, faces, 1.1, 3, 0, Size(50, 50) );
+	m_faceCascade.detectMultiScale( frame_gray, faces, 1.1, 3, 0 );//, Size(50, 50) );
 
 	if( m_filterFacesByEyeDetections )
 	{
