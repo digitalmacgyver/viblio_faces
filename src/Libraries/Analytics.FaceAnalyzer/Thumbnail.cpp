@@ -3,6 +3,7 @@
 
 #include "FaceAnalyzerConfiguration.h"
 #include "Thumbnail.h"
+#include "EyeDetector_OpenCV.h"
 
 using namespace cv;
 using namespace std;
@@ -14,8 +15,14 @@ namespace Analytics
 
 
 Thumbnail::Thumbnail(FaceAnalyzerConfiguration *faceAnalyzerConfig)
-{
-	face_detector_check.reset( new FaceDetector_OpenCV(faceAnalyzerConfig->faceDetectorCascadeFile, faceAnalyzerConfig->eyeDetectorCascadeFile));
+{  has_eyecascade= false;
+	face_detector_check.reset( new FaceDetector_OpenCV(faceAnalyzerConfig->faceDetectorCascadeFile));
+	if(!faceAnalyzerConfig->eyeDetectorCascadeFile.empty())
+	{   has_eyecascade = true;
+		eye_detector_check.reset(new EyeDetector_OpenCV(faceAnalyzerConfig->eyeDetectorCascadeFile));
+	}
+	Thumbnail_enlarge_percentage = 20;
+	
 }
 
 
@@ -29,7 +36,7 @@ cv::Mat Thumbnail::ExtractThumbnail( const cv::Mat &frame, const cv::Rect &Thumb
 {
 	cv::Mat temp;
 	
-	Rect enlarged_thumbnail(ThumbnailLocation.x-(ThumbnailLocation.width*20/100),ThumbnailLocation.y-(ThumbnailLocation.height*20/100),ThumbnailLocation.width+(ThumbnailLocation.width*40/100),ThumbnailLocation.height+(ThumbnailLocation.height*40/100));
+	Rect enlarged_thumbnail(ThumbnailLocation.x-(ThumbnailLocation.width*Thumbnail_enlarge_percentage/100),ThumbnailLocation.y-(ThumbnailLocation.height*Thumbnail_enlarge_percentage/100),ThumbnailLocation.width+(ThumbnailLocation.width*(Thumbnail_enlarge_percentage*2)/100),ThumbnailLocation.height+(ThumbnailLocation.height*Thumbnail_enlarge_percentage*2/100));
 	Rect constrainedRect = ConstrainRect(enlarged_thumbnail, Size(frame.cols, frame.rows));
 	
 	temp= frame(constrainedRect);
@@ -50,8 +57,19 @@ float Thumbnail::GetConfidencevalue(const cv::Mat &Thumbnail,bool &has_thumbnail
 				{
 					
 					has_thumbnails = true;
-					confidence = confidence + 0.3 ;
+					confidence = confidence + 0.15 ;
 				}
+
+	if(has_eyecascade)
+	{
+
+		vector<Rect> eyes_detected =eye_detector_check->Detect(Thumbnail);
+		if(eyes_detected.size()>0)
+				{
+					confidence = confidence + 0.15 ;
+				}
+	}
+
 	return confidence;
 
 }
