@@ -70,13 +70,8 @@ void Face::Merge(Face *theOtherFace)
 
 	// assumes that *this is the face to keep (the original) and 'theOtherFace' is the duplicate
 
-	// check to see if the other face had a visible pair that was currently being constructed, add it to the list
-	// if it did... the MergeFaceVisibleTimes function will sort out the confusion
-	if( theOtherFace->m_currentFaceVisiblePair.first != 0 && theOtherFace->m_currentFaceVisiblePair.second == 0 )// isn't this always the case?
-	{
-		theOtherFace->m_currentFaceVisiblePair.second = theOtherFace->m_mostRecentFrameTimestamp;
-		theOtherFace->m_timesWhenFaceVisible.push_back( theOtherFace->m_currentFaceVisiblePair );
-	}
+	// both of these tracks were active so both had a m_currentFaceVisiblePair that was under construction... merge these two here
+	m_currentFaceVisiblePair.first = std::min(m_currentFaceVisiblePair.first, theOtherFace->m_currentFaceVisiblePair.first); // we always take the older of the pair
 
 	// copy any face visibility information out of 'theOtherFace' and put it into the correct position in
 	// this->m_timesWhenFaceVisible... ensure if theOtherFace had info in m_currentFaceVisiblePair we get that too
