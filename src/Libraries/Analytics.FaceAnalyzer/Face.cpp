@@ -78,11 +78,26 @@ void Face::Merge(Face *theOtherFace)
 	MergeFaceVisibleTimes(theOtherFace->m_timesWhenFaceVisible);
 
 	// get the face location history out of theOtherFace and put it into the this->m_faceLocationHistory
+	m_faceLocationHistory.insert(theOtherFace->m_faceLocationHistory.begin(),theOtherFace->m_faceLocationHistory.end());
 
 	// look at the thumbnails that we have in theOtherFace and determine if any of them have higher scores
 	// than the lowest scored images from this->thumbnails and if so replace them
+	//std::map<float, cv::Mat> m_thumbnailConfidence_temp;
+	// Merging both and cutting of at size specified in the constructor
+	m_thumbnailConfidence.insert(theOtherFace->m_thumbnailConfidence.begin(),theOtherFace->m_thumbnailConfidence.begin());
+	if(m_thumbnailConfidence.size() >=m_thumbnailConfidenceSize)
+	{
+		while(m_thumbnailConfidence.size()<=m_thumbnailConfidenceSize)
+		{
+			m_thumbnailConfidence.erase( m_thumbnailConfidence.begin());
+		}
+
+	}
+	
+
 
 	// copy the current estimated position from theOtherFace and update this->m_currentEstimatedPosition
+	m_currentEstimatedPosition = theOtherFace->m_currentEstimatedPosition;
 
 	// destroy this->m_faceTracker and take theOtherFace->m_faceTracker and use that instead as it is more up to date...
 	// would be ideal here if we could exploit the current tracks slightly outdated knowledge as to the model of the tracked
