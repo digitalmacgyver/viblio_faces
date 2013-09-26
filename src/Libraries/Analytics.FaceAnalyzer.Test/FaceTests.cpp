@@ -184,6 +184,71 @@ void FaceTests::TestMergeFunctionalityMultipleInterleaved()
 	EXPECT_EQ(0, tracker1.m_currentFaceVisiblePair.second);
 }
 
+void FaceTests::TestMergeFunctionalitySimplethumbnails()
+{
+	FaceAnalyzerConfiguration faceAnalyzerConfig;
+	faceAnalyzerConfig.faceDetectorCascadeFile = "";
+	faceAnalyzerConfig.eyeDetectorCascadeFile = "";
+
+	cv::Mat frame(480, 640, CV_8UC3);
+	// setup each of the two faces
+
+	pair<uint64_t, uint64_t> currentTimes;
+
+	// the first is the older one
+	Face tracker1(frame, 0, cv::Rect(20, 20, 40, 40), &faceAnalyzerConfig);
+
+	// tracker 1 tracks Person A for period [5000, 10000]
+	currentTimes.first = 5000;
+	currentTimes.second = 10000;
+	tracker1.m_timesWhenFaceVisible.push_back(currentTimes);
+	
+	tracker1.m_currentFaceVisiblePair.first = 15000;
+	tracker1.m_currentFaceVisiblePair.second = 0;
+	tracker1.m_mostRecentFrameTimestamp = 17000;
+	cv::Mat a(10,10,CV_16U);
+	tracker1.m_thumbnailConfidence.insert(tracker1.m_thumbnailConfidence.end(), pair<float,cv::Mat>(0.50,a));
+	tracker1.m_thumbnailConfidence.insert(tracker1.m_thumbnailConfidence.end(), pair<float,cv::Mat>(0.25,a));
+	tracker1.m_thumbnailConfidence.insert(tracker1.m_thumbnailConfidence.end(), pair<float,cv::Mat>(0.70,a));
+	tracker1.m_thumbnailConfidence.insert(tracker1.m_thumbnailConfidence.end(), pair<float,cv::Mat>(0.65,a));
+
+
+	Face tracker2(frame, 0, cv::Rect(20, 20, 40, 40), &faceAnalyzerConfig);
+	tracker2.m_currentFaceVisiblePair.first = 17000;
+	tracker2.m_currentFaceVisiblePair.second = 0;
+	tracker2.m_mostRecentFrameTimestamp = 17000; // at time 17 seconds tracker 1 reacquires the face, this is when we detect we have to merge
+	
+	cv::Mat b(10,10,CV_16U);
+	
+	tracker2.m_thumbnailConfidence.insert(tracker2.m_thumbnailConfidence.end(), pair<float,cv::Mat>(0.8,a));
+	tracker2.m_thumbnailConfidence.insert(tracker2.m_thumbnailConfidence.end(), pair<float,cv::Mat>(0.9,a));
+	tracker2.m_thumbnailConfidence.insert(tracker2.m_thumbnailConfidence.end(), pair<float,cv::Mat>(0.2,a));
+	
+
+	// we have just detected that tracker2 & tracker1 are tracking the same face! time to merge
+	tracker1.Merge(&tracker2);
+
+	// ensure we have 1 pair of times and that the state of the tracker 1 is such
+	// that it is tracking the face and would store the correct time pair if it lost
+	// the face again
+	EXPECT_EQ(1, tracker1.m_timesWhenFaceVisible.size());
+
+	// ensure the times are actually correct
+	EXPECT_EQ(5000, tracker1.m_timesWhenFaceVisible[0].first);
+	EXPECT_EQ(10000, tracker1.m_timesWhenFaceVisible[0].second);
+	EXPECT_EQ(15000, tracker1.m_currentFaceVisiblePair.first);
+	EXPECT_EQ(0, tracker1.m_currentFaceVisiblePair.second);
+
+	EXPECT_EQ(5, tracker1.m_thumbnailConfidence.size());
+	EXPECT_EQ(0.5,tracker1.m_thumbnailConfidence.begin()->first);
+	std::map<float,cv::Mat>::iterator it = tracker1.m_thumbnailConfidence.begin();
+	std::advance(it,tracker1.m_thumbnailConfidence.size()-1);
+	EXPECT_FLOAT_EQ(0.9,it->first);
+	
+	
+}
+
+
 TEST_F(FaceTests, TestMergeFunctionalitySimple) 
 {
 	TestMergeFunctionalitySimple();
@@ -197,6 +262,11 @@ TEST_F(FaceTests, TestMergeFunctionalityLessSimple)
 TEST_F(FaceTests, TestMergeFunctionalityMultipleInterleaved) 
 {
 	TestMergeFunctionalityMultipleInterleaved();
+}
+
+TEST_F(FaceTests, TestMergeFunctionalitySimplethumbnails) 
+{
+	TestMergeFunctionalitySimplethumbnails();
 }
 
 	}

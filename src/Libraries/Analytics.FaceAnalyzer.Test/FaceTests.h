@@ -16,6 +16,7 @@ public:
 	~FaceTests(){};
 
 	void TestMergeFunctionalitySimple();
+	void TestMergeFunctionalitySimplethumbnails();
 	void TestMergeFunctionalityLessSimple();
 	void TestMergeFunctionalityMultipleInterleaved();
 };

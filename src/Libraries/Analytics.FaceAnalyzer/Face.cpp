@@ -84,10 +84,10 @@ void Face::Merge(Face *theOtherFace)
 	// than the lowest scored images from this->thumbnails and if so replace them
 	//std::map<float, cv::Mat> m_thumbnailConfidence_temp;
 	// Merging both and cutting of at size specified in the constructor
-	m_thumbnailConfidence.insert(theOtherFace->m_thumbnailConfidence.begin(),theOtherFace->m_thumbnailConfidence.begin());
+	m_thumbnailConfidence.insert(theOtherFace->m_thumbnailConfidence.begin(),theOtherFace->m_thumbnailConfidence.end());
 	if(m_thumbnailConfidence.size() >=m_thumbnailConfidenceSize)
 	{
-		while(m_thumbnailConfidence.size()<=m_thumbnailConfidenceSize)
+		while(m_thumbnailConfidence.size()>m_thumbnailConfidenceSize)
 		{
 			m_thumbnailConfidence.erase( m_thumbnailConfidence.begin());
 		}
