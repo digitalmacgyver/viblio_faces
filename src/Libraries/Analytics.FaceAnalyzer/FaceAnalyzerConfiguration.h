@@ -45,6 +45,10 @@ public:
 	// Higher values will mean faster processing of the video but with a higher chance of missing detection of a face
 	int faceDetectionFrequency;
 
+	// specifies the rescale factor to be applied to the images prior to face processing. Values lower
+	// than 1 indicate a downscale.
+	float imageRescaleFactor;
+
 	// how often we will attempt to regather a lost face by allowing the trackers for lost faces to process each
 	// frame (or every nth frame, where n is lostFaceProcessFrequency). Higher values indicate faster processing
 	// at the potential expense of missing a chance to regather a once lost track

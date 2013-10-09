@@ -42,12 +42,14 @@ int main(int argc, char* argv[])
 	desc.add_options()
 		("help", "produce help message")
 		("filename,f", po::value<string>(), "specify the input video filename to analyze")
+		("video_rotation,r", po::value<int>()->default_value(0), "amount (in degrees) to rotate each frame prior to any processing")
 		("verbosity,v", po::value<int>(&g_verbosityLevel)->default_value(0), "set the verbosity level (between 0-3, 0 is off, 3 is most verbose)")
 		("analyzers", po::value< vector<string> >(), "analyzers to use. Options include \"FaceAnalysis\"")
 		("face_detector_cascade_file", po::value<string>(), "the path to the cascade file to use for face detection")
 		("eye_detector_cascade_file", po::value<string>(), "the path to the cascade file to use for eye detection")
 		("face_thumbnail_path", po::value<string>(), "the location to put output facial thumbnails generated")
 		("face_detection_frequency", po::value<int>()->default_value(3), "set how often we should perform face detection, e.g. a value of 3 means we only check every third frame, lower numbers means we check more frequently but this will be slower")
+		("face_image_resize", po::value<float>()->default_value(1.0f), "specifies rescale factor for frames prior to performing face processing")
 		("lost_track_process_frequency", po::value<int>()->default_value(5), "set how often a lost face should perform processing when attempting to regain the track, e.g. a value of 5 means we only check every fifth frame, lower numbers means we check more frequently but this will be slower")
 		("Thumbnail_generation_frequency", po::value<int>()->default_value(3), "set how often a thumbnail should be generated, e.g. a value of 3 means we only check every third frame and do thumbnail processing")
 		("render_visualization", "determines whether visualizations will be rendered")
@@ -131,6 +133,8 @@ int main(int argc, char* argv[])
 
 	videoProcessor.PerformProcessing();
 
+	videoProcessor.OutputJobSummaryStatistics();
+
 	videoProcessor.DumpOutput(jobConfig);
 
 	return 0;
@@ -169,6 +173,11 @@ void ExtractFaceAnalysisParameters( po::variables_map variableMap, Analytics::Fa
 	if (variableMap.count("Thumbnail_generation_frequency")) 
 	{
 		faceAnalyzerConfig->Thumbnail_generation_frequency = variableMap["Thumbnail_generation_frequency"].as<int>();
+	}
+
+	if (variableMap.count("face_image_resize")) 
+	{
+		faceAnalyzerConfig->imageRescaleFactor = variableMap["face_image_resize"].as<float>();
 	}
 
 	if (variableMap.count("render_visualization")) 

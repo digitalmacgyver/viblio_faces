@@ -75,7 +75,8 @@ bool VideoProcessor::SetupAnalyzers(const JobConfiguration &jobConfig)
 
 bool VideoProcessor::PerformProcessing()
 {
-	
+	m_startProcessingTime = chrono::steady_clock::now();
+
 	// go through each frame from the video source and pass it along to each of the analyzers
 	Mat currentFrame;
 	uint64_t timestamp;
@@ -99,7 +100,32 @@ bool VideoProcessor::PerformProcessing()
 	 
 	}
 
+	m_lastFrameTimestamp = timestamp;
+	m_endProcessingTime = chrono::steady_clock::now();
+
 	return true;
+}
+
+void VideoProcessor::OutputJobSummaryStatistics()
+{
+	using namespace chrono;
+
+	std::chrono::duration<double> elapsed_time = m_endProcessingTime - m_startProcessingTime;
+	cout << "########### SUMMARY JOB STATISTICS ###########" << endl;
+
+	cout << "Total time to process: " << (duration <double, std::milli> (elapsed_time).count())/1000 << " seconds" << endl;
+	//duration <double, std::milli> (elapsed_time).count()
+	//hours h = duration_cast<hours>(elapsed_time);
+    //elapsed_time -= h;
+    //minutes m = duration_cast<minutes>(elapsed_time);
+    //elapsed_time -= m;
+    //seconds s = duration_cast<seconds>(elapsed_time);
+    //elapsed_time -= s;
+    //std::cout << h.count() << ':' << m.count() << ':' << s.count() << endl;
+
+	cout << "Video length: " << m_lastFrameTimestamp / 1000 << " seconds" << endl;
+
+	cout << "Percentage of realtime: " << (duration <double, std::milli> (elapsed_time).count() / (double)m_lastFrameTimestamp) * 100 << "%" << endl;
 }
 
 bool VideoProcessor::DumpOutput(const JobConfiguration &jobConfig)

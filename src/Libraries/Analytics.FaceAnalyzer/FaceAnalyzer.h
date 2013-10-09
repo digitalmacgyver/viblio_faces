@@ -27,6 +27,8 @@ private:
 	int m_faceDetectionFrequency;
 	int m_currentFrameNumber;
 
+	float m_imageRescaleFactor;
+
 	bool m_renderVisualization;
 
 	// no copy constructor or assignment operator

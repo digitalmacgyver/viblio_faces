@@ -49,6 +49,8 @@ FaceAnalysis::FaceAnalysis(FaceAnalyzerConfiguration *faceAnalyzerConfig)
 	m_faceDetectionFrequency = faceAnalyzerConfig->faceDetectionFrequency;
 	m_currentFrameNumber = 0;
 
+	m_imageRescaleFactor = faceAnalyzerConfig->imageRescaleFactor;
+
 	m_renderVisualization = faceAnalyzerConfig->renderVisualization;
 }
 
@@ -60,18 +62,26 @@ FaceAnalysis::~FaceAnalysis()
 
 void FaceAnalysis::Process(const Mat &frame, uint64_t frameTimestamp)
 {
+	Mat resizedFrame;
+	if( m_imageRescaleFactor != 1.0f )
+		resize(frame, resizedFrame, Size(frame.cols * m_imageRescaleFactor, frame.rows * m_imageRescaleFactor));
+	else
+		// no resize necessary
+		resizedFrame = frame;
+
 	auto start = std::chrono::steady_clock::now();
    
 	// multithreaded version - do 2 things in parallel here
 	// 1. Perform face detection	
 	//std::future<vector<Rect>> detectedFacesFuture;
+
 	//if( m_currentFrameNumber%m_faceDetectionFrequency == 0 )
 	//{
 	//	try
 	//	{
 	//		// its a pity but we have to make use of the underlying Face Detector that is managed by the unique_ptr, but
 	//		// std::async doesn't seem to like it any other way
-	//		detectedFacesFuture = std::async(std::launch::async, &Analytics::FaceAnalyzer::FaceDetector_OpenCV::Detect, m_faceDetector.get(), frame);
+	//		detectedFacesFuture = std::async(std::launch::async, &Analytics::FaceAnalyzer::FaceDetector_OpenCV::Detect, m_faceDetector.get(), resizedFrame);
 	//	}
 	//	catch(Exception e)
 	//	{
@@ -80,7 +90,7 @@ void FaceAnalysis::Process(const Mat &frame, uint64_t frameTimestamp)
 	//}
 	//
 	// 2. Pass the frame off to the tracking controller to update any active trackers
-	//std::future<void> trackingFuture = std::async(std::launch::async, &Analytics::FaceAnalyzer::TrackingController::Process, m_trackingController.get(), frame, frameTimestamp);
+	//std::future<void> trackingFuture = std::async(std::launch::async, &Analytics::FaceAnalyzer::TrackingController::Process, m_trackingController.get(), resizedFrame, frameTimestamp);
 	//
 	// make sure the detector and the tracking controller have been called
 	//if( detectedFacesFuture.valid() )
@@ -103,9 +113,9 @@ void FaceAnalysis::Process(const Mat &frame, uint64_t frameTimestamp)
 	// Single threaded version
 	vector<Rect> detectedFaces;
 	if( m_currentFrameNumber%m_faceDetectionFrequency == 0 )
-		detectedFaces = m_faceDetector->Detect(frame);
+		detectedFaces = m_faceDetector->Detect(resizedFrame);
 
-	m_trackingController->Process(frame, frameTimestamp);
+	m_trackingController->Process(resizedFrame, frameTimestamp);
 
 	auto end = std::chrono::steady_clock::now();
 
@@ -124,7 +134,7 @@ void FaceAnalysis::Process(const Mat &frame, uint64_t frameTimestamp)
 			if( !m_trackingController->IsAlreadyBeingTracked(*startIter) )
 			{
 				// we've found a new object, better start tracking it
-				m_trackingController->AddNewTrack(frame, frameTimestamp, *startIter);
+				m_trackingController->AddNewTrack(resizedFrame, frameTimestamp, *startIter);
 			}
 			// else do nothing as we are already tracking this one
 		}
@@ -133,7 +143,7 @@ void FaceAnalysis::Process(const Mat &frame, uint64_t frameTimestamp)
 	// now see if we need to render any visualizations
 	if( m_renderVisualization )
 	{
-		Mat frameCopy = frame.clone();
+		Mat frameCopy = resizedFrame.clone();
 
 		m_trackingController->RenderVisualization(frameCopy);
 

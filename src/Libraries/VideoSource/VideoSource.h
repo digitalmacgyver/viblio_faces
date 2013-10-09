@@ -20,6 +20,8 @@ private:
 	VideoSourceBase(const VideoSourceBase&);
 	VideoSourceBase& operator=(const VideoSourceBase&);
 
+	float m_scaleFactor;
+
 public:
 	VideoSourceBase(){};
 	virtual ~VideoSourceBase(){};
