@@ -6,7 +6,7 @@ Face.cpp\
 FaceDetector_OpenCV.cpp\
 Tracker_OpenTLD.cpp\
 TrackingController.cpp\
-Jzon.cpp\
+../Jzon/Jzon.cpp\
 Thumbnail.cpp
 
 OBJS=$(SOURCES:.cpp=.o)

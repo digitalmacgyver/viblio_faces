@@ -1,7 +1,7 @@
 SOURCES=\
 viblio_video_analyzer.cpp\
 VideoProcessor.cpp\
-Jzon.cpp
+../../Libraries/Jzon/Jzon.cpp
 
 OBJS=$(SOURCES:.cpp=.o)
 CFLAGS=-std=c++0x -I../../Libraries

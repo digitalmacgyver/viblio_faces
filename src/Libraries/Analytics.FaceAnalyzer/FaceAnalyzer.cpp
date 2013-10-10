@@ -13,10 +13,12 @@
 #include "FaceAnalyzerConfiguration.h"
 #include "TrackingController.h"
 #include "FileSystem/FileSystem.h"
+#include <boost/any.hpp>
 #include <stdexcept>
 #include <opencv2/opencv.hpp>
 #include <chrono>
 #include <future>
+#include <iostream>
 
 using namespace std;
 using namespace cv;
@@ -69,7 +71,7 @@ void FaceAnalysis::Process(const Mat &frame, uint64_t frameTimestamp)
 		// no resize necessary
 		resizedFrame = frame;
 
-	auto start = std::chrono::steady_clock::now();
+	auto start = std::chrono::monotonic_clock::now();
    
 	// multithreaded version - do 2 things in parallel here
 	// 1. Perform face detection	
@@ -117,7 +119,7 @@ void FaceAnalysis::Process(const Mat &frame, uint64_t frameTimestamp)
 
 	m_trackingController->Process(resizedFrame, frameTimestamp);
 
-	auto end = std::chrono::steady_clock::now();
+	auto end = std::chrono::monotonic_clock::now();
 
 	auto diff = end - start;
 	//std::cout << "Detection + tracking update took " << std::chrono::duration <double, std::milli> (diff).count() << " ms" << std::endl;
