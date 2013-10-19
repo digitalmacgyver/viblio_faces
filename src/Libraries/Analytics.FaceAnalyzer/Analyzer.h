@@ -12,6 +12,7 @@
 
 #include <opencv2/opencv.hpp>
 #include "FaceDetector_OpenCV.h"
+#include "FaceDetector_Neurotech.h"
 
 namespace Analytics
 {

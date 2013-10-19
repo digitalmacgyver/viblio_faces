@@ -44,8 +44,8 @@ FaceAnalysis::FaceAnalysis(FaceAnalyzerConfiguration *faceAnalyzerConfig)
 			//throw runtime_error("Specified output thumbnail directory does not exist");
 	}
 
-	m_faceDetector.reset( new FaceDetector_OpenCV(faceAnalyzerConfig->faceDetectorCascadeFile, faceAnalyzerConfig->eyeDetectorCascadeFile) );
-
+	//m_faceDetector.reset( new FaceDetector_OpenCV(faceAnalyzerConfig->faceDetectorCascadeFile, faceAnalyzerConfig->eyeDetectorCascadeFile) );
+	m_faceDetector.reset( new FaceDetector_Neurotech( ));
 	m_trackingController.reset( new TrackingController(faceAnalyzerConfig) );
 
 	m_faceDetectionFrequency = faceAnalyzerConfig->faceDetectionFrequency;

@@ -10,7 +10,7 @@
 #define __TRACKING_FACE__
 
 #include "FaceAnalyzerConfiguration.h"
-
+#include <chrono>
 #include <opencv2/opencv.hpp>
 #include <boost/uuid/uuid.hpp>
 
@@ -32,7 +32,11 @@ private:
 	Face(const Face&);
 	Face& operator=(const Face&);
 
-	
+	// the time at which we started processing the video
+	std::chrono::system_clock::time_point m_startTime;
+
+	// the time at which we finished processing the video
+	std::chrono::system_clock::time_point m_endTime;
 
 	// a unique identifier for this face
 	boost::uuids::uuid m_faceId;

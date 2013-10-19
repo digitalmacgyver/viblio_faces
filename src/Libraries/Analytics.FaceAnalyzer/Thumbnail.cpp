@@ -16,7 +16,9 @@ namespace Analytics
 
 Thumbnail::Thumbnail(FaceAnalyzerConfiguration *faceAnalyzerConfig)
 {  has_eyecascade= false;
-	face_detector_check.reset( new FaceDetector_OpenCV(faceAnalyzerConfig->faceDetectorCascadeFile));
+  face_detector_check.reset( new FaceDetector_Neurotech());
+	//face_detector_check.reset( new FaceDetector_Neurotech(faceAnalyzerConfig->faceDetectorCascadeFile));
+	//face_detector_neuro.reset(new FaceDetector_Neurotech());
 	if(!faceAnalyzerConfig->eyeDetectorCascadeFile.empty())
 	{   has_eyecascade = true;
 		eye_detector_check.reset(new EyeDetector_OpenCV(faceAnalyzerConfig->eyeDetectorCascadeFile));
@@ -51,6 +53,7 @@ cv::Mat Thumbnail::ExtractThumbnail( const cv::Mat &frame, const cv::Rect &Thumb
 float Thumbnail::GetConfidencevalue(const cv::Mat &Thumbnail,bool &has_thumbnails,const float &tracker_confidence )
 {
 	vector<Rect> faces_detected =face_detector_check->Detect(Thumbnail);
+	//face_detector_neuro->Detect(Thumbnail);
 	float confidence;
 	confidence = tracker_confidence;
 	if(faces_detected.size()>0)

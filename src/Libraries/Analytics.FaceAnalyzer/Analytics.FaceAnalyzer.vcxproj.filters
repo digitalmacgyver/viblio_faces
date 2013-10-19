@@ -57,6 +57,12 @@
     <ClCompile Include="Thumbnail.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="FaceDetector_Neurotech.cpp">
+      <Filter>Source Files\Detection</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Neurotech\Utils.c">
+      <Filter>Source Files\Detection</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FaceAnalyzer.h">
@@ -91,6 +97,9 @@
     </ClInclude>
     <ClInclude Include="Thumbnail.h">
       <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FaceDetector_Neurotech.h">
+      <Filter>Header Files\Detection</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

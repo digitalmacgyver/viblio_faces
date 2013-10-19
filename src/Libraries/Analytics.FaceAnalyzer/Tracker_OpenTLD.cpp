@@ -35,6 +35,7 @@ Tracker_OpenTLD::Tracker_OpenTLD()
     m_tldTracker->detectorCascade->numFeatures = 10;
     m_tldTracker->detectorCascade->nnClassifier->thetaTP = 0.65f;
     m_tldTracker->detectorCascade->nnClassifier->thetaFP = 0.5f;
+	
 }
 
 
@@ -71,6 +72,7 @@ Rect Tracker_OpenTLD::Process(const Mat &frame)
 	static int currentFrameNumber = 1;
 
 	m_tldTracker->processImage(frame);
+
 
 	Rect trackingRect = Rect(0,0,0,0);
 

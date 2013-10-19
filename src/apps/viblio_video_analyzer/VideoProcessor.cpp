@@ -76,6 +76,7 @@ bool VideoProcessor::SetupAnalyzers(const JobConfiguration &jobConfig)
 bool VideoProcessor::PerformProcessing()
 {
 	m_startProcessingTime = chrono::monotonic_clock::now();
+	
 
 	// go through each frame from the video source and pass it along to each of the analyzers
 	Mat currentFrame;

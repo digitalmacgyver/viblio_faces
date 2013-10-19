@@ -35,8 +35,11 @@ Face::Face(const Mat frame, uint64_t frameTimestamp, Rect initialFaceRegion,Face
 	// however this is yet TBD
 	m_faceTracker.reset(new Tracker_OpenTLD());//m_trackerToInitializeFrom;
 
+	m_startTime = chrono::monotonic_clock::now();
+
     Thumbnail_frequency = faceAnalyzerConfig->Thumbnail_generation_frequency;
 	m_faceTracker->InitialiseTrack(frame, initialFaceRegion);
+	
 	Thumbnail_path = faceAnalyzerConfig->faceThumbnailOutputPath;
 	Thumbnail_generator = new Thumbnail(faceAnalyzerConfig);
 
@@ -113,6 +116,15 @@ bool Face::Process(const Mat &frame, uint64_t frameTimestamp)
 	m_frameProcessedNumber++;
 	if( m_isLost && m_frameProcessedNumber % m_lostFaceProcessingInterval != 0)
 		return true; // all good, we are just going to skip processing of this frame because this face is lost and we don't process every frame for lost faces otherwise it slows us down
+
+	m_endTime = chrono::monotonic_clock::now();
+
+	std::chrono::duration<double> elapsed_time = m_endTime - m_startTime;
+
+	double temp =(std::chrono::duration <double, std::milli> (elapsed_time).count())/1000;
+
+	if (temp>20.0)
+		return true;
 
 
 	m_currentEstimatedPosition = m_faceTracker->Process(frame);

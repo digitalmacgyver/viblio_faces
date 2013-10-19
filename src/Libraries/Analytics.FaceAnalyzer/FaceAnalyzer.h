@@ -15,12 +15,13 @@ namespace Analytics
 class FaceAnalyzerConfiguration;
 class FaceDetector_OpenCV;
 class TrackingController;
+class FaceDetector_Neurotech;
 
 class FaceAnalysis : public Analyzer
 {
 private:
 	// The face detector we will use to identify faces in a given frame
-	std::unique_ptr<FaceDetector_OpenCV> m_faceDetector;
+	std::unique_ptr<FaceDetector_Neurotech> m_faceDetector;
 
 	std::unique_ptr<TrackingController> m_trackingController;
 
