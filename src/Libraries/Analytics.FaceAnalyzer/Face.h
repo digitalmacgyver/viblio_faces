@@ -22,6 +22,7 @@ namespace Analytics
 // fwd declarations
 class Tracker_OpenTLD;
 class FaceDetector_OpenCV;
+class FaceDetector_Neurotech;
 class Thumbnail;
 class Face
 {
@@ -99,7 +100,7 @@ public:
 	void Merge(Face *theOtherFace);
 
 	bool Process(const cv::Mat &frame, uint64_t frameTimestamp);
-
+	std::unique_ptr<FaceDetector_Neurotech> face_detector_neuro;
 	// Returns the timestamp at which this face was first created
 	uint64_t Age();
 
@@ -112,7 +113,7 @@ public:
 
 	cv::Rect GetMostRecentFacePosition(){ return m_currentEstimatedPosition; }
 
-	std::string GetOutput();
+	std::string GetOutput(int trackno);
 
 	void RenderVisualization(cv::Mat &frame);
 

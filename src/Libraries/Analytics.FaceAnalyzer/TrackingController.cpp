@@ -11,6 +11,7 @@
 #include "TrackingController.h"
 #include "Tracker_OpenTLD.h"
 #include "Face.h"
+#include "Jzon/Jzon.h"
 
 #include <thread>
 #include <future>
@@ -212,11 +213,31 @@ string TrackingController::GetOutput()
 {
 
 	string facesArrayJson = "";
+	Jzon::Array listOfStuff2;
 
 	for( auto startIter=m_trackedFaces.begin(); startIter!=m_trackedFaces.end(); ++startIter)
 	{
-		facesArrayJson += (*startIter)->GetOutput();
+		string temp;
+		temp = (*startIter)->GetOutput(startIter-m_trackedFaces.begin());
+		 Jzon::Object tempNode;
+         Jzon::Parser parser(tempNode,temp );
+		 if (!parser.Parse())
+		    {
+               std::cout << "Error: " << parser.GetError() << std::endl;
+		     }
+		// tempNode.Add("Trackid",startIter-m_trackedFaces.begin());
+				//face_detector_neuro->Detect(k);
+		        if(!temp.empty())
+				listOfStuff2.Add(tempNode);
+		//facesArrayJson += (*startIter)->GetOutput();
 	}
+		 Jzon::Object root1;
+		 root1.Add("tracks",listOfStuff2);
+
+		 Jzon::Writer writer(root1, Jzon::StandardFormat);
+         writer.Write();
+		// Writing everything ot a string to export
+        facesArrayJson = writer.GetResult();
 
 	return facesArrayJson;
 }

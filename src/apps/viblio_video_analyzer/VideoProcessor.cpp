@@ -13,7 +13,7 @@
 #include "Analytics.FaceAnalyzer/FaceAnalyzer.h"
 #include "FileSystem/FileSystem.h"
 #include "Jzon/Jzon.h"
-
+#include "Analytics.FaceAnalyzer/FaceAnalyzerConfiguration.h"
 #include <boost/uuid/uuid.hpp>            // uuid class
 #include <boost/uuid/uuid_generators.hpp> // generators
 #include <boost/uuid/uuid_io.hpp>         // streaming operators etc.
@@ -152,21 +152,51 @@ bool VideoProcessor::DumpOutput(const JobConfiguration &jobConfig)
 
 	string outputJsonData = "";
 
+		//Jzon::Array listOfStuff3;
+	Jzon::Object tempNode;
 	for(auto startIter=m_analyzers.begin(); startIter != m_analyzers.end(); ++startIter)
-		outputJsonData += (*startIter)->GetOutput();
-	
+	{
+		//outputJsonData += (*startIter)->GetOutput();
+
+		string temp;
+		temp = (*startIter)->GetOutput();
+		 
+         Jzon::Parser parser(tempNode,temp );
+		 if (!parser.Parse())
+		    {
+               std::cout << "Error: " << parser.GetError() << std::endl;
+		     }
+		// tempNode.Add("Analyzer",startIter-m_analyzers.begin());
+				//face_detector_neuro->Detect(k);
+				//listOfStuff3.Add(tempNode);
+
+	}
+
+
+	//Jzon::Object root2;
+   // root2.Add("AnalyzerInfo",listOfStuff3);
+
+	Jzon::Writer writer(tempNode, Jzon::StandardFormat);
+     writer.Write();
+		// Writing everything ot a string to export
+     outputJsonData = writer.GetResult();
+
 	Jzon::Object rootNode;
         Jzon::Parser parser(rootNode,outputJsonData);
 		if (!parser.Parse())
         {
                 std::cout << "Error: " << parser.GetError() << std::endl;
         }
+		rootNode.Add("user_uuid","user_uuid");
+		rootNode.Add("media_uuid",jobConfig.videoSourceFilename);
+		rootNode.Add("protocol_version","protocol_version");
 
-		rootNode.Add("video_file_processed",jobConfig.videoSourceFilename);
 		boost::uuids::uuid uuid = boost::uuids::random_generator()();
 		std::stringstream ss;
 		ss << uuid;
-		Jzon::FileWriter::WriteFile(ss.str()+".json", rootNode, Jzon::StandardFormat);
+		string temppath;
+		temppath = jobConfig.faceAnalyzerConfig->faceThumbnailOutputPath +"/"+jobConfig.faceAnalyzerConfig->faceThumbnailOutputPath+".json";
+		Jzon::FileWriter::WriteFile(temppath, rootNode, Jzon::StandardFormat);
 
 	// now open a file (perhaps using the unique Job ID as the file name, with a .json extension) and dump the data to it
 

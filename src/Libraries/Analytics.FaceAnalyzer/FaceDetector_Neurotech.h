@@ -24,11 +24,12 @@ private:
 	
 	NResult result ;
 	HNLExtractor extractor ;
+	HNLExtractor extractor1 ;
 	HNLTemplate tmpl ;
 	NleExtractionStatus status;
 
 	HNImage image ;
-	HNGrayscaleImage grayscale ;
+	HNGrayscaleImage grayscale,grayscale1 ;
 
 	int faceCount;
 	NleFace *faces ;
@@ -59,6 +60,7 @@ public:
 	FaceDetector_Neurotech(void);
 	~FaceDetector_Neurotech(void);
 	std::vector<cv::Rect> Detect(const cv::Mat &frame);
+	std::string Detect_return_json(const cv::Mat &frame, const std::string &path,int id);
 	void RenderVisualization(cv::Mat &frame, const std::vector<cv::Rect> &detectedFaces);
 };
 

@@ -11,7 +11,7 @@
 #define __VIDEO_PROCESSOR__
 
 #include <vector>
-
+#include "Analytics.FaceAnalyzer/FaceAnalyzerConfiguration.h"
 #include "JobConfiguration.h"
 #include "Analytics.FaceAnalyzer/Analyzer.h"
 #include "VideoSource/VideoSource.h"

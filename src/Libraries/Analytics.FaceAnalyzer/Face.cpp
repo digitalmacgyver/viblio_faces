@@ -34,7 +34,7 @@ Face::Face(const Mat frame, uint64_t frameTimestamp, Rect initialFaceRegion,Face
 	// in a real system we will probably take a copy of the tracker to initialize the face from as it has learned the background,
 	// however this is yet TBD
 	m_faceTracker.reset(new Tracker_OpenTLD());//m_trackerToInitializeFrom;
-
+	face_detector_neuro.reset( new FaceDetector_Neurotech());
 	m_startTime = chrono::monotonic_clock::now();
 
     Thumbnail_frequency = faceAnalyzerConfig->Thumbnail_generation_frequency;
@@ -123,8 +123,8 @@ bool Face::Process(const Mat &frame, uint64_t frameTimestamp)
 
 	double temp =(std::chrono::duration <double, std::milli> (elapsed_time).count())/1000;
 
-	if (temp>20.0)
-		return true;
+	//if (temp>20.0)
+		//return true;
 
 
 	m_currentEstimatedPosition = m_faceTracker->Process(frame);
@@ -298,8 +298,9 @@ void Face::MergeFaceVisibleTimes(vector<pair<uint64_t, uint64_t>> otherFaceTimes
 	}
 }
 
-string Face::GetOutput()
+string Face::GetOutput(int trackno)
 {
+	std::string result;
 	// before we dump the data make sure we don't have another visibility pair to dump
 	if( !m_isLost )
 	{
@@ -316,7 +317,7 @@ string Face::GetOutput()
 	*/
 	// Getting UUid to string
 	std::stringstream ss;
-		ss << m_faceId;
+	ss << m_faceId;
 	// Store the top five thumbnails
 		string imagepath;
 		int count=0;
@@ -324,37 +325,67 @@ string Face::GetOutput()
 		if(m_thumbnailConfidence.size()>0)
 		{
 		std::string path =Thumbnail_path+"/"+ss.str();
-					FileSystem::CreateDirectory(path);
+				//	FileSystem::CreateDirectory(path);
 		}
+		else
+			return result;
+	//	std::string all_thumbnails;
+		  Jzon::Array listOfStuff;
 	for(std::map<float,Mat>::iterator iter = m_thumbnailConfidence.begin(); iter != m_thumbnailConfidence.end(); ++iter)
 					{
 						count++;
 						Mat k =  iter->second;
 					std::stringstream oss;
+					std::stringstream tracknumber;
 				//oss << frameTimestamp;
 					oss << count;
-			   imagepath =Thumbnail_path+"/"+ss.str()+ "/image"+oss.str()+".png";
-				imwrite( imagepath,k);
+					tracknumber << trackno;
+			   imagepath =Thumbnail_path+"/"+Thumbnail_path+"_face_"+tracknumber.str()+"_"+oss.str()+".png";
+				
+				string temp;
+				temp = face_detector_neuro->Detect_return_json(k,imagepath,count-1);
+				cout << temp;
+				 Jzon::Object tempNode;
+                 Jzon::Parser parser(tempNode, temp);
+				  if (!parser.Parse())
+				{
+                std::cout << "Error: " << parser.GetError() << std::endl;
+				 }
+				//face_detector_neuro->Detect(k);
+				  if(!temp.empty())
+				  {
+					listOfStuff.Add(tempNode);
+					imwrite( imagepath,k);
+				  }
+			//	all_thumbnails = all_thumbnails + temp ;
+				//cout << all_thumbnails;
 					}
 
 
     // Defining a jason object and adding some attributes and their values
+
 	 Jzon::Object root;
-        root.Add("UUID", ss.str());
-        root.Add("number_of_thumbnails", no_of_thumbnails);
+       // root.Add("UUID", ss.str());
+	    root.Add("track_id", trackno);
+		root.Add("faces",listOfStuff);
+      //  root.Add("number_of_thumbnails", count);
+		
+	
 
    // Adding visibility information as an array under visibilty info attribute
 	 Jzon::Array visibilty_info;
 	 std::vector<std::pair<uint64_t, uint64_t>>::iterator iter = m_timesWhenFaceVisible.begin();
 	 for (iter=m_timesWhenFaceVisible.begin();iter!=m_timesWhenFaceVisible.end();++iter)
 	 {
-		Jzon::Array each_visibility;
-       each_visibility.Add(int(iter->first));
-	   each_visibility.Add(int(iter->second));
+		Jzon::Object each_visibility;
+       each_visibility.Add("start_frame",int(iter->first));
+	   each_visibility.Add("end_frame",int(iter->second));
 	   visibilty_info.Add(each_visibility);
+		// visibilty_info.Add("start_frame",iter->first);
 	 }
         root.Add("visiblity_info", visibilty_info);
 
+		/*
 		// Adding face rectangle information as an array of arrays under "face_rectangles" attribute
 		 std::map<uint64_t, cv::Rect>::iterator it = m_faceLocationHistory.begin();
 
@@ -372,10 +403,11 @@ string Face::GetOutput()
 		}
 		root.Add("face_rectangles",rect_info);
 
+		*/
 		Jzon::Writer writer(root, Jzon::StandardFormat);
         writer.Write();
 		// Writing everything ot a string to export
-        std::string result = writer.GetResult();
+        result = writer.GetResult();
 
 
 	return result;
