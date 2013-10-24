@@ -15,6 +15,8 @@
 #include <NLExtractor.h>
 #include <NLicensing.h>
 
+#include "Jzon/Jzon.h"
+
 //#include <TutorialUtils.h>
 
 using namespace std;
@@ -36,6 +38,7 @@ FaceDetector_Neurotech::FaceDetector_Neurotech(void)
 	 tmpl (NULL),
      image(NULL),
 	 grayscale(NULL),
+	 grayscale1(NULL),
 	 faces( NULL),
 	 components(N_T("Biometrics.FaceDetection,Biometrics.FaceExtraction")),
 	 available(NFalse),
@@ -69,6 +72,7 @@ FaceDetector_Neurotech::FaceDetector_Neurotech(void)
 	
 
 	// create an extractor
+	
 	result = NleCreate(&extractor);
 	if (NFailed(result))
 	{
@@ -76,7 +80,7 @@ FaceDetector_Neurotech::FaceDetector_Neurotech(void)
 		//PrintErrorMsg(N_T("NleCreate() failed (result = %d)!"), result);
 		
 	}
-
+	
 	result = NObjectSetParameterEx(extractor, NLEP_DETECT_ALL_FEATURE_POINTS, -1, &detectAllFeatures, sizeof(NBool));
 	if (NFailed(result))
 	{
@@ -84,7 +88,7 @@ FaceDetector_Neurotech::FaceDetector_Neurotech(void)
 		//PrintErrorMsg(N_T("NObjectSetParameter() failed (result = %d)!"), result);
 		
 	}
-
+	
 	result = NObjectSetParameterEx(extractor, NLEP_DETECT_BASE_FEATURE_POINTS, -1, &detectBaseFeatures, sizeof(NBool));
 	if (NFailed(result))
 	{
@@ -92,7 +96,7 @@ FaceDetector_Neurotech::FaceDetector_Neurotech(void)
 		//PrintErrorMsg(N_T("NObjectSetParameter() failed (result = %d)!"), result);
 		
 	}
-
+	
 	result = NObjectSetParameterEx(extractor, NLEP_DETECT_GENDER, -1, &detectGender, sizeof(NBool));
 	if (NFailed(result))
 	{
@@ -124,7 +128,7 @@ FaceDetector_Neurotech::FaceDetector_Neurotech(void)
 		//PrintErrorMsg(N_T("NObjectSetParameter() failed (result = %d)!"), result);
 		
 	}
-
+	
 	result = NObjectSetParameterEx(extractor, NLEP_DETECT_GLASSES, -1, &detectGlasses, sizeof(NBool));
 	if (NFailed(result))
 	{
@@ -140,7 +144,7 @@ FaceDetector_Neurotech::FaceDetector_Neurotech(void)
 		//PrintErrorMsg(N_T("NObjectSetParameter() failed (result = %d)!"), result);
 	
 	}
-
+	
 	result = NObjectSetParameterEx(extractor, NLEP_TEMPLATE_SIZE, -1, &templateSize, sizeof(NleTemplateSize));
 	if (NFailed(result))
 	{
@@ -156,7 +160,8 @@ FaceDetector_Neurotech::FaceDetector_Neurotech(void)
 FaceDetector_Neurotech::~FaceDetector_Neurotech(void)
 {
 
-	
+	   NObjectFree(extractor);
+	   NObjectFree(extractor1);
 		NResult result2 = NLicenseReleaseComponents(components);
 		if (NFailed(result2))
 		{
@@ -166,75 +171,211 @@ FaceDetector_Neurotech::~FaceDetector_Neurotech(void)
 
 }
 
+std::string FaceDetector_Neurotech::Detect_return_json(const cv::Mat &frame1, const string &path,int id)
+{
+	Mat temp2;
+	cvtColor( frame1, temp2, CV_BGR2GRAY );
+    if( !temp2.isContinuous())
+		cout << " Non continuous memory " << endl;
+
+	//imwrite("frame1.jpg",frame1);
+
+
+	HNImage ooimage;
+	ooimage=NULL;
+   std::string faces_jzon;
+	vector<Rect> faces_returned;
+
+result = NImageCreateFromDataEx(npfGrayscale, temp2.cols, temp2.rows, 0, temp2.cols , temp2.data ,temp2.cols*temp2.rows ,0,&ooimage);
+if (NFailed(result))
+	{
+		cout << "NImageCreateFromDataEx failed (result = " << result<< ")!" << endl;
+		NObjectFree(ooimage);
+		return faces_jzon;
+		//PrintErrorMsg(N_T("NImageToGrayscale() failed (result = %d)!"), result);
+	
+	}
+
+	result = NImageToGrayscale(ooimage, &grayscale1);
+	if (NFailed(result))
+	{
+		cout << "NImageToGrayscale() failed (result = " << result<< ")!" << endl;
+		NObjectFree(ooimage);
+		return faces_jzon;
+		
+	}
+
+
+	result = NleDetectFaces(extractor, grayscale1, &faceCount, &faces);
+	if (NFailed(result))
+	{
+		cout << "NleDetectFaces() failed (result = " << result<< ")!" << endl;
+		NObjectFree(ooimage);
+		return faces_jzon;
+		//PrintErrorMsg(N_T("NleDetectFaces() failed (result = %d)!"), result);
+		//goto FINALLY;
+	}
+
+	// Output in Jzon string Value
+	 
+
+
+
+	//printf(N_T("found faces:\n"));
+	for (i = 0; i < faceCount; ++i)
+	{
+		Jzon::Object root;
+		//cout << i << endl;
+		Rect temp;
+		temp.x= faces[i].Rectangle.X ;
+		temp.y = faces[i].Rectangle.Y ; 
+		temp.width = faces[i].Rectangle.Width;
+		temp.height = faces[i].Rectangle.Height;
+		Rect constrainedRect = ConstrainRect(temp, Size(frame1.cols, frame1.rows));
+		faces_returned.push_back(constrainedRect);
+		
+		// Jzon addition
+		  root.Add("face_id",id);
+		  root.Add("s3_bucket","s3_bucket");
+		  root.Add("s3_key",path);
+		  root.Add("md5sum","md5sum");
+		  root.Add("face_confidence",faces[i].Confidence);
+		  root.Add("face_rotation_pitch",faces[i].Rotation.Pitch);
+		  root.Add("face_rotation_roll",faces[i].Rotation.Roll);
+		  root.Add("face_rotation_yaw",faces[i].Rotation.Yaw);
+		  root.Add("width",faces[i].Rectangle.Width);
+		  root.Add("height",faces[i].Rectangle.Height);
+
+		 
+		// detect features for current face
+		cout << " \t location =  (" << constrainedRect.x <<","<< constrainedRect.y<<"), width = "<< constrainedRect.width <<
+			", height = " << constrainedRect.height << endl;
+
+		// Extra features
+		
+		
+		result = NleDetectFacialFeatures(extractor, grayscale1, &faces[i], &details);
+		if (NFailed(result))
+		{
+			cout << "NleDetectFacialFeatures() failed (result = " << result<< "), maybe feature points were not found!" << endl;
+			Jzon::Writer writer(root, Jzon::StandardFormat);
+			writer.Write();
+		// Writing everything ot a string to export
+		    std::string result = writer.GetResult();
+			faces_jzon = faces_jzon + result;
+			continue;
+		}
+	
+		/*
+	
+		//Jzon Addition
+		Jzon::Array left_eye;
+		left_eye.Add(int(&details.LeftEyeCenter.X));left_eye.Add(int(&details.LeftEyeCenter.Y));
+		root.Add("LeftEyeCenter",left_eye);
+		Jzon::Array right_eye;
+		right_eye.Add(int(&details.RightEyeCenter.X));right_eye.Add(int(&details.RightEyeCenter.Y));
+		root.Add("RightEyeCenter",right_eye);
+		Jzon::Array mouth_center;
+		mouth_center.Add(int(&details.MouthCenter.X));mouth_center.Add(int(&details.MouthCenter.Y));
+		root.Add("MouthCenter",mouth_center);
+		Jzon::Array nose_tip;
+		nose_tip.Add(int(&details.NoseTip.X));nose_tip.Add(int(&details.NoseTip.Y));
+		root.Add("NoseTip",nose_tip);
+	  */
+		// gender, expression and other proeprties only detected during extraction
+		result = NleExtractUsingDetails(extractor, grayscale1, &details, &status, &tmpl);
+		if(NFailed(result))
+		{
+			cout << "NleExtractUsingDetails() failed (result = " << result<< ")!" << endl;
+			Jzon::Writer writer(root, Jzon::StandardFormat);
+			writer.Write();
+		// Writing everything ot a string to export
+		    std::string result = writer.GetResult();
+			faces_jzon = faces_jzon + result;
+			continue;
+		}
+		
+		NObjectFree(tmpl); tmpl = NULL;
+		
+		
+		
+	
+	//Jzon Addition
+		
+		details.Gender == ngMale ? root.Add("Gender","male"):root.Add("Gender","female"); 
+		root.Add("Genderconfidence",details.GenderConfidence);
+		
+
+		(details.Properties & nlpBlink) == nlpBlink ? root.Add("Blink","yes") : root.Add("Blink","no");
+		root.Add("Blinkconfidence",details.BlinkConfidence);
+
+	    (details.Properties & nlpMouthOpen) == nlpMouthOpen ?root.Add("MouthOpen" ,"Yes") : root.Add("MouthOpen" ,"No");
+	    root.Add("MouthOpenConfidence",details.MouthOpenConfidence);
+
+		(details.Properties & nlpGlasses) == nlpGlasses ?root.Add("Glasses" ,"Yes") : root.Add("Glasses" ,"No");
+	    root.Add("GlassesConfidence",details.GlassesConfidence);
+
+		(details.Properties & nlpDarkGlasses) == nlpDarkGlasses ?root.Add("DarkGlasses" ,"Yes") : root.Add("DarkGlasses" ,"No");
+	    root.Add("DarkGlassesConfidence",details.DarkGlassesConfidence);
+
+		Jzon::Writer writer(root, Jzon::StandardFormat);
+        writer.Write();
+		// Writing everything ot a string to export
+        std::string result = writer.GetResult();
+		faces_jzon = faces_jzon + result;
+
+		
+	
+	}
+	return faces_jzon;
+	}
+	
+	
+
 std::vector<cv::Rect> FaceDetector_Neurotech::Detect(const cv::Mat &frame)
 {
 	Mat temp;
 	cvtColor( frame, temp, CV_BGR2GRAY );
-    
-	//Mat temp2= temp.clone();
-	//Mat temp = frame.clone();
-	//unsigned char *input = (unsigned char*)(temp.data);
-	/*
-	NSizeType size, strval;
-	NUInt pixformat, width, height; 
-	*/
+    if( !temp.isContinuous())
+		cout << " Non continuous memory " << endl;
+	
 	HNImage oimage;
 
-	/* color image
-	pixformat = NPF_RGB_8U;
-	width = temp.cols;
-	height = temp.rows;
-	strval = width*3;
-	size = width*height*3;
-	*/
-	
-	//pixformat = NPF_GRAYSCALE_8U;
-	/*
-	width = temp.cols;
-	height = temp.rows;
-	strval = temp.cols;
-	size = width*height;
-	*/
-	//imwrite( "image2_opencv.jpg", temp );
-	//const NChar * img1 = N_T("image2_neuro.jpg");
 	vector<Rect> faces_returned;
 
 result = NImageCreateFromDataEx(npfGrayscale, temp.cols, temp.rows, 0, temp.cols , temp.data ,temp.cols*temp.rows ,0,&oimage);
 if (NFailed(result))
 	{
 		cout << "NImageCreateFromDataEx failed (result = " << result<< ")!" << endl;
+		NObjectFree(oimage);
+		return faces_returned;
 		//PrintErrorMsg(N_T("NImageToGrayscale() failed (result = %d)!"), result);
 	
 	}
-//NImageSaveToFileEx(oimage,img1,NULL,NULL,NULL);
-	// convert image to grayscale
-	
-	//const NChar * img = N_T("image1.jpg");
-
-	//result = NImageCreateFromFileEx(img, NULL, 0, NULL, &image);
 
 	result = NImageToGrayscale(oimage, &grayscale);
 	if (NFailed(result))
 	{
 		cout << "NImageToGrayscale() failed (result = " << result<< ")!" << endl;
-		//PrintErrorMsg(N_T("NImageToGrayscale() failed (result = %d)!"), result);
-	
+		NObjectFree(oimage);
+		return faces_returned;
+		
 	}
 
-	NObjectFree(oimage);
-	oimage = NULL;
 
 	result = NleDetectFaces(extractor, grayscale, &faceCount, &faces);
 	if (NFailed(result))
 	{
 		cout << "NleDetectFaces() failed (result = " << result<< ")!" << endl;
-		//PrintErrorMsg(N_T("NleDetectFaces() failed (result = %d)!"), result);
-		//goto FINALLY;
+		NObjectFree(oimage);
+		return faces_returned;
+		
 	}
 
-	//printf(N_T("found faces:\n"));
+	
 	for (i = 0; i < faceCount; ++i)
 	{
+		
 		//cout << i << endl;
 		Rect temp;
 		temp.x= faces[i].Rectangle.X ;
@@ -244,58 +385,19 @@ if (NFailed(result))
 		Rect constrainedRect = ConstrainRect(temp, Size(frame.cols, frame.rows));
 		faces_returned.push_back(constrainedRect);
 		
-		// detect features for current face
-		cout << " \t location =  (" << constrainedRect.x <<","<< constrainedRect.y<<"), width = "<< constrainedRect.width <<
-			", height = " << constrainedRect.height << endl;
-		/*
-		result = NleDetectFacialFeatures(extractor, grayscale, &faces[i], &details);
-		if (NFailed(result))
-		{
-			cout << "NleDetectFacialFeatures() failed (result = " << result<< "), maybe feature points were not found!" << endl;
-			//PrintErrorMsg(N_T("NleDetectFacialFeatures() failed (result = %d), maybe feature points were not found!"), result);
-			continue;
-		}
-
-		*/
-		/*
-		// gender, expression and other proeprties only detected during extraction
-		result = NleExtractUsingDetails(extractor, grayscale, &details, &status, &tmpl);
-		if(NFailed(result))
-		{
-			cout << "NleExtractUsingDetails() failed (result = " << result<< ")!" << endl;
-			//PrintErrorMsg(N_T("NleExtractUsingDetails() failed (result = %d)"), result);
-			continue;
-		}
-		NObjectFree(tmpl); tmpl = NULL;
-		*/
-		//printf(N_T("\n"));
-		//printf(N_T("\t\textraction status: %d\n"), status);
-		
-		/*if(details.GenderConfidence == 255) 
-			printf(N_T("\t\tgender not detected\n"));
-		printf(N_T("\t\tgender: %s, confidence: %d\n"), (details.Gender == ngMale ? N_T("Male") : N_T("Female")), details.GenderConfidence);
-		if (details.ExpressionConfidence == 255) printf(N_T("\t\texpression not detected\n"));
-		else if (details.Expression == nleSmile) printf(N_T("\t\texpression: smile, confidence: %d\n"), details.GenderConfidence);
-		if (details.BlinkConfidence == 255) printf(N_T("\t\tblink not detected\n"));
-		else printf(N_T("\t\tblink: %s, confidence: %d\n"), (details.Properties & nlpBlink) == nlpBlink ? N_T("Yes") : N_T("No"), details.BlinkConfidence);
-		if (details.MouthOpenConfidence == 255) printf(N_T("\t\tmouth open not detected\n"));
-		else printf(N_T("\t\tmouth open: %s, confidence: %d\n"), (details.Properties & nlpMouthOpen) == nlpMouthOpen ? N_T("Yes") : N_T("No"), details.MouthOpenConfidence);
-		if (details.GlassesConfidence == 255) printf(N_T("\t\tglasses not detected\n"));
-		else printf(N_T("\t\tglasses: %s, confidence: %d\n"), (details.Properties & nlpGlasses) == nlpGlasses ? N_T("Yes") : N_T("No"), details.GlassesConfidence);
-		if (details.DarkGlassesConfidence == 255) printf(N_T("\t\tdark glasses not detected\n"));
-		else printf(N_T("\t\tdark glasses: %s, confidence: %d\n"), (details.Properties & nlpDarkGlasses) == nlpDarkGlasses ? N_T("Yes") : N_T("No"), details.DarkGlassesConfidence);*/
+	
+	
 	}
+
+	
 
 	result = N_OK;
 
 	NObjectFree(oimage);
 	NObjectFree(grayscale);
-	NObjectFree(extractor);
+	
 	NObjectFree(tmpl);
 	NFree(faces);
-	
-	
-	
 
 	return faces_returned;
 
