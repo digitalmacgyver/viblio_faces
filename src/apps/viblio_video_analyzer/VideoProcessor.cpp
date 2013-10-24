@@ -20,6 +20,7 @@
 
 #include <opencv2/opencv.hpp>
 #include <string>
+#include <iomanip>
 
 using namespace std;
 using namespace cv;
@@ -76,7 +77,6 @@ bool VideoProcessor::SetupAnalyzers(const JobConfiguration &jobConfig)
 bool VideoProcessor::PerformProcessing()
 {
 	m_startProcessingTime = chrono::monotonic_clock::now();
-	
 
 	// go through each frame from the video source and pass it along to each of the analyzers
 	Mat currentFrame;
@@ -89,7 +89,7 @@ bool VideoProcessor::PerformProcessing()
 
 		timestamp = m_videoSource->GetTimestamp();
 		CurrentFrameNumber=m_videoSource->CurrentFrameNo();
-		cout<<"Processing Frame no : " <<CurrentFrameNumber << " of " << TotalFrames << " Total " <<endl;
+		//cout<<"Processing Frame no : " <<CurrentFrameNumber << " of " << TotalFrames << " Total " <<endl;
 		// Printing the current Timestamp
 		//cout<< "Time stamp : " << timestamp<<endl;
 		if( currentFrame.empty() )
@@ -99,6 +99,7 @@ bool VideoProcessor::PerformProcessing()
 		for(vector<Analytics::Analyzer*>::iterator startIter=m_analyzers.begin(); startIter != m_analyzers.end(); ++startIter)
 			(*startIter)->Process(currentFrame,timestamp);
 	 
+		cout << std::setprecision(2) << std::fixed << (CurrentFrameNumber / (float) TotalFrames) * 100 << "% done       \r";
 	}
 
 	m_lastFrameTimestamp = timestamp;
