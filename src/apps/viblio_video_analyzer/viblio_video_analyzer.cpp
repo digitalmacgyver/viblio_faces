@@ -48,6 +48,7 @@ int main(int argc, char* argv[])
 		("face_detector_cascade_file", po::value<string>(), "the path to the cascade file to use for face detection")
 		("eye_detector_cascade_file", po::value<string>(), "the path to the cascade file to use for eye detection")
 		("face_thumbnail_path", po::value<string>(), "the location to put output facial thumbnails generated")
+		("filename_prefix", po::value<string>(), "the filename prefix that need to be appended")
 		("face_detection_frequency", po::value<int>()->default_value(3), "set how often we should perform face detection, e.g. a value of 3 means we only check every third frame, lower numbers means we check more frequently but this will be slower")
 		("face_image_resize", po::value<float>()->default_value(1.0f), "specifies rescale factor for frames prior to performing face processing")
 		("lost_track_process_frequency", po::value<int>()->default_value(5), "set how often a lost face should perform processing when attempting to regain the track, e.g. a value of 5 means we only check every fifth frame, lower numbers means we check more frequently but this will be slower")
@@ -158,6 +159,10 @@ void ExtractFaceAnalysisParameters( po::variables_map variableMap, Analytics::Fa
 	if (variableMap.count("face_thumbnail_path")) 
 	{
 		faceAnalyzerConfig->faceThumbnailOutputPath = variableMap["face_thumbnail_path"].as<string>();
+	}
+	if (variableMap.count("filename_prefix")) 
+	{
+		faceAnalyzerConfig->filenameprefix= variableMap["filename_prefix"].as<string>();
 	}
 
 	if (variableMap.count("face_detection_frequency")) 
