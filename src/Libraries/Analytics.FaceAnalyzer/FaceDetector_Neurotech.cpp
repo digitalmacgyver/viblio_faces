@@ -53,7 +53,7 @@ FaceDetector_Neurotech::FaceDetector_Neurotech(void)
 	 detectDarkGlasses ( NTrue),
 	 templateSize(nletsSmall)
 {
-
+	/*
 	// check the license first
 	result = NLicenseObtainComponents(N_T("/local"), N_T("5000"), components, &available);
 	if (NFailed(result))
@@ -67,92 +67,148 @@ FaceDetector_Neurotech::FaceDetector_Neurotech(void)
 		//printf(N_T("Licenses for %s not available\n"), components);
 		result = N_E_FAILED;
 	}
+	*/
 
-	// read image
+	// Check the Licenses
 	
-	
+	try
+	{
+		
+	     result = NLicenseObtainComponents(N_T("/local"), N_T("5000"), components, &available);
+		 if (NFailed(result))
+			 throw 20;
+	}
+	catch(int e)
+	{
+		cout << "Exception caught while attempting to obtain Neurotech product license. " << " Cannot continue" << endl;
+		if (!available)
+			cout << "Neurotech Licenses for " << components<< "  not available" << endl;
+		throw e;
+	}
+
+
 
 	// create an extractor
-	
-	result = NleCreate(&extractor);
-	if (NFailed(result))
+	try
+	{
+	     result = NleCreate(&extractor);
+		 if (NFailed(result))
+			 throw 20;
+	}
+	catch(int e)
 	{
 		cout << "NleCreate() failed (result = " << result<< ")!" << endl;
-		//PrintErrorMsg(N_T("NleCreate() failed (result = %d)!"), result);
-		
+		throw e;
 	}
 	
-	result = NObjectSetParameterEx(extractor, NLEP_DETECT_ALL_FEATURE_POINTS, -1, &detectAllFeatures, sizeof(NBool));
-	if (NFailed(result))
+	
+	// Detect all feature points
+	try
+	{
+	     result = NObjectSetParameterEx(extractor, NLEP_DETECT_ALL_FEATURE_POINTS, -1, &detectAllFeatures, sizeof(NBool));
+		 if (NFailed(result))
+			 throw 20;
+	}
+	catch(int e)
 	{
 		cout << "NObjectSetParameter() failed (result = " << result<< ")!" << endl;
-		//PrintErrorMsg(N_T("NObjectSetParameter() failed (result = %d)!"), result);
-		
+		throw e;
 	}
 	
-	result = NObjectSetParameterEx(extractor, NLEP_DETECT_BASE_FEATURE_POINTS, -1, &detectBaseFeatures, sizeof(NBool));
-	if (NFailed(result))
+	
+	// Detect all base feature Points
+	try
+	{
+	     result = NObjectSetParameterEx(extractor, NLEP_DETECT_BASE_FEATURE_POINTS, -1, &detectBaseFeatures, sizeof(NBool));
+		 if (NFailed(result))
+			 throw 20;
+	}
+	catch(int e)
 	{
 		cout << "NObjectSetParameter() failed (result = " << result<< ")!" << endl;
-		//PrintErrorMsg(N_T("NObjectSetParameter() failed (result = %d)!"), result);
-		
+		throw e;
 	}
 	
-	result = NObjectSetParameterEx(extractor, NLEP_DETECT_GENDER, -1, &detectGender, sizeof(NBool));
-	if (NFailed(result))
+	// Detect Gender
+	try
+	{
+	    result = NObjectSetParameterEx(extractor, NLEP_DETECT_GENDER, -1, &detectGender, sizeof(NBool));
+		 if (NFailed(result))
+			 throw 20;
+	}
+	catch(int e)
 	{
 		cout << "NObjectSetParameter() failed (result = " << result<< ")!" << endl;
-		//PrintErrorMsg(N_T("NObjectSetParameter() failed (result = %d)!"), result);
-		
+		throw e;
+	}
+	
+	// Detect Expression
+	try
+	{
+	    result = NObjectSetParameterEx(extractor, NLEP_DETECT_EXPRESSION, -1, &detectExpression, sizeof(NBool));
+		 if (NFailed(result))
+			 throw 20;
+	}
+	catch(int e)
+	{
+		cout << "NObjectSetParameter() failed (result = " << result<< ")!" << endl;
+		throw e;
 	}
 
-	result = NObjectSetParameterEx(extractor, NLEP_DETECT_EXPRESSION, -1, &detectExpression, sizeof(NBool));
-	if (NFailed(result))
+   // Detect Blink
+	try
+	{
+	   result = NObjectSetParameterEx(extractor, NLEP_DETECT_BLINK, -1, &detectBlink, sizeof(NBool));
+		 if (NFailed(result))
+			 throw 20;
+	}
+	catch(int e)
 	{
 		cout << "NObjectSetParameter() failed (result = " << result<< ")!" << endl;
-		//PrintErrorMsg(N_T("NObjectSetParameter() failed (result = %d)!"), result);
-		
+		throw e;
 	}
 
-	result = NObjectSetParameterEx(extractor, NLEP_DETECT_BLINK, -1, &detectBlink, sizeof(NBool));
-	if (NFailed(result))
+	// Detect Mouth Open
+	try
+	{
+	   result = NObjectSetParameterEx(extractor, NLEP_DETECT_MOUTH_OPEN, -1, &detectMouthOpen, sizeof(NBool));
+		 if (NFailed(result))
+			 throw 20;
+	}
+	catch(int e)
 	{
 		cout << "NObjectSetParameter() failed (result = " << result<< ")!" << endl;
-		//PrintErrorMsg(N_T("NObjectSetParameter() failed (result = %d)!"), result);
-		
+		throw e;
 	}
 
-	result = NObjectSetParameterEx(extractor, NLEP_DETECT_MOUTH_OPEN, -1, &detectMouthOpen, sizeof(NBool));
-	if (NFailed(result))
+	// Detect Glasses
+	
+	try
 	{
-		cout << "NObjectSetParameter() failed (result = " << result<< ")!" << endl;
-		//PrintErrorMsg(N_T("NObjectSetParameter() failed (result = %d)!"), result);
-		
+	   result = NObjectSetParameterEx(extractor, NLEP_DETECT_GLASSES, -1, &detectGlasses, sizeof(NBool));
+		 if (NFailed(result))
+			 throw 20;
 	}
-	
-	result = NObjectSetParameterEx(extractor, NLEP_DETECT_GLASSES, -1, &detectGlasses, sizeof(NBool));
-	if (NFailed(result))
+	catch(int e)
 	{
 		cout << "NObjectSetParameter() failed (result = " << result<< ")!" << endl;
-		//PrintErrorMsg(N_T("NObjectSetParameter() failed (result = %d)!"), result);
-	
+		throw e;
 	}
 
-	result = NObjectSetParameterEx(extractor, NLEP_DETECT_DARK_GLASSES, -1, &detectDarkGlasses, sizeof(NBool));
-	if (NFailed(result))
+	// Detect dark Glasses
+
+	try
+	{
+	   result = NObjectSetParameterEx(extractor, NLEP_DETECT_DARK_GLASSES, -1, &detectDarkGlasses, sizeof(NBool));
+		 if (NFailed(result))
+			 throw 20;
+	}
+	catch(int e)
 	{
 		cout << "NObjectSetParameter() failed (result = " << result<< ")!" << endl;
-		//PrintErrorMsg(N_T("NObjectSetParameter() failed (result = %d)!"), result);
-	
+		throw e;
 	}
-	
-	result = NObjectSetParameterEx(extractor, NLEP_TEMPLATE_SIZE, -1, &templateSize, sizeof(NleTemplateSize));
-	if (NFailed(result))
-	{
-		cout << "NObjectSetParameter() failed (result = " << result<< ")!" << endl;
-		//PrintErrorMsg(N_T("NObjectSetParameter() failed (result = %d)!"), result);
-		
-	}
+
 
 	
 }
