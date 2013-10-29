@@ -1,4 +1,5 @@
 #include "FaceDetector_Neurotech.h"
+#include "FaceDetectionDetails.h"
 
 #include <opencv2/opencv.hpp>
 
@@ -332,7 +333,7 @@ if (NFailed(result))
 	
 	
 
-std::vector<cv::Rect> FaceDetector_Neurotech::Detect(const cv::Mat &frame)
+std::vector<FaceDetectionDetails> FaceDetector_Neurotech::Detect(const cv::Mat &frame, bool getDetailedInformation)
 {
 	Mat temp;
 	cvtColor( frame, temp, CV_BGR2GRAY );
@@ -341,10 +342,10 @@ std::vector<cv::Rect> FaceDetector_Neurotech::Detect(const cv::Mat &frame)
 	
 	HNImage oimage;
 
-	vector<Rect> faces_returned;
+	vector<FaceDetectionDetails> faces_returned;
 
-result = NImageCreateFromDataEx(npfGrayscale, temp.cols, temp.rows, 0, temp.cols , temp.data ,temp.cols*temp.rows ,0,&oimage);
-if (NFailed(result))
+	result = NImageCreateFromDataEx(npfGrayscale, temp.cols, temp.rows, 0, temp.cols , temp.data ,temp.cols*temp.rows ,0,&oimage);
+	if(NFailed(result))
 	{
 		cout << "NImageCreateFromDataEx failed (result = " << result<< ")!" << endl;
 		NObjectFree(oimage);
@@ -375,23 +376,80 @@ if (NFailed(result))
 	
 	for (i = 0; i < faceCount; ++i)
 	{
-		
+		FaceDetectionDetails currentFaceDeets;
 		//cout << i << endl;
-		Rect temp;
-		temp.x= faces[i].Rectangle.X ;
-		temp.y = faces[i].Rectangle.Y ; 
-		temp.width = faces[i].Rectangle.Width;
-		temp.height = faces[i].Rectangle.Height;
-		Rect constrainedRect = ConstrainRect(temp, Size(frame.cols, frame.rows));
-		faces_returned.push_back(constrainedRect);
-		
-	
-	
+		Rect currentFaceRect;
+		currentFaceRect.x= faces[i].Rectangle.X ;
+		currentFaceRect.y = faces[i].Rectangle.Y ; 
+		currentFaceRect.width = faces[i].Rectangle.Width;
+		currentFaceRect.height = faces[i].Rectangle.Height;
+		Rect constrainedRect = ConstrainRect(currentFaceRect, Size(frame.cols, frame.rows));
+
+		currentFaceDeets.faceRect = constrainedRect;
+		currentFaceDeets.faceDetectionConfidence = faces[i].Confidence;
+
+		if( getDetailedInformation )
+		{
+			// they have requested that we get more detailed information for this face
+			result = NleDetectFacialFeatures(extractor, grayscale, &faces[i], &details);
+			if (NFailed(result))
+			{
+				cout << "NleDetectFacialFeatures() failed (result = " << result<< "), maybe feature points were not found!" << endl;
+				
+				continue;
+			}
+
+			// success
+			currentFaceDeets.roll = details.Face.Rotation.Roll;
+			currentFaceDeets.yaw = details.Face.Rotation.Yaw;
+			currentFaceDeets.pitch = details.Face.Rotation.Pitch;
+
+			// pull out the eye information
+			if( details.EyesAvailable )
+			{
+				currentFaceDeets.leftEye.x = details.LeftEyeCenter.X;
+				currentFaceDeets.leftEye.y = details.LeftEyeCenter.Y;
+				currentFaceDeets.leftEyeConfidence = details.LeftEyeCenter.Confidence;
+
+				currentFaceDeets.rightEye.x = details.RightEyeCenter.X;
+				currentFaceDeets.rightEye.y = details.RightEyeCenter.Y;
+				currentFaceDeets.rightEyeConfidence = details.RightEyeCenter.Confidence;
+			}
+
+			// grab the mouth location information
+			currentFaceDeets.mouthLocation.x = details.MouthCenter.X;
+			currentFaceDeets.mouthLocation.y = details.MouthCenter.Y;
+			currentFaceDeets.mouthLocationConfidence = details.MouthCenter.Confidence;
+
+			// grab the nose location information
+			currentFaceDeets.noseLocation.x = details.NoseTip.X;
+			currentFaceDeets.noseLocation.y = details.NoseTip.Y;
+			currentFaceDeets.noseLocationConfidence = details.NoseTip.Confidence;
+
+			// see if we have gender information
+			if(details.Gender == ngUnspecified || details.Gender == ngUnknown)
+			{
+				currentFaceDeets.genderConfidence = 0.0f;
+			}
+			else
+			{
+				currentFaceDeets.isMale = details.Gender == ngMale;
+				currentFaceDeets.genderConfidence = details.GenderConfidence;
+			}
+
+			// see if we have expression information
+			if(details.Expression == nleUnknown || details.Expression == nleUnspecified)
+				currentFaceDeets.expressionConfidence = 0.0f;
+			else
+			{
+				// we need to convert the expression into one of our own enums for the various expressions
+				// it could detect
+				currentFaceDeets.expressionConfidence = details.ExpressionConfidence;
+			}
+		}
+
+		faces_returned.push_back(currentFaceDeets);
 	}
-
-	
-
-	result = N_OK;
 
 	NObjectFree(oimage);
 	NObjectFree(grayscale);
@@ -400,7 +458,6 @@ if (NFailed(result))
 	NFree(faces);
 
 	return faces_returned;
-
 }
 
 
@@ -439,7 +496,7 @@ Rect FaceDetector_Neurotech::ConstrainRect(const Rect &rectToConstrain, const Si
 	return constrainedRect;
 }
 
-void FaceDetector_Neurotech::RenderVisualization(cv::Mat &frame, const std::vector<cv::Rect> &detectedFaces)
+void FaceDetector_Neurotech::RenderVisualization(cv::Mat &frame, const std::vector<FaceDetectionDetails> &detectedFaces)
 {
 
 	// iterate over each of the faces
@@ -449,8 +506,8 @@ void FaceDetector_Neurotech::RenderVisualization(cv::Mat &frame, const std::vect
 	for(; faceIter != faceIterEnd; faceIter++)
 	{
 		// Draw the face
-		Point center( (*faceIter).x + int((*faceIter).width*0.5f), (*faceIter).y + int((*faceIter).height*0.5f) );
-		ellipse( frame, center, Size( int((*faceIter).width*0.5f), int((*faceIter).height*0.5f)), 0, 0, 360, Scalar( 255, 0, 0 ), 2, 8, 0 );
+		Point center( (*faceIter).faceRect.x + int((*faceIter).faceRect.width*0.5f), (*faceIter).faceRect.y + int((*faceIter).faceRect.height*0.5f) );
+		ellipse( frame, center, Size( int((*faceIter).faceRect.width*0.5f), int((*faceIter).faceRect.height*0.5f)), 0, 0, 360, Scalar( 255, 0, 0 ), 2, 8, 0 );
 	}
 
 }

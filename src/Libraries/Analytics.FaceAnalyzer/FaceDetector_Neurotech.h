@@ -2,6 +2,8 @@
 
 #ifndef __FACEDETECTOR_NEUROTECH__
 #define __FACEDETECTOR_NEUROTECH__
+#include "FaceDetectionDetails.h"
+
 #include <memory>
 #include <opencv2/objdetect/objdetect.hpp>
 #include <string>
@@ -59,9 +61,9 @@ public:
 	
 	FaceDetector_Neurotech(void);
 	~FaceDetector_Neurotech(void);
-	std::vector<cv::Rect> Detect(const cv::Mat &frame);
+	std::vector<FaceDetectionDetails> Detect(const cv::Mat &frame, bool getDetailedInformation=false);
 	std::string Detect_return_json(const cv::Mat &frame, const std::string &path,int id);
-	void RenderVisualization(cv::Mat &frame, const std::vector<cv::Rect> &detectedFaces);
+	void RenderVisualization(cv::Mat &frame, const std::vector<FaceDetectionDetails> &detectedFaces);
 };
 
 	}

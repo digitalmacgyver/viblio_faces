@@ -24,6 +24,7 @@
     <ClCompile Include="Face.cpp" />
     <ClCompile Include="FaceAnalyzer.cpp" />
     <ClCompile Include="FaceAnalyzerConfiguration.cpp" />
+    <ClCompile Include="FaceDetectionDetails.cpp" />
     <ClCompile Include="FaceDetector_Neurotech.cpp" />
     <ClCompile Include="FaceDetector_OpenCV.cpp" />
     <ClCompile Include="Thumbnail.cpp" />
@@ -38,6 +39,7 @@
     <ClInclude Include="Face.h" />
     <ClInclude Include="FaceAnalyzer.h" />
     <ClInclude Include="FaceAnalyzerConfiguration.h" />
+    <ClInclude Include="FaceDetectionDetails.h" />
     <ClInclude Include="FaceDetector_Neurotech.h" />
     <ClInclude Include="FaceDetector_OpenCV.h" />
     <ClInclude Include="Thumbnail.h" />

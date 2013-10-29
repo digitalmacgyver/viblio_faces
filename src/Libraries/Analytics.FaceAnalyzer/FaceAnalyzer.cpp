@@ -12,6 +12,7 @@
 #include "FaceAnalyzer.h"
 #include "FaceAnalyzerConfiguration.h"
 #include "TrackingController.h"
+#include "FaceDetectionDetails.h"
 #include "FileSystem/FileSystem.h"
 #include <boost/any.hpp>
 #include <stdexcept>
@@ -113,7 +114,7 @@ void FaceAnalysis::Process(const Mat &frame, uint64_t frameTimestamp)
 	//}
 
 	// Single threaded version
-	vector<Rect> detectedFaces;
+	vector<FaceDetectionDetails> detectedFaces;
 	if( m_currentFrameNumber%m_faceDetectionFrequency == 0 )
 		detectedFaces = m_faceDetector->Detect(resizedFrame);
 
@@ -133,10 +134,10 @@ void FaceAnalysis::Process(const Mat &frame, uint64_t frameTimestamp)
 		for( auto startIter=detectedFaces.begin(); startIter!=detectedFaces.end(); ++startIter)
 		{
 			// determine if we have detected a new object to track or an existing one we are already tracking
-			if( !m_trackingController->IsAlreadyBeingTracked(*startIter) )
+			if( !m_trackingController->IsAlreadyBeingTracked((*startIter).faceRect) )
 			{
 				// we've found a new object, better start tracking it
-				m_trackingController->AddNewTrack(resizedFrame, frameTimestamp, *startIter);
+				m_trackingController->AddNewTrack(resizedFrame, frameTimestamp, (*startIter).faceRect);
 			}
 			// else do nothing as we are already tracking this one
 		}
