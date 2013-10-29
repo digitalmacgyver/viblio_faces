@@ -4,14 +4,16 @@ VideoProcessor.cpp\
 ../../Libraries/Jzon/Jzon.cpp
 
 OBJS=$(SOURCES:.cpp=.o)
-CFLAGS=-std=c++0x -I../../Libraries
+CFLAGS=-std=c++0x -I../../Libraries -I$(NEUROTEC)/Include/
 EXECNAME=viblio_video_analyzer
+
+LD_OPTS=-Wl,-rpath=$(DEPLOY)/lib
 
 %.o : %.cpp
 	g++ -c $(CFLAGS) $< -o $@
 
 $(EXECNAME) : $(OBJS)
-	g++ -std=c++0x -o $@ $(OBJS) -L../../Libraries/FileSystem -L../../Libraries/VideoSource -L../../Libraries/Analytics.FaceAnalyzer/ -L../../../../faces/OpenTLD/src/libopentld/tld/ -L../../../../faces/OpenTLD/src/3rdparty/cvblobs/ -L../../../../faces/OpenTLD/src/libopentld/mftracker -lVideoSource -lFaceAnalyzer -lFileSystem -lOpenTld -lopencv_imgproc -lopencv_core -lcvblobs -lmftracker -lopencv_highgui -lopencv_objdetect -lboost_program_options -lboost_system -lboost_filesystem -lopencv_video
+	g++ -std=c++0x -o $@ $(OBJS) $(LD_OPTS) -L../../Libraries/FileSystem -L../../Libraries/VideoSource -L../../Libraries/Analytics.FaceAnalyzer/ -L../../../../faces/OpenTLD/src/libopentld/tld/ -L../../../../faces/OpenTLD/src/3rdparty/cvblobs/ -L../../../../faces/OpenTLD/src/libopentld/mftracker -L$(NEUROTEC)/Lib/$(NEUROTEC_ARCH)/ -lVideoSource -lFaceAnalyzer -lFileSystem -lOpenTld -lopencv_imgproc -lopencv_core -lcvblobs -lmftracker -lopencv_highgui -lopencv_objdetect -lboost_program_options -lboost_system -lboost_filesystem -lopencv_video -lNCore -lNLicensing -lNBiometrics -lNMediaProc -lNMedia
 
 clean :
 	rm -rf $(EXECNAME) $(OBJS)

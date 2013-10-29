@@ -40,6 +40,7 @@ public:
 
 	// a path to the location where to write the thumbnails that are extracted
 	std::string faceThumbnailOutputPath;
+	std::string filenameprefix;
 
 	// how often we apply face detection. Essentially how many frames are skipped before reapplying recognition.
 	// Higher values will mean faster processing of the video but with a higher chance of missing detection of a face

@@ -189,14 +189,15 @@ bool VideoProcessor::DumpOutput(const JobConfiguration &jobConfig)
                 std::cout << "Error: " << parser.GetError() << std::endl;
         }
 		rootNode.Add("user_uuid","user_uuid");
-		rootNode.Add("media_uuid",jobConfig.videoSourceFilename);
-		rootNode.Add("protocol_version","protocol_version");
+		rootNode.Add("media_uuid",jobConfig.faceAnalyzerConfig->filenameprefix);
+		//rootNode.Add("protocol_version","protocol_version");
 
 		boost::uuids::uuid uuid = boost::uuids::random_generator()();
 		std::stringstream ss;
 		ss << uuid;
 		string temppath;
-		temppath = jobConfig.faceAnalyzerConfig->faceThumbnailOutputPath +"/"+jobConfig.faceAnalyzerConfig->faceThumbnailOutputPath+".json";
+		temppath = jobConfig.faceAnalyzerConfig->faceThumbnailOutputPath +"/"+jobConfig.faceAnalyzerConfig->filenameprefix+".json";
+		cout << temppath;
 		Jzon::FileWriter::WriteFile(temppath, rootNode, Jzon::StandardFormat);
 
 	// now open a file (perhaps using the unique Job ID as the file name, with a .json extension) and dump the data to it

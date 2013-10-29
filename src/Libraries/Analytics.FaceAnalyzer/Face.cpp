@@ -41,6 +41,7 @@ Face::Face(const Mat frame, uint64_t frameTimestamp, Rect initialFaceRegion,Face
 	m_faceTracker->InitialiseTrack(frame, initialFaceRegion);
 	
 	Thumbnail_path = faceAnalyzerConfig->faceThumbnailOutputPath;
+	Filenameprefix = faceAnalyzerConfig->filenameprefix;
 	Thumbnail_generator = new Thumbnail(faceAnalyzerConfig);
 
 	m_lostFaceProcessingInterval = faceAnalyzerConfig->lostFaceProcessFrequency;
@@ -338,12 +339,13 @@ string Face::GetOutput(int trackno)
 					std::stringstream oss;
 					std::stringstream tracknumber;
 				//oss << frameTimestamp;
-					oss << count;
+					oss << count-1;
 					tracknumber << trackno;
-			   imagepath =Thumbnail_path+"/"+Thumbnail_path+"_face_"+tracknumber.str()+"_"+oss.str()+".png";
-				
+					
+			   imagepath =Thumbnail_path+"/"+Filenameprefix+"_face_"+tracknumber.str()+"_"+oss.str()+".jpg";
+				string pass = Filenameprefix +"/"+ Filenameprefix+"_face_"+tracknumber.str()+"_"+oss.str()+".jpg";
 				string temp;
-				temp = face_detector_neuro->Detect_return_json(k,imagepath,count-1);
+				temp = face_detector_neuro->Detect_return_json(k,pass,count-1);
 				cout << temp;
 				 Jzon::Object tempNode;
                  Jzon::Parser parser(tempNode, temp);

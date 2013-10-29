@@ -84,7 +84,7 @@ private:
 	std::unique_ptr<Tracker_OpenTLD> m_faceTracker;
 	Thumbnail *Thumbnail_generator;
 	std::string Thumbnail_path;
-
+	std::string Filenameprefix;
 	cv::Scalar m_visualizationColor;
 
 	// Private functions

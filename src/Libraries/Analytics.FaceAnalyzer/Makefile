@@ -4,13 +4,14 @@ FaceAnalyzerConfiguration.cpp\
 FaceAnalyzer.cpp\
 Face.cpp\
 FaceDetector_OpenCV.cpp\
+FaceDetector_Neurotech.cpp\
 Tracker_OpenTLD.cpp\
 TrackingController.cpp\
 ../Jzon/Jzon.cpp\
 Thumbnail.cpp
 
 OBJS=$(SOURCES:.cpp=.o)
-CFLAGS=-std=c++0x -I../ -I../../../OpenTLD/src/libopentld/tld/
+CFLAGS=-std=c++0x -I../ -I../../../OpenTLD/src/libopentld/tld/ -I$(NEUROTEC)/Include/ -L$(NEUROTEC)/Lib/$(NEUROTEC_ARCH)
 LIBNAME=libFaceAnalyzer.a
 
 %.o : %.cpp
