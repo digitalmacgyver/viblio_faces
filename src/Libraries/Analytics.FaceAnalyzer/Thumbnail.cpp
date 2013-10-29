@@ -4,6 +4,8 @@
 #include "FaceAnalyzerConfiguration.h"
 #include "Thumbnail.h"
 #include "EyeDetector_OpenCV.h"
+#include "Jzon/Jzon.h"
+#include <numeric>
 
 using namespace cv;
 using namespace std;
@@ -52,27 +54,46 @@ cv::Mat Thumbnail::ExtractThumbnail( const cv::Mat &frame, const cv::Rect &Thumb
 
 float Thumbnail::GetConfidencevalue(const cv::Mat &Thumbnail,bool &has_thumbnails,const float &tracker_confidence )
 {
-	vector<Rect> faces_detected =face_detector_check->Detect(Thumbnail);
-	//face_detector_neuro->Detect(Thumbnail);
-	float confidence;
-	confidence = tracker_confidence;
-	if(faces_detected.size()>0)
-				{
-					
-					has_thumbnails = true;
-					confidence = confidence + 0.15 ;
-				}
+	std::vector<float> v;
+	float confidence = 1;
 
-	if(has_eyecascade)
+	string faces_detected =face_detector_check->Detect_return_json(Thumbnail,"temp",1);
+	Jzon::Object rootNode;
+	Jzon::Parser parser(rootNode, faces_detected);
+	if(faces_detected.empty())
+	{
+		confidence = 0;
+		return confidence;
+	}
+	has_thumbnails = true;
+	if (!parser.Parse())
+	{
+		std::cout << "Error: " << parser.GetError() << std::endl;
+	}
+	else
 	{
 
-		vector<Rect> eyes_detected =eye_detector_check->Detect(Thumbnail);
-		if(eyes_detected.size()>0)
-				{
-					confidence = confidence + 0.15 ;
-				}
+		v.push_back(rootNode.Get("face_confidence").ToFloat());
+		if(rootNode.Get("Genderconfidence").ToFloat()<255)
+			v.push_back(rootNode.Get("Genderconfidence").ToFloat());
+		if(rootNode.Get("Blinkconfidence").ToFloat()<255)
+			v.push_back(rootNode.Get("Blinkconfidence").ToFloat());
+		if(rootNode.Get("MouthOpenConfidence").ToFloat()<255)
+			v.push_back(rootNode.Get("MouthOpenConfidence").ToFloat());
+
 	}
 
+	// Take Geometric mean 
+	/*
+	for(std::vector<float>::iterator it = v.begin(); it != v.end(); ++it) {
+    confidence = confidence * *it;
+			}
+	float temp = 1.0/ v.size();
+	confidence =  pow(confidence ,temp);
+	*/
+
+	// Arithnmetic mean
+	confidence = std::accumulate(v.begin(), v.end(), 0.0) / v.size();
 	return confidence;
 
 }
