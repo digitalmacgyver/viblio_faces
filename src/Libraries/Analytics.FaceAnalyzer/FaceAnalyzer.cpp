@@ -69,8 +69,16 @@ void FaceAnalysis::Process(const Mat &frame, uint64_t frameTimestamp)
 	if( m_imageRescaleFactor != 1.0f )
 		resize(frame, resizedFrame, Size(frame.cols * m_imageRescaleFactor, frame.rows * m_imageRescaleFactor));
 	else
-		// no resize necessary
-		resizedFrame = frame;
+	{// Auto resize to 480p ( 640 x 480)
+		float colRescalefactor = 1.0f;
+		float rowRescalefactor = 1.0f;
+		if(frame.cols > 640) colRescalefactor = 640.0 / frame.cols;
+		if(frame.rows > 640) rowRescalefactor = 480.0 / frame.rows;
+		if( colRescalefactor != 1.0f || rowRescalefactor != 1.0f)
+			resize(frame, resizedFrame, Size(frame.cols * colRescalefactor, frame.rows * rowRescalefactor));
+		else
+			resizedFrame = frame;
+	}
 
 	auto start = std::chrono::monotonic_clock::now();
    
