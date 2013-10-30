@@ -53,6 +53,10 @@ public:
 
 	bool hasImageQualityInformation;
 
+	float sharpness;
+	float backgroundUniformity;
+	float grayscaleDensity;
+
 	FaceDetectionDetails();
 	~FaceDetectionDetails();
 

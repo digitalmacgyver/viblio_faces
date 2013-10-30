@@ -187,8 +187,9 @@ bool Face::Process(const Mat &frame, uint64_t frameTimestamp)
 				
 			if(no_of_thumbnails%Thumbnail_frequency==0)
 			{
-		  		Mat thumbnail_temp = Thumbnail_generator->ExtractThumbnail(frame.clone(),m_currentEstimatedPosition);
-				float confidence =Thumbnail_generator->GetConfidencevalue(thumbnail_temp,has_thumbnails,m_faceTracker->GetConfidence());
+				float confidence = 0.0f;
+		  		Mat thumbnail_temp = Thumbnail_generator->ExtractThumbnail(frame.clone(), m_currentEstimatedPosition, confidence);
+				confidence =Thumbnail_generator->GetConfidencevalue(thumbnail_temp,has_thumbnails,m_faceTracker->GetConfidence());
 				
 			       if(has_thumbnails)
 				   {

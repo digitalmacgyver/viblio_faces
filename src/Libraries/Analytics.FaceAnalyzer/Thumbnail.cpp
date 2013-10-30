@@ -1,11 +1,14 @@
-
-
-
 #include "FaceAnalyzerConfiguration.h"
 #include "Thumbnail.h"
 #include "EyeDetector_OpenCV.h"
 #include "Jzon/Jzon.h"
 #include <numeric>
+
+// Neurotech related libraries for token image generation
+#include <NImages.h>
+#include <Ntfi.h>
+#include <NLExtractor.h>
+#include <NLicensing.h>
 
 using namespace cv;
 using namespace std;
@@ -17,35 +20,84 @@ namespace Analytics
 
 
 Thumbnail::Thumbnail(FaceAnalyzerConfiguration *faceAnalyzerConfig)
-{  has_eyecascade= false;
-  face_detector_check.reset( new FaceDetector_Neurotech());
+{  
+	tokenFaceExtractor = NULL;
+
+	has_eyecascade= false;
+	face_detector_check.reset( new FaceDetector_Neurotech() );
 	//face_detector_check.reset( new FaceDetector_Neurotech(faceAnalyzerConfig->faceDetectorCascadeFile));
 	//face_detector_neuro.reset(new FaceDetector_Neurotech());
-	if(!faceAnalyzerConfig->eyeDetectorCascadeFile.empty())
-	{   has_eyecascade = true;
-		eye_detector_check.reset(new EyeDetector_OpenCV(faceAnalyzerConfig->eyeDetectorCascadeFile));
-	}
-	Thumbnail_enlarge_percentage = 20;
+	//if(!faceAnalyzerConfig->eyeDetectorCascadeFile.empty())
+	//{   has_eyecascade = true;
+	//	eye_detector_check.reset(new EyeDetector_OpenCV(faceAnalyzerConfig->eyeDetectorCascadeFile));
+	//}
 	
+	Thumbnail_enlarge_percentage = 20;
+	NBool available = false;
+
+	NResult result = N_OK;
+
+	const NChar * components = N_T("Biometrics.FaceDetection,Biometrics.FaceSegmentation,Biometrics.FaceQualityAssessment");
+	try
+	{	
+		result = NLicenseObtainComponents(N_T("/local"), N_T("5000"), components, &available);
+		if( NFailed(result) )
+			throw runtime_error("Failed to obtain Neurotech licenses for the Token & Image quality related components");
+	}
+	catch(Exception e)
+	{
+		cout << "Exception caught while attempting to obtain Neurotech product license. Cannot continue" << endl;
+		if (!available)
+			cout << "Neurotech Licenses for " << components << "  not available" << endl;
+		throw e;
+	}
+	
+	try
+	{	
+		result = NtfiCreate(&tokenFaceExtractor);
+		if( NFailed(result) )
+			throw runtime_error("Failed to Token image extractor");
+	}
+	catch(Exception e)
+	{
+		cout << "Exception caught while attempting to create a Neurotech token image extractor. Cannot continue" << endl;
+		
+		throw e;
+	}
+
 }
 
 
-Thumbnail::~Thumbnail(void)
+Thumbnail::~Thumbnail()
 {
+	if( tokenFaceExtractor != NULL )
+		NObjectFree(tokenFaceExtractor);
 }
 
 
-cv::Mat Thumbnail::ExtractThumbnail( const cv::Mat &frame, const cv::Rect &ThumbnailLocation)
-
+cv::Mat Thumbnail::ExtractThumbnail( const cv::Mat &frame, const cv::Rect &ThumbnailLocation, float &confidence)
 {
 	cv::Mat temp;
 	
 	Rect enlarged_thumbnail(ThumbnailLocation.x-(ThumbnailLocation.width*Thumbnail_enlarge_percentage/100),ThumbnailLocation.y-(ThumbnailLocation.height*Thumbnail_enlarge_percentage/100),ThumbnailLocation.width+(ThumbnailLocation.width*(Thumbnail_enlarge_percentage*2)/100),ThumbnailLocation.height+(ThumbnailLocation.height*Thumbnail_enlarge_percentage*2/100));
 	Rect constrainedRect = ConstrainRect(enlarged_thumbnail, Size(frame.cols, frame.rows));
 	
-	temp= frame(constrainedRect);
+	temp = frame(constrainedRect);
 
+	// perform a detailed face extraction to get some detailed information
+	vector<FaceDetectionDetails> detectedFaces = face_detector_check->Detect(temp, true);
 
+	if( detectedFaces.size() > 1 || detectedFaces.size() == 0 )
+	{
+		// if we find either no faces or more than 1 face in this 'little' region then we have 0 confidence in
+		// this thumbnail
+		confidence = 0.0f;
+		return temp;
+	}
+
+	// now use the detailed information to create a token image
+
+	// and then extract the quality information for the token image
 
 	return temp;
 
