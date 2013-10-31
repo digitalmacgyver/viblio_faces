@@ -37,7 +37,7 @@ Face::Face(const Mat frame, uint64_t frameTimestamp, Rect initialFaceRegion,Face
 	face_detector_neuro.reset( new FaceDetector_Neurotech());
 	m_startTime = chrono::monotonic_clock::now();
 
-    Thumbnail_frequency = faceAnalyzerConfig->Thumbnail_generation_frequency;
+    Thumbnail_frequency = faceAnalyzerConfig->Thumbnail_generation_frequency*30;
 	m_faceTracker->InitialiseTrack(frame, initialFaceRegion);
 	
 	Thumbnail_path = faceAnalyzerConfig->faceThumbnailOutputPath;
@@ -189,8 +189,10 @@ bool Face::Process(const Mat &frame, uint64_t frameTimestamp)
 			{
 				float confidence = 0.0f;
 		  		Mat thumbnail_temp = Thumbnail_generator->ExtractThumbnail(frame.clone(), m_currentEstimatedPosition, confidence);
-				confidence =Thumbnail_generator->GetConfidencevalue(thumbnail_temp,has_thumbnails,m_faceTracker->GetConfidence());
-				
+				//confidence =Thumbnail_generator->GetConfidencevalue(thumbnail_temp,has_thumbnails,m_faceTracker->GetConfidence());
+				if(confidence > 0.0)
+					has_thumbnails = true;
+
 			       if(has_thumbnails)
 				   {
 					if( m_thumbnailConfidence.size() == m_thumbnailConfidenceSize && (confidence>m_thumbnailConfidence.begin()->first))
@@ -312,105 +314,87 @@ string Face::GetOutput(int trackno)
 	}
 
 	/*
-		- Each face will store the number of thumbnails generated
-		- Each face will store the UUID
-		- Each face will also store the visibility information
-		- Each face will store the face rectangle information 
+	- Each face will store the number of thumbnails generated
+	- Each face will store the UUID
+	- Each face will also store the visibility information
+	- Each face will store the face rectangle information 
 	*/
 	// Getting UUid to string
 	std::stringstream ss;
 	ss << m_faceId;
 	// Store the top five thumbnails
-		string imagepath;
-		int count=0;
-		cout << " No of faces : " << m_thumbnailConfidence.size();
-		if(m_thumbnailConfidence.size()>0)
-		{
+	string imagepath;
+	int count=0;
+	cout << " No of faces : " << m_thumbnailConfidence.size();
+	if(m_thumbnailConfidence.size()>0)
+	{
 		std::string path =Thumbnail_path+"/"+ss.str();
-				//	FileSystem::CreateDirectory(path);
-		}
-		else
-			return result;
+		//	FileSystem::CreateDirectory(path);
+	}
+	else
+		return result;
 	//	std::string all_thumbnails;
-		  Jzon::Array listOfStuff;
+	Jzon::Array listOfStuff;
 	for(std::map<float,Mat>::iterator iter = m_thumbnailConfidence.begin(); iter != m_thumbnailConfidence.end(); ++iter)
-					{
-						count++;
-						Mat k =  iter->second;
-					std::stringstream oss;
-					std::stringstream tracknumber;
-				//oss << frameTimestamp;
-					oss << count-1;
-					tracknumber << trackno;
-					
-			   imagepath =Thumbnail_path+"/"+Filenameprefix+"_face_"+tracknumber.str()+"_"+oss.str()+".jpg";
-				string pass = Filenameprefix +"/"+ Filenameprefix+"_face_"+tracknumber.str()+"_"+oss.str()+".jpg";
-				string temp;
-				temp = face_detector_neuro->Detect_return_json(k,pass,count-1);
-				cout << temp;
-				 Jzon::Object tempNode;
-                 Jzon::Parser parser(tempNode, temp);
-				  if (!parser.Parse())
-				{
-                std::cout << "Error: " << parser.GetError() << std::endl;
-				 }
-				//face_detector_neuro->Detect(k);
-				  if(!temp.empty())
-				  {
-					listOfStuff.Add(tempNode);
-					imwrite( imagepath,k);
-				  }
-			//	all_thumbnails = all_thumbnails + temp ;
-				//cout << all_thumbnails;
-					}
+	{
+		count++;
+		Mat k =  iter->second;
+		std::stringstream oss;
+		std::stringstream tracknumber;
+		//oss << frameTimestamp;
+		oss << count-1;
+		tracknumber << trackno;
 
-
-    // Defining a jason object and adding some attributes and their values
-
-	 Jzon::Object root;
-       // root.Add("UUID", ss.str());
-	    root.Add("track_id", trackno);
-		root.Add("faces",listOfStuff);
-      //  root.Add("number_of_thumbnails", count);
-		
-	
-
-   // Adding visibility information as an array under visibilty info attribute
-	 Jzon::Array visibilty_info;
-	 std::vector<std::pair<uint64_t, uint64_t>>::iterator iter = m_timesWhenFaceVisible.begin();
-	 for (iter=m_timesWhenFaceVisible.begin();iter!=m_timesWhenFaceVisible.end();++iter)
-	 {
-		Jzon::Object each_visibility;
-       each_visibility.Add("start_frame",int(iter->first));
-	   each_visibility.Add("end_frame",int(iter->second));
-	   visibilty_info.Add(each_visibility);
-		// visibilty_info.Add("start_frame",iter->first);
-	 }
-        root.Add("visiblity_info", visibilty_info);
-
-		/*
-		// Adding face rectangle information as an array of arrays under "face_rectangles" attribute
-		 std::map<uint64_t, cv::Rect>::iterator it = m_faceLocationHistory.begin();
-
-		 Jzon::Array rect_info;
-
-		for ( it=m_faceLocationHistory.begin(); it!=m_faceLocationHistory.end(); ++it)
+		imagepath =Thumbnail_path+"/"+Filenameprefix+"_face_"+tracknumber.str()+"_"+oss.str()+".jpg";
+		string pass = Filenameprefix +"/"+ Filenameprefix+"_face_"+tracknumber.str()+"_"+oss.str()+".jpg";
+		string temp;
+		temp = face_detector_neuro->Detect_return_json(k,pass,count-1);
+		cout << temp;
+		Jzon::Object tempNode;
+		Jzon::Parser parser(tempNode, temp);
+		if (!parser.Parse())
 		{
-		Jzon::Array each_rect;
-			each_rect.Add(it->second.x);
-			each_rect.Add(it->second.y);
-			each_rect.Add(it->second.width);
-			each_rect.Add(it->second.height);
-			each_rect.Add(int(it->first));
-			rect_info.Add(each_rect);
+			std::cout << "Error: " << parser.GetError() << std::endl;
 		}
-		root.Add("face_rectangles",rect_info);
+		//face_detector_neuro->Detect(k);
+		if(!temp.empty())
+		{
+			listOfStuff.Add(tempNode);
+			imwrite( imagepath,k);
+		}
+		//	all_thumbnails = all_thumbnails + temp ;
+		//cout << all_thumbnails;
+	}
 
-		*/
-		Jzon::Writer writer(root, Jzon::StandardFormat);
-        writer.Write();
-		// Writing everything ot a string to export
-        result = writer.GetResult();
+
+	// Defining a jason object and adding some attributes and their values
+
+	Jzon::Object root;
+	// root.Add("UUID", ss.str());
+	root.Add("track_id", trackno);
+	root.Add("faces",listOfStuff);
+	//  root.Add("number_of_thumbnails", count);
+
+
+
+	// Adding visibility information as an array under visibilty info attribute
+	Jzon::Array visibilty_info;
+	std::vector<std::pair<uint64_t, uint64_t>>::iterator iter = m_timesWhenFaceVisible.begin();
+	for (iter=m_timesWhenFaceVisible.begin();iter!=m_timesWhenFaceVisible.end();++iter)
+	{
+		Jzon::Object each_visibility;
+		each_visibility.Add("start_frame",int(iter->first));
+		each_visibility.Add("end_frame",int(iter->second));
+		visibilty_info.Add(each_visibility);
+		// visibilty_info.Add("start_frame",iter->first);
+	}
+	root.Add("visiblity_info", visibilty_info);
+
+	
+	Jzon::Writer writer(root, Jzon::StandardFormat);
+	writer.Write();
+	// Writing everything ot a string to export
+	result = writer.GetResult();
 
 
 	return result;
