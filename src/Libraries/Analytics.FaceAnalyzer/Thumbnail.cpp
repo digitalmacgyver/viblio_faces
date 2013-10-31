@@ -22,7 +22,6 @@ namespace Analytics
 Thumbnail::Thumbnail(FaceAnalyzerConfiguration *faceAnalyzerConfig)
 {  
 	tokenFaceExtractor = NULL;
-
 	has_eyecascade= false;
 	face_detector_check.reset( new FaceDetector_Neurotech() );
 	//face_detector_check.reset( new FaceDetector_Neurotech(faceAnalyzerConfig->faceDetectorCascadeFile));
@@ -78,10 +77,10 @@ Thumbnail::~Thumbnail()
 cv::Mat Thumbnail::ExtractThumbnail( const cv::Mat &frame, const cv::Rect &ThumbnailLocation, float &confidence)
 {
 	cv::Mat temp;
-	
+
 	Rect enlarged_thumbnail(ThumbnailLocation.x-(ThumbnailLocation.width*Thumbnail_enlarge_percentage/100),ThumbnailLocation.y-(ThumbnailLocation.height*Thumbnail_enlarge_percentage/100),ThumbnailLocation.width+(ThumbnailLocation.width*(Thumbnail_enlarge_percentage*2)/100),ThumbnailLocation.height+(ThumbnailLocation.height*Thumbnail_enlarge_percentage*2/100));
 	Rect constrainedRect = ConstrainRect(enlarged_thumbnail, Size(frame.cols, frame.rows));
-	
+
 	temp = frame(constrainedRect);
 
 	// perform a detailed face extraction to get some detailed information
@@ -95,10 +94,71 @@ cv::Mat Thumbnail::ExtractThumbnail( const cv::Mat &frame, const cv::Rect &Thumb
 		return temp;
 	}
 
+
 	// now use the detailed information to create a token image
+	FaceDetectionDetails uniqueface;
+	uniqueface = detectedFaces.at(0);
+	NResult result ;
+	NPoint first;
+	NPoint second;
+	HNImage token;
+	HNImage image;
+	HNtfiAttributes ntfiAttributes = NULL;
+	NDouble quality;
+	Mat temporary;
+	cvtColor( temp, temporary, CV_BGR2GRAY );
+	result = NImageCreateFromDataEx(npfGrayscale, temporary.cols, temporary.rows, 0, temporary.cols , temporary.data ,temporary.cols*temporary.rows ,0,&image);
+	if(NFailed(result))
+	{
+		cout << "NImageCreateFromDataEx failed (result = " << result<< ")!" << endl;
+		NObjectFree(image);
+		NObjectFree(token);
+		if (ntfiAttributes)
+		NObjectFree(ntfiAttributes);
+		confidence = 0.0f;
+		return temp;
 
-	// and then extract the quality information for the token image
+	}
+	if(uniqueface.leftEyeConfidence>0 && uniqueface.rightEyeConfidence >0)
+	{
+		first.X = uniqueface.leftEye.x;
+		first.Y = uniqueface.leftEye.y;
+		second.X = uniqueface.rightEye.x;
+		second.Y = uniqueface.rightEye.y;
+		result = NtfiCreateTokenFaceImageEx(tokenFaceExtractor, image, &first, &second, &token);
+		if (NFailed(result))
+		{
+			cout << "NtfiCreateTokenFaceImage()failed (result = " << result<< ")!" << endl;
+			NObjectFree(image);
+			NObjectFree(token);
+			if (ntfiAttributes)
+			NObjectFree(ntfiAttributes);
+			confidence = 0.0f;
+			return temp;
+		}
+		result = NtfiTestTokenFaceImage(tokenFaceExtractor, token, &ntfiAttributes, &quality);
+		if (NFailed(result))
+		{
+			cout << "NtfiCreateTokenFaceImage() quality extractor failed (result = " << result<< ")!" << endl;
+			NObjectFree(image);
+			NObjectFree(token);
+			if (ntfiAttributes)
+			NObjectFree(ntfiAttributes);
+			confidence = 0.0f;
+			return temp;
+		}
 
+		NObjectFree(image);
+		NObjectFree(token);
+		if (ntfiAttributes)
+			NObjectFree(ntfiAttributes);
+		confidence = quality;
+		return temp;
+	}
+
+	NObjectFree(image);
+	NObjectFree(token);
+	confidence = 0.0f;
 	return temp;
 
 }
