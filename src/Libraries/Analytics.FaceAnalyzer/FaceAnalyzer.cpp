@@ -70,16 +70,17 @@ void FaceAnalysis::Process(const Mat &frame, uint64_t frameTimestamp)
 		resize(frame, resizedFrame, Size(frame.cols * m_imageRescaleFactor, frame.rows * m_imageRescaleFactor));
 	else
 	{// Auto resize to 480p ( 640 x 480)
-		float colRescalefactor = 1.0f;
-		float rowRescalefactor = 1.0f;
-		if(frame.cols > 640) colRescalefactor = 640.0 / frame.cols;
-		if(frame.rows > 640) rowRescalefactor = 480.0 / frame.rows;
-		if( colRescalefactor != 1.0f || rowRescalefactor != 1.0f)
-			resize(frame, resizedFrame, Size(frame.cols * colRescalefactor, frame.rows * rowRescalefactor));
+		const int DETECTION_WIDTH = 640;
+		float scale =  frame.cols/(float) DETECTION_WIDTH;
+		if(frame.cols > DETECTION_WIDTH)
+		{ // Shrink the image while keeping the same aspect ratio
+			int scaledHeight = cvRound(frame.rows/scale);
+			resize(frame, resizedFrame, Size(DETECTION_WIDTH, scaledHeight));
+		}
 		else
 			resizedFrame = frame;
 	}
-
+	 
 	auto start = std::chrono::monotonic_clock::now();
    
 	// multithreaded version - do 2 things in parallel here
