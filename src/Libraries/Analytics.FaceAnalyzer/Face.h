@@ -58,6 +58,7 @@ private:
 	int Thumbnail_frequency;
 	// indicates whether the face has had recognition applied to them yet
 	bool m_hasBeenRecognized;
+	bool entry;
 
 	// the most recent estimate for the face's position
 	cv::Rect m_currentEstimatedPosition;
@@ -71,6 +72,9 @@ private:
 	// stores a history of the frames location in recent frames (the number of frames in the past it will store is based on the face location history size parameter)
 	uint32_t m_faceLocationHistorySize;
 	uint32_t m_thumbnailConfidenceSize;
+
+	uint64_t last_thumbnail_time;
+	uint64_t current_thumbnail_time;
 	int no_of_thumbnails;
 	std::map<uint64_t, cv::Rect> m_faceLocationHistory;
 	std::map<float, cv::Mat> m_thumbnailConfidence;

@@ -31,7 +31,7 @@ Thumbnail::Thumbnail(FaceAnalyzerConfiguration *faceAnalyzerConfig)
 	//	eye_detector_check.reset(new EyeDetector_OpenCV(faceAnalyzerConfig->eyeDetectorCascadeFile));
 	//}
 	
-	Thumbnail_enlarge_percentage = 75;
+	Thumbnail_enlarge_percentage = 25;
 	NBool available = false;
 
 	NResult result = N_OK;

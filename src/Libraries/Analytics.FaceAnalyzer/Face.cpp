@@ -37,7 +37,9 @@ Face::Face(const Mat frame, uint64_t frameTimestamp, Rect initialFaceRegion,Face
 	face_detector_neuro.reset( new FaceDetector_Neurotech());
 	m_startTime = chrono::monotonic_clock::now();
 
-    Thumbnail_frequency = faceAnalyzerConfig->Thumbnail_generation_frequency*30;
+	last_thumbnail_time = 0;
+	current_thumbnail_time = 0;
+    Thumbnail_frequency = faceAnalyzerConfig->Thumbnail_generation_frequency;
 	m_faceTracker->InitialiseTrack(frame, initialFaceRegion);
 	
 	Thumbnail_path = faceAnalyzerConfig->faceThumbnailOutputPath;
@@ -113,7 +115,7 @@ void Face::Merge(Face *theOtherFace)
 bool Face::Process(const Mat &frame, uint64_t frameTimestamp)
 {
 	m_wasLostIsNowFound = false;
-
+	entry = false;
 	m_frameProcessedNumber++;
 	if( m_isLost && m_frameProcessedNumber % m_lostFaceProcessingInterval != 0)
 		return true; // all good, we are just going to skip processing of this frame because this face is lost and we don't process every frame for lost faces otherwise it slows us down
@@ -126,7 +128,9 @@ bool Face::Process(const Mat &frame, uint64_t frameTimestamp)
 
 	//if (temp>20.0)
 		//return true;
-
+	current_thumbnail_time = frameTimestamp;
+	if((current_thumbnail_time - last_thumbnail_time) < Thumbnail_frequency && (current_thumbnail_time - last_thumbnail_time)>0 && entry)
+		return true;
 
 	m_currentEstimatedPosition = m_faceTracker->Process(frame);
 		
@@ -195,14 +199,18 @@ bool Face::Process(const Mat &frame, uint64_t frameTimestamp)
 
 			       if(has_thumbnails)
 				   {
+					   entry = true;
 					if( m_thumbnailConfidence.size() == m_thumbnailConfidenceSize && (confidence>m_thumbnailConfidence.begin()->first))
 					{
+						last_thumbnail_time=current_thumbnail_time;
 						m_thumbnailConfidence.erase( m_thumbnailConfidence.begin() );
 						m_thumbnailConfidence.insert (m_thumbnailConfidence.end(), pair<float,Mat>(confidence,thumbnail_temp));
 					}
 					else if (m_thumbnailConfidence.size() != m_thumbnailConfidenceSize)
+					{
 						m_thumbnailConfidence.insert (m_thumbnailConfidence.end(), pair<float,Mat>(confidence,thumbnail_temp));
-				
+						last_thumbnail_time=current_thumbnail_time;
+					}
 				   }
 			}
 
