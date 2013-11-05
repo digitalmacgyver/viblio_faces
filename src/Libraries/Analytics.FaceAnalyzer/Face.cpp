@@ -27,18 +27,14 @@ Face::Face(const Mat frame, uint64_t frameTimestamp, Rect initialFaceRegion,Face
 	  m_overlapThresholdForSameFace(0.5f),
 	  m_faceTrackerConfidenceThreshold(0.5f),
 	  m_thumbnailConfidenceSize(5),
-	  no_of_thumbnails(0),
-	  has_thumbnails(false),
 	  m_frameProcessedNumber(0)
 {
 	// in a real system we will probably take a copy of the tracker to initialize the face from as it has learned the background,
 	// however this is yet TBD
 	m_faceTracker.reset(new Tracker_OpenTLD());//m_trackerToInitializeFrom;
 	face_detector_neuro.reset( new FaceDetector_Neurotech());
-	m_startTime = chrono::monotonic_clock::now();
 
 	last_thumbnail_time = 0;
-	current_thumbnail_time = 0;
     Thumbnail_frequency = faceAnalyzerConfig->Thumbnail_generation_frequency;
 	m_faceTracker->InitialiseTrack(frame, initialFaceRegion);
 	
@@ -115,23 +111,12 @@ void Face::Merge(Face *theOtherFace)
 bool Face::Process(const Mat &frame, uint64_t frameTimestamp)
 {
 	m_wasLostIsNowFound = false;
-	entry = false;
+	
 	m_frameProcessedNumber++;
 	if( m_isLost && m_frameProcessedNumber % m_lostFaceProcessingInterval != 0)
 		return true; // all good, we are just going to skip processing of this frame because this face is lost and we don't process every frame for lost faces otherwise it slows us down
 
-	m_endTime = chrono::monotonic_clock::now();
-
-	std::chrono::duration<double> elapsed_time = m_endTime - m_startTime;
-
-	double temp =(std::chrono::duration <double, std::milli> (elapsed_time).count())/1000;
-
-	//if (temp>20.0)
-		//return true;
-	current_thumbnail_time = frameTimestamp;
-	if((current_thumbnail_time - last_thumbnail_time) < Thumbnail_frequency && (current_thumbnail_time - last_thumbnail_time)>0 && entry)
-		return true;
-
+	// perform the tracking on the latest frame
 	m_currentEstimatedPosition = m_faceTracker->Process(frame);
 		
 	std::ostringstream oss;
@@ -173,8 +158,6 @@ bool Face::Process(const Mat &frame, uint64_t frameTimestamp)
 		// nothing really to do here
 	}
 	
-
-
 	if( !m_isLost )
 	{
 		// if the face isn't lost then we can do several things here
@@ -186,38 +169,30 @@ bool Face::Process(const Mat &frame, uint64_t frameTimestamp)
 		// Saving a frame for every 800 milliseconds for a tracked frame when Thumbnail path is provided
 		if( !Thumbnail_path.empty() )
 		{
-
-			//if((frameTimestamp-m_currentFaceVisiblePair.first)%800 ==0)
-				
-			if(no_of_thumbnails%Thumbnail_frequency==0)
+			// if this is the first frame we have of the face OR we enough time has passed that we need to capture
+			// another thumbnail then attempt to extract one
+			if(last_thumbnail_time == 0 || (frameTimestamp - last_thumbnail_time) > Thumbnail_frequency )//&& (frameTimestamp - last_thumbnail_time) > 0)
 			{
 				float confidence = 0.0f;
-		  		Mat thumbnail_temp = Thumbnail_generator->ExtractThumbnail(frame.clone(), m_currentEstimatedPosition, confidence);
+				Mat thumbnail_temp = Thumbnail_generator->ExtractThumbnail(frame.clone(), m_currentEstimatedPosition, confidence);
 				//confidence =Thumbnail_generator->GetConfidencevalue(thumbnail_temp,has_thumbnails,m_faceTracker->GetConfidence());
 				if(confidence > 0.0)
-					has_thumbnails = true;
-
-			       if(has_thumbnails)
-				   {
-					   entry = true;
+				{
 					if( m_thumbnailConfidence.size() == m_thumbnailConfidenceSize && (confidence>m_thumbnailConfidence.begin()->first))
 					{
-						last_thumbnail_time=current_thumbnail_time;
 						m_thumbnailConfidence.erase( m_thumbnailConfidence.begin() );
 						m_thumbnailConfidence.insert (m_thumbnailConfidence.end(), pair<float,Mat>(confidence,thumbnail_temp));
 					}
 					else if (m_thumbnailConfidence.size() != m_thumbnailConfidenceSize)
 					{
 						m_thumbnailConfidence.insert (m_thumbnailConfidence.end(), pair<float,Mat>(confidence,thumbnail_temp));
-						last_thumbnail_time=current_thumbnail_time;
 					}
-				   }
+				}
+
+				// even if we don't find a useful thumbnail this time through we will wait Thumbnail_frequency milliseconds before trying
+				// again
+				last_thumbnail_time=frameTimestamp;
 			}
-
-				   no_of_thumbnails = no_of_thumbnails+1;
-
-
-				
 		}
 		if( m_faceLocationHistory.size() >= m_faceLocationHistorySize )
 			// make some space in the history map by removing the oldest item

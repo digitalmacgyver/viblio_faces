@@ -33,20 +33,12 @@ private:
 	Face(const Face&);
 	Face& operator=(const Face&);
 
-	// the time at which we started processing the video
-	std::chrono::system_clock::time_point m_startTime;
-
-	// the time at which we finished processing the video
-	std::chrono::system_clock::time_point m_endTime;
-
 	// a unique identifier for this face
 	boost::uuids::uuid m_faceId;
 
 	// indicates whether the face has been lost or not, likely due to them leaving the scene or because they
 	// are simply out of view of the camera (occluded etc)
 	bool m_isLost;
-
-	bool has_thumbnails;
 
 	// this bool is set to true when this face track was lost but is then found again, this can
 	// happen with a discriminative tracker with the capability to automatically redetect & track
@@ -56,9 +48,9 @@ private:
 	int m_frameProcessedNumber; // a count of the number of frames we have processed
 	int m_lostFaceProcessingInterval;
 	int Thumbnail_frequency;
+
 	// indicates whether the face has had recognition applied to them yet
 	bool m_hasBeenRecognized;
-	bool entry;
 
 	// the most recent estimate for the face's position
 	cv::Rect m_currentEstimatedPosition;
@@ -74,8 +66,6 @@ private:
 	uint32_t m_thumbnailConfidenceSize;
 
 	uint64_t last_thumbnail_time;
-	uint64_t current_thumbnail_time;
-	int no_of_thumbnails;
 	std::map<uint64_t, cv::Rect> m_faceLocationHistory;
 	std::map<float, cv::Mat> m_thumbnailConfidence;
 
