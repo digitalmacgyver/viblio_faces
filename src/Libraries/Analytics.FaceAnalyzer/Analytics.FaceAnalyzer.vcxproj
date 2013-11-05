@@ -28,6 +28,7 @@
     <ClCompile Include="FaceDetector_Neurotech.cpp" />
     <ClCompile Include="FaceDetector_OpenCV.cpp" />
     <ClCompile Include="Thumbnail.cpp" />
+    <ClCompile Include="ThumbnailDetails.cpp" />
     <ClCompile Include="Tracker_OpenTLD.cpp" />
     <ClCompile Include="TrackingController.cpp" />
   </ItemGroup>
@@ -43,6 +44,7 @@
     <ClInclude Include="FaceDetector_Neurotech.h" />
     <ClInclude Include="FaceDetector_OpenCV.h" />
     <ClInclude Include="Thumbnail.h" />
+    <ClInclude Include="ThumbnailDetails.h" />
     <ClInclude Include="Tracker_OpenTLD.h" />
     <ClInclude Include="TrackingController.h" />
   </ItemGroup>
