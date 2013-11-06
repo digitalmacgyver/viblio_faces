@@ -1,5 +1,6 @@
 #include "FaceAnalyzerConfiguration.h"
 #include "Thumbnail.h"
+#include "ThumbnailDetails.h"
 #include "EyeDetector_OpenCV.h"
 #include "Jzon/Jzon.h"
 #include <numeric>
@@ -24,6 +25,7 @@ Thumbnail::Thumbnail(FaceAnalyzerConfiguration *faceAnalyzerConfig)
 	tokenFaceExtractor = NULL;
 	has_eyecascade= false;
 	face_detector_check.reset( new FaceDetector_Neurotech() );
+//	thumbnail_details.reset(new ThumbnailDetails());
 	//face_detector_check.reset( new FaceDetector_Neurotech(faceAnalyzerConfig->faceDetectorCascadeFile));
 	//face_detector_neuro.reset(new FaceDetector_Neurotech());
 	//if(!faceAnalyzerConfig->eyeDetectorCascadeFile.empty())
@@ -74,9 +76,13 @@ Thumbnail::~Thumbnail()
 }
 
 
-cv::Mat Thumbnail::ExtractThumbnail( const cv::Mat &frame, const cv::Rect &ThumbnailLocation, float &confidence)
-{
+
+cv::Mat Thumbnail::ExtractThumbnail( const cv::Mat &frame, const cv::Rect &ThumbnailLocation, float &confidence, ThumbnailDetails *thumbnail_detail)
+{   
+	
+	
 	cv::Mat thumbnail;
+
 
 	Rect enlarged_thumbnail(ThumbnailLocation.x-(ThumbnailLocation.width*Thumbnail_enlarge_percentage),ThumbnailLocation.y-(ThumbnailLocation.height*Thumbnail_enlarge_percentage),ThumbnailLocation.width+(ThumbnailLocation.width*(Thumbnail_enlarge_percentage*2)),ThumbnailLocation.height+(ThumbnailLocation.height*Thumbnail_enlarge_percentage*2));
 	Rect constrainedRect = ConstrainRect(enlarged_thumbnail, Size(frame.cols, frame.rows));
@@ -84,7 +90,9 @@ cv::Mat Thumbnail::ExtractThumbnail( const cv::Mat &frame, const cv::Rect &Thumb
 	thumbnail = frame(constrainedRect);
 
 	// perform a detailed face extraction to get some detailed information
+
 	vector<FaceDetectionDetails> detectedFaces = face_detector_check->Detect(thumbnail, true);
+
 
 	if( detectedFaces.size() > 1 || detectedFaces.size() == 0 )
 	{
@@ -94,10 +102,11 @@ cv::Mat Thumbnail::ExtractThumbnail( const cv::Mat &frame, const cv::Rect &Thumb
 		return thumbnail;
 	}
 
-
+	
 	// now use the detailed information to create a token image
 	FaceDetectionDetails uniqueface;
 	uniqueface = detectedFaces.at(0);
+
 
 	// check to make sure we have the prerequisite information for token extraction before proceeding
 	if(uniqueface.leftEyeConfidence <= 0 || uniqueface.rightEyeConfidence <= 0)
@@ -105,6 +114,9 @@ cv::Mat Thumbnail::ExtractThumbnail( const cv::Mat &frame, const cv::Rect &Thumb
 		confidence = 0.0f;
 		return thumbnail;
 	}
+
+	thumbnail_detail->FillThumbnailDetails(temp,uniqueface);
+
 
 	NResult result ;
 	NPoint first;

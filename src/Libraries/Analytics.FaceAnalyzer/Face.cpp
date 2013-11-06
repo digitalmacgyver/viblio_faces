@@ -1,6 +1,7 @@
 #include "Face.h"
 #include "Tracker_OpenTLD.h"
 #include "Thumbnail.h"
+#include "ThumbnailDetails.h"
 #include "FaceAnalyzerConfiguration.h"
 #include "Jzon/Jzon.h"
 #include "FileSystem/FileSystem.h"
@@ -164,7 +165,7 @@ bool Face::Process(const Mat &frame, uint64_t frameTimestamp)
 		// 1) Determine if we need to produce a thumbnail
 		// 2) Determine if we need to apply recognition to the face
 		// 3) Store the face's location in the location history map
-
+		
 
 		// Saving a frame for every 800 milliseconds for a tracked frame when Thumbnail path is provided
 		if( !Thumbnail_path.empty() )
@@ -174,18 +175,21 @@ bool Face::Process(const Mat &frame, uint64_t frameTimestamp)
 			if(last_thumbnail_time == 0 || (frameTimestamp - last_thumbnail_time) > Thumbnail_frequency )//&& (frameTimestamp - last_thumbnail_time) > 0)
 			{
 				float confidence = 0.0f;
-				Mat thumbnail_temp = Thumbnail_generator->ExtractThumbnail(frame.clone(), m_currentEstimatedPosition, confidence);
+				ThumbnailDetails thumbnail_detail;
+				//thumbnail_detail.reset(new ThumbnailDetails());
+				Mat thumbnail_temp = Thumbnail_generator->ExtractThumbnail(frame.clone(), m_currentEstimatedPosition, confidence,&thumbnail_detail);
+				
 				//confidence =Thumbnail_generator->GetConfidencevalue(thumbnail_temp,has_thumbnails,m_faceTracker->GetConfidence());
 				if(confidence > 0.0)
 				{
 					if( m_thumbnailConfidence.size() == m_thumbnailConfidenceSize && (confidence>m_thumbnailConfidence.begin()->first))
 					{
 						m_thumbnailConfidence.erase( m_thumbnailConfidence.begin() );
-						m_thumbnailConfidence.insert (m_thumbnailConfidence.end(), pair<float,Mat>(confidence,thumbnail_temp));
+						m_thumbnailConfidence.insert (m_thumbnailConfidence.end(), pair<float,Mat>(confidence,thumbnail_detail.GetThumbnail()));
 					}
 					else if (m_thumbnailConfidence.size() != m_thumbnailConfidenceSize)
 					{
-						m_thumbnailConfidence.insert (m_thumbnailConfidence.end(), pair<float,Mat>(confidence,thumbnail_temp));
+						m_thumbnailConfidence.insert (m_thumbnailConfidence.end(), pair<float,Mat>(confidence,thumbnail_detail.GetThumbnail()));
 					}
 				}
 

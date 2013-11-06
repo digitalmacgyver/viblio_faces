@@ -66,6 +66,9 @@
     <ClCompile Include="FaceDetectionDetails.cpp">
       <Filter>Source Files\Detection</Filter>
     </ClCompile>
+    <ClCompile Include="ThumbnailDetails.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FaceAnalyzer.h">
@@ -106,6 +109,9 @@
     </ClInclude>
     <ClInclude Include="FaceDetectionDetails.h">
       <Filter>Header Files\Detection</Filter>
+    </ClInclude>
+    <ClInclude Include="ThumbnailDetails.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
