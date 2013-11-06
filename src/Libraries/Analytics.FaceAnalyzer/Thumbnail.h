@@ -22,9 +22,11 @@ private:
 
 	HNtfi tokenFaceExtractor;
 
-	int Thumbnail_enlarge_percentage;
+	float Thumbnail_enlarge_percentage;
 	bool has_eyecascade;
 
+	bool MatToHNImage(const cv::Mat &matImage, HNImage *hnImage);
+	cv::Mat HNImageToMat(HNImage *hnImage);
 	cv::Rect ConstrainRect(const cv::Rect &rectToConstrain, const cv::Size &imageSize);
 
 public:

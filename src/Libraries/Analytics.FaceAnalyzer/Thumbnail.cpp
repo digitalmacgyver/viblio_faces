@@ -31,7 +31,7 @@ Thumbnail::Thumbnail(FaceAnalyzerConfiguration *faceAnalyzerConfig)
 	//	eye_detector_check.reset(new EyeDetector_OpenCV(faceAnalyzerConfig->eyeDetectorCascadeFile));
 	//}
 	
-	Thumbnail_enlarge_percentage = 25;
+	Thumbnail_enlarge_percentage = 0.75f;
 	NBool available = false;
 
 	NResult result = N_OK;
@@ -76,28 +76,36 @@ Thumbnail::~Thumbnail()
 
 cv::Mat Thumbnail::ExtractThumbnail( const cv::Mat &frame, const cv::Rect &ThumbnailLocation, float &confidence)
 {
-	cv::Mat temp;
+	cv::Mat thumbnail;
 
-	Rect enlarged_thumbnail(ThumbnailLocation.x-(ThumbnailLocation.width*Thumbnail_enlarge_percentage/100),ThumbnailLocation.y-(ThumbnailLocation.height*Thumbnail_enlarge_percentage/100),ThumbnailLocation.width+(ThumbnailLocation.width*(Thumbnail_enlarge_percentage*2)/100),ThumbnailLocation.height+(ThumbnailLocation.height*Thumbnail_enlarge_percentage*2/100));
+	Rect enlarged_thumbnail(ThumbnailLocation.x-(ThumbnailLocation.width*Thumbnail_enlarge_percentage),ThumbnailLocation.y-(ThumbnailLocation.height*Thumbnail_enlarge_percentage),ThumbnailLocation.width+(ThumbnailLocation.width*(Thumbnail_enlarge_percentage*2)),ThumbnailLocation.height+(ThumbnailLocation.height*Thumbnail_enlarge_percentage*2));
 	Rect constrainedRect = ConstrainRect(enlarged_thumbnail, Size(frame.cols, frame.rows));
 
-	temp = frame(constrainedRect);
+	thumbnail = frame(constrainedRect);
 
 	// perform a detailed face extraction to get some detailed information
-	vector<FaceDetectionDetails> detectedFaces = face_detector_check->Detect(temp, true);
+	vector<FaceDetectionDetails> detectedFaces = face_detector_check->Detect(thumbnail, true);
 
 	if( detectedFaces.size() > 1 || detectedFaces.size() == 0 )
 	{
 		// if we find either no faces or more than 1 face in this 'little' region then we have 0 confidence in
 		// this thumbnail
 		confidence = 0.0f;
-		return temp;
+		return thumbnail;
 	}
 
 
 	// now use the detailed information to create a token image
 	FaceDetectionDetails uniqueface;
 	uniqueface = detectedFaces.at(0);
+
+	// check to make sure we have the prerequisite information for token extraction before proceeding
+	if(uniqueface.leftEyeConfidence <= 0 || uniqueface.rightEyeConfidence <= 0)
+	{
+		confidence = 0.0f;
+		return thumbnail;
+	}
+
 	NResult result ;
 	NPoint first;
 	NPoint second;
@@ -105,92 +113,149 @@ cv::Mat Thumbnail::ExtractThumbnail( const cv::Mat &frame, const cv::Rect &Thumb
 	HNImage image = NULL;
 	HNtfiAttributes ntfiAttributes = NULL;
 	NDouble quality;
-	Mat temporary;
-	cvtColor( temp, temporary, CV_BGR2GRAY );
-	result = NImageCreateFromDataEx(npfGrayscale, temporary.cols, temporary.rows, 0, temporary.cols , temporary.data ,temporary.cols*temporary.rows ,0,&image);
-	//result = NImageCreateFromDataEx(npfRgb, temp.cols, temp.rows, temp.cols*3, temp.cols*3, temp.data, (temp.cols*3)*temp.rows, 0, &image); // colour version
-	if(NFailed(result))
+
+	// first convert out thumbnail into an HNImage
+	bool success = MatToHNImage(thumbnail, &image);
+
+	if(!success)
 	{
-		cout << "NImageCreateFromDataEx failed (result = " << result<< ")!" << endl;
+		// Failed to convert the OpenCV Mat into a Neurotech HNImage
+
 		if(image)
 			NObjectFree(image);
-		//NObjectFree(token);
-		if (ntfiAttributes)
-			NObjectFree(ntfiAttributes);
+
 		confidence = 0.0f;
-		return temp;
-
+		return thumbnail;
 	}
-	if(uniqueface.leftEyeConfidence>0 && uniqueface.rightEyeConfidence >0)
+
+	// now setup the left and right eye positions and use them to create the token image
+	first.X = uniqueface.rightEye.x;
+	first.Y = uniqueface.rightEye.y;
+	second.X = uniqueface.leftEye.x;
+	second.Y = uniqueface.leftEye.y;
+	result = NtfiCreateTokenFaceImageEx(tokenFaceExtractor, image, &first, &second, &token);
+	if (NFailed(result))
 	{
-		first.X = uniqueface.rightEye.x;
-		first.Y = uniqueface.rightEye.y;
-		second.X = uniqueface.leftEye.x;
-		second.Y = uniqueface.leftEye.y;
-		result = NtfiCreateTokenFaceImageEx(tokenFaceExtractor, image, &first, &second, &token);
-		if (NFailed(result))
-		{
-			cout << "NtfiCreateTokenFaceImage()failed (result = " << result<< ")!" << endl;
-			if(image)
-				NObjectFree(image);
-			if( token)
-				NObjectFree(token);
-			if (ntfiAttributes)
-				NObjectFree(ntfiAttributes);
-			confidence = 0.0f;
-			return temp;
-		}
-		//const NChar * savePath = N_T("C:\\temp\\tokenTest.jpg");
-		//result = NImageSaveToFileEx(token, savePath, NULL, NULL, 0);
-		result = NtfiTestTokenFaceImage(tokenFaceExtractor, token, &ntfiAttributes, &quality);
-		if (NFailed(result))
-		{
-			cout << "NtfiCreateTokenFaceImage() quality extractor failed (result = " << result<< ")!" << endl;
-			if(image)
-				NObjectFree(image);
-			if(token)
-				NObjectFree(token);
-			if (ntfiAttributes)
-				NObjectFree(ntfiAttributes);
-			confidence = 0.0f;
-			return temp;
-		}
-
-		//NtfiAttributesGetBackgroundUniformity - see page 729 in the SDK documentation
-		//NtfiAttributesGetGrayscaleDensity
-		//NtfiAttributesGetSharpness
-
-		//npfRgb
-		NUInt width = 0, height = 0;
-		
-		NImageGetWidth(token, &width);
-		NImageGetHeight(token, &height);
-		
-		Mat tokenMat = Mat(height, width, CV_8UC1);
-		NImageCopyToData(token, npfGrayscale, tokenMat.cols, tokenMat.rows, tokenMat.step, tokenMat.data, tokenMat.step * tokenMat.rows, 0, 0, 0);
-
-		//imshow("Token image", tokenMat);
-		//waitKey(0);
-
+		cout << "NtfiCreateTokenFaceImage()failed (result = " << result<< ")!" << endl;
 		if(image)
 			NObjectFree(image);
+		if( token)
+			NObjectFree(token);
+		
+		confidence = 0.0f;
+		return thumbnail;
+	}
+
+	//const NChar * savePath = N_T("C:\\temp\\tokenTest.jpg");
+	//result = NImageSaveToFileEx(token, savePath, NULL, NULL, 0);
+
+	// now that we have the token image lets test it to establish its quality
+	result = NtfiTestTokenFaceImage(tokenFaceExtractor, token, &ntfiAttributes, &quality);
+	if (NFailed(result))
+	{
+		cout << "NtfiCreateTokenFaceImage() quality extractor failed (result = " << result<< ")!" << endl;
+		if(image)
+			NObjectFree(image);
+
 		if(token)
 			NObjectFree(token);
+
 		if (ntfiAttributes)
 			NObjectFree(ntfiAttributes);
-		confidence = quality;
-		return temp;
+
+		confidence = 0.0f;
+		return thumbnail;
 	}
+
+	// Determine the background uniformity - see page 729 in the SDK documentation
+	double backgroundUniformity = 0.0f;
+	NtfiAttributesGetBackgroundUniformity(ntfiAttributes, &backgroundUniformity);
+
+	// determine the image sharpness
+	double sharpness = 0.0f;
+	NtfiAttributesGetSharpness(ntfiAttributes, &sharpness);
+	
+	// lastly, determine the grayscale density
+	double grayscaleDensity = 0.0f;
+	NtfiAttributesGetGrayscaleDensity(ntfiAttributes, &grayscaleDensity);
+	
+	// Now convert the token image back into an OpenCV Mat
+	Mat tokenMat = HNImageToMat(&token);
+	
+	//imshow("Token image", tokenMat);
+	//waitKey(0);
 
 	if(image)
 		NObjectFree(image);
 	if(token)
 		NObjectFree(token);
-	confidence = 0.0f;
-	return temp;
+	if (ntfiAttributes)
+		NObjectFree(ntfiAttributes);
 
+	confidence = quality;
+
+	return thumbnail;
 }
 
+bool Thumbnail::MatToHNImage(const Mat &matImage, HNImage *hnImage)
+{
+	unsigned char *pixelData = new unsigned char[matImage.rows*matImage.cols*matImage.channels()];
+	
+	for (int row=0;row<matImage.rows;row++)
+	{
+		const unsigned char *data = matImage.ptr(row);
+		for (int col=0;col<matImage.cols;col++)
+		{
+			// then use *data for the pixel value, assuming you know the order, RGB etc           
+			// Note 'rgb' is actually stored B,G,R
+		   pixelData[(row * matImage.cols + col)*3 + 2]= *data++;
+		   pixelData[(row * matImage.cols + col)*3 + 1] = *data++;
+		   pixelData[(row * matImage.cols + col)*3 + 0]= *data++;
+		}
+	}
+
+	NResult result = NImageCreateFromDataEx(npfRgb, matImage.cols, matImage.rows, matImage.cols*matImage.channels(), matImage.cols*matImage.channels(), pixelData, (matImage.cols*matImage.channels())*matImage.rows, 0, hnImage);
+
+	delete [] pixelData;
+
+	if(NFailed(result))
+	{
+		cout << "NImageCreateFromDataEx failed (result = " << result<< ")!" << endl;
+		return false;
+	}
+
+	// success
+	return true;
+}
+
+Mat Thumbnail::HNImageToMat(HNImage *hnImage)
+{
+	NUInt width = 0, height = 0;
+
+	NImageGetWidth(*hnImage, &width);
+	NImageGetHeight(*hnImage, &height);
+	NInt channels = 0;
+	NImageGetPlaneCount(*hnImage, &channels);
+	Mat matImage;
+
+	if( channels == 3 )
+	{
+		matImage = Mat(height, width, CV_8UC3);
+		NImageCopyToData(*hnImage, npfRgb, matImage.cols, matImage.rows, matImage.step, matImage.data, matImage.step * matImage.rows, 0, 0, 0);
+		cvtColor(matImage, matImage, CV_BGR2RGB);
+	}
+	else if( channels == 1 )
+	{
+		matImage = Mat(height, width, CV_8UC1);
+		NImageCopyToData(*hnImage, npfGrayscale, matImage.cols, matImage.rows, matImage.step, matImage.data, matImage.step * matImage.rows, 0, 0, 0);
+	}
+	else
+	{
+		cout << "Unsupported number of channels when converting from HNImage to Mat" << endl;
+	}
+
+	return matImage;
+}
 
 float Thumbnail::GetConfidencevalue(const cv::Mat &Thumbnail,bool &has_thumbnails,const float &tracker_confidence )
 {
