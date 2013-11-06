@@ -115,7 +115,7 @@ cv::Mat Thumbnail::ExtractThumbnail( const cv::Mat &frame, const cv::Rect &Thumb
 		return thumbnail;
 	}
 
-	thumbnail_detail->FillThumbnailDetails(temp,uniqueface);
+	thumbnail_detail->FillThumbnailDetails(thumbnail,uniqueface);
 
 
 	NResult result ;
