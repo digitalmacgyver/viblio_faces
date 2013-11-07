@@ -24,6 +24,7 @@ class Tracker_OpenTLD;
 class FaceDetector_OpenCV;
 class FaceDetector_Neurotech;
 class Thumbnail;
+class ThumbnailDetails;
 class Face
 {
 	friend class FaceTests;
@@ -67,7 +68,7 @@ private:
 
 	uint64_t last_thumbnail_time;
 	std::map<uint64_t, cv::Rect> m_faceLocationHistory;
-	std::map<float, cv::Mat> m_thumbnailConfidence;
+	std::map<float, ThumbnailDetails> m_thumbnailConfidence;
 
 	// a vector of times when the face was visible in the scene. It is a vector of pairs of timestamps when the face entered and left (or was lost track of)
 	std::vector<std::pair<uint64_t, uint64_t>> m_timesWhenFaceVisible;
@@ -76,7 +77,7 @@ private:
 
 	// the tracker that will be used to track this face
 	std::unique_ptr<Tracker_OpenTLD> m_faceTracker;
-	Thumbnail *Thumbnail_generator;
+	std::unique_ptr<Thumbnail> Thumbnail_generator;
 	std::string Thumbnail_path;
 	std::string Filenameprefix;
 	cv::Scalar m_visualizationColor;

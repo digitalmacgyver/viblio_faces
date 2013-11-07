@@ -25,9 +25,5 @@ void ThumbnailDetails::FillThumbnailDetails(const cv::Mat &frame,  FaceDetection
 
 }
 
-cv::Mat ThumbnailDetails::GetThumbnail()
-{
-	return thumbnail;
-}
 	}
 }

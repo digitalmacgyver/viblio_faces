@@ -4,10 +4,6 @@
 #include "FaceDetectionDetails.h"
 #include <opencv2/opencv.hpp>
 
-
-using namespace cv;
-using namespace std;
-
 namespace Analytics
 {
 	namespace FaceAnalyzer
@@ -16,17 +12,20 @@ namespace Analytics
 
 class ThumbnailDetails
 {
-
-
 private:
 	FaceDetectionDetails thumbnaildeets;
 	cv::Mat  thumbnail;
 
 public:
+	ThumbnailDetails();
+	~ThumbnailDetails();
+
 	void FillThumbnailDetails(const cv::Mat &frame,  FaceDetectionDetails ThumbnailLocation);
-	cv::Mat ThumbnailDetails::GetThumbnail();
-	ThumbnailDetails(void);
-	~ThumbnailDetails(void);
+
+	void SetThumbnail(cv::Mat newThumbnail){ thumbnail = newThumbnail; }
+	cv::Mat GetThumbnail(){ return thumbnail; }
+
+	void SetDetailedInformation(const FaceDetectionDetails &detailedFaceInfo){ thumbnaildeets = detailedFaceInfo; }
 };
 
 

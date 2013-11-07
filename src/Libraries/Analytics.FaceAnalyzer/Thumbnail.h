@@ -34,7 +34,7 @@ public:
 	Thumbnail(FaceAnalyzerConfiguration *faceAnalyzerConfig);
 	~Thumbnail(void);
 	
-	cv::Mat ExtractThumbnail( const cv::Mat &frame,const  cv::Rect &ThumbnailLocation, float &confidence,ThumbnailDetails *thumbnail_details1);
+	bool ExtractThumbnail( const cv::Mat &frame,const  cv::Rect &ThumbnailLocation, float &confidence, ThumbnailDetails &thumbnail_details);
 	
     float GetConfidencevalue(const cv::Mat &Thumbnail,bool &has_thumbnails,const float &tracker_confidence);
 	

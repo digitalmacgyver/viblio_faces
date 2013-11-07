@@ -60,6 +60,10 @@ public:
 	FaceDetectionDetails();
 	~FaceDetectionDetails();
 
+	// copy constructor
+	//FaceDetectionDetails(const FaceDetectionDetails &otherFaceDetails);
+	FaceDetectionDetails & operator=(FaceDetectionDetails other);
+
 	std::string ToJson(){};
 };
 

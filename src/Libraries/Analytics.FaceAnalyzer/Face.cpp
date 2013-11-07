@@ -41,7 +41,7 @@ Face::Face(const Mat frame, uint64_t frameTimestamp, Rect initialFaceRegion,Face
 	
 	Thumbnail_path = faceAnalyzerConfig->faceThumbnailOutputPath;
 	Filenameprefix = faceAnalyzerConfig->filenameprefix;
-	Thumbnail_generator = new Thumbnail(faceAnalyzerConfig);
+	Thumbnail_generator.reset(new Thumbnail(faceAnalyzerConfig));
 
 	m_lostFaceProcessingInterval = faceAnalyzerConfig->lostFaceProcessFrequency;
 
@@ -177,7 +177,7 @@ bool Face::Process(const Mat &frame, uint64_t frameTimestamp)
 				float confidence = 0.0f;
 				ThumbnailDetails thumbnail_detail;
 				//thumbnail_detail.reset(new ThumbnailDetails());
-				Mat thumbnail_temp = Thumbnail_generator->ExtractThumbnail(frame.clone(), m_currentEstimatedPosition, confidence,&thumbnail_detail);
+				bool extractionSuccess = Thumbnail_generator->ExtractThumbnail(frame.clone(), m_currentEstimatedPosition, confidence, thumbnail_detail);
 				
 				//confidence =Thumbnail_generator->GetConfidencevalue(thumbnail_temp,has_thumbnails,m_faceTracker->GetConfidence());
 				if(confidence > 0.0)
@@ -185,11 +185,11 @@ bool Face::Process(const Mat &frame, uint64_t frameTimestamp)
 					if( m_thumbnailConfidence.size() == m_thumbnailConfidenceSize && (confidence>m_thumbnailConfidence.begin()->first))
 					{
 						m_thumbnailConfidence.erase( m_thumbnailConfidence.begin() );
-						m_thumbnailConfidence.insert (m_thumbnailConfidence.end(), pair<float,Mat>(confidence,thumbnail_detail.GetThumbnail()));
+						m_thumbnailConfidence.insert (m_thumbnailConfidence.end(), pair<float,ThumbnailDetails>(confidence,thumbnail_detail));
 					}
 					else if (m_thumbnailConfidence.size() != m_thumbnailConfidenceSize)
 					{
-						m_thumbnailConfidence.insert (m_thumbnailConfidence.end(), pair<float,Mat>(confidence,thumbnail_detail.GetThumbnail()));
+						m_thumbnailConfidence.insert (m_thumbnailConfidence.end(), pair<float,ThumbnailDetails>(confidence,thumbnail_detail));
 					}
 				}
 
@@ -322,10 +322,10 @@ string Face::GetOutput(int trackno)
 		return result;
 	//	std::string all_thumbnails;
 	Jzon::Array listOfStuff;
-	for(std::map<float,Mat>::iterator iter = m_thumbnailConfidence.begin(); iter != m_thumbnailConfidence.end(); ++iter)
+	for(std::map<float,ThumbnailDetails>::iterator iter = m_thumbnailConfidence.begin(); iter != m_thumbnailConfidence.end(); ++iter)
 	{
 		count++;
-		Mat k =  iter->second;
+		Mat k =  iter->second.GetThumbnail();
 		std::stringstream oss;
 		std::stringstream tracknumber;
 		//oss << frameTimestamp;
