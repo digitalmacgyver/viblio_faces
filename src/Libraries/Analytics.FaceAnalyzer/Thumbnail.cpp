@@ -191,6 +191,9 @@ cv::Mat Thumbnail::ExtractThumbnail( const cv::Mat &frame, const cv::Rect &Thumb
 	double grayscaleDensity = 0.0f;
 	NtfiAttributesGetGrayscaleDensity(ntfiAttributes, &grayscaleDensity);
 	
+	thumbnail_detail->backgroundUniformity = backgroundUniformity;
+	thumbnail_detail->grayscaleDensity = grayscaleDensity;
+	thumbnail_detail->sharpness = sharpness;
 	// Now convert the token image back into an OpenCV Mat
 	Mat tokenMat = HNImageToMat(&token);
 	
