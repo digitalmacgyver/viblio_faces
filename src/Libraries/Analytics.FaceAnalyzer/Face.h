@@ -24,6 +24,7 @@ class Tracker_OpenTLD;
 class FaceDetector_OpenCV;
 class FaceDetector_Neurotech;
 class Thumbnail;
+class ThumbnailDetails;
 class Face
 {
 	friend class FaceTests;
@@ -76,7 +77,7 @@ private:
 
 	// the tracker that will be used to track this face
 	std::unique_ptr<Tracker_OpenTLD> m_faceTracker;
-	Thumbnail *Thumbnail_generator;
+	std::unique_ptr<Thumbnail> Thumbnail_generator;
 	std::string Thumbnail_path;
 	std::string Filenameprefix;
 	cv::Scalar m_visualizationColor;

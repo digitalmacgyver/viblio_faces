@@ -77,20 +77,18 @@ Thumbnail::~Thumbnail()
 
 
 
-cv::Mat Thumbnail::ExtractThumbnail( const cv::Mat &frame, const cv::Rect &ThumbnailLocation, float &confidence, ThumbnailDetails *thumbnail_detail)
+bool Thumbnail::ExtractThumbnail( const cv::Mat &frame, const cv::Rect &ThumbnailLocation, float &confidence, ThumbnailDetails &thumbnail_details)
 {   
-	
-	
 	cv::Mat thumbnail;
-
 
 	Rect enlarged_thumbnail(ThumbnailLocation.x-(ThumbnailLocation.width*Thumbnail_enlarge_percentage),ThumbnailLocation.y-(ThumbnailLocation.height*Thumbnail_enlarge_percentage),ThumbnailLocation.width+(ThumbnailLocation.width*(Thumbnail_enlarge_percentage*2)),ThumbnailLocation.height+(ThumbnailLocation.height*Thumbnail_enlarge_percentage*2));
 	Rect constrainedRect = ConstrainRect(enlarged_thumbnail, Size(frame.cols, frame.rows));
 
 	thumbnail = frame(constrainedRect);
 
-	// perform a detailed face extraction to get some detailed information
+	thumbnail_details.SetThumbnail(thumbnail);
 
+	// perform a detailed face extraction to get some detailed information
 	vector<FaceDetectionDetails> detectedFaces = face_detector_check->Detect(thumbnail, true);
 
 
@@ -99,23 +97,24 @@ cv::Mat Thumbnail::ExtractThumbnail( const cv::Mat &frame, const cv::Rect &Thumb
 		// if we find either no faces or more than 1 face in this 'little' region then we have 0 confidence in
 		// this thumbnail
 		confidence = 0.0f;
-		return thumbnail;
+		return false;
 	}
 
 	
 	// now use the detailed information to create a token image
-	FaceDetectionDetails uniqueface;
-	uniqueface = detectedFaces.at(0);
+	FaceDetectionDetails detailedFaceInfo;
+	detailedFaceInfo = detectedFaces.at(0);
 
+	thumbnail_details.SetDetailedInformation(detailedFaceInfo);
 
 	// check to make sure we have the prerequisite information for token extraction before proceeding
-	if(uniqueface.leftEyeConfidence <= 0 || uniqueface.rightEyeConfidence <= 0)
+	if(detailedFaceInfo.leftEyeConfidence <= 0 || detailedFaceInfo.rightEyeConfidence <= 0)
 	{
 		confidence = 0.0f;
-		return thumbnail;
+		return false;
 	}
 
-	thumbnail_detail->FillThumbnailDetails(thumbnail,uniqueface);
+	//thumbnail_detail->FillThumbnailDetails(thumbnail,uniqueface);
 
 
 	NResult result ;
@@ -137,14 +136,14 @@ cv::Mat Thumbnail::ExtractThumbnail( const cv::Mat &frame, const cv::Rect &Thumb
 			NObjectFree(image);
 
 		confidence = 0.0f;
-		return thumbnail;
+		return false;
 	}
 
 	// now setup the left and right eye positions and use them to create the token image
-	first.X = uniqueface.rightEye.x;
-	first.Y = uniqueface.rightEye.y;
-	second.X = uniqueface.leftEye.x;
-	second.Y = uniqueface.leftEye.y;
+	first.X = detailedFaceInfo.rightEye.x;
+	first.Y = detailedFaceInfo.rightEye.y;
+	second.X = detailedFaceInfo.leftEye.x;
+	second.Y = detailedFaceInfo.leftEye.y;
 	result = NtfiCreateTokenFaceImageEx(tokenFaceExtractor, image, &first, &second, &token);
 	if (NFailed(result))
 	{
@@ -155,7 +154,7 @@ cv::Mat Thumbnail::ExtractThumbnail( const cv::Mat &frame, const cv::Rect &Thumb
 			NObjectFree(token);
 		
 		confidence = 0.0f;
-		return thumbnail;
+		return false;
 	}
 
 	//const NChar * savePath = N_T("C:\\temp\\tokenTest.jpg");
@@ -176,7 +175,7 @@ cv::Mat Thumbnail::ExtractThumbnail( const cv::Mat &frame, const cv::Rect &Thumb
 			NObjectFree(ntfiAttributes);
 
 		confidence = 0.0f;
-		return thumbnail;
+		return false;
 	}
 
 	// Determine the background uniformity - see page 729 in the SDK documentation
@@ -191,9 +190,9 @@ cv::Mat Thumbnail::ExtractThumbnail( const cv::Mat &frame, const cv::Rect &Thumb
 	double grayscaleDensity = 0.0f;
 	NtfiAttributesGetGrayscaleDensity(ntfiAttributes, &grayscaleDensity);
 	
-	thumbnail_detail->backgroundUniformity = backgroundUniformity;
-	thumbnail_detail->grayscaleDensity = grayscaleDensity;
-	thumbnail_detail->sharpness = sharpness;
+	thumbnail_details.backgroundUniformity = backgroundUniformity;
+	thumbnail_details.grayscaleDensity = grayscaleDensity;
+	thumbnail_details.sharpness = sharpness;
 	// Now convert the token image back into an OpenCV Mat
 	Mat tokenMat = HNImageToMat(&token);
 	
@@ -209,7 +208,7 @@ cv::Mat Thumbnail::ExtractThumbnail( const cv::Mat &frame, const cv::Rect &Thumb
 
 	confidence = quality;
 
-	return thumbnail;
+	return true;
 }
 
 bool Thumbnail::MatToHNImage(const Mat &matImage, HNImage *hnImage)

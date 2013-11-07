@@ -49,6 +49,53 @@ FaceDetectionDetails::~FaceDetectionDetails()
 {
 }
 
+FaceDetectionDetails & FaceDetectionDetails::operator= (FaceDetectionDetails other)
+{
+	if (this != &other) // protect against invalid self-assignment
+	{
+		faceRect = other.faceRect;
+
+		roll = other.roll;
+		pitch = other.pitch;
+		yaw = other.yaw;
+
+		leftEye = other.leftEye;
+		leftEyeConfidence = other.leftEyeConfidence;
+		rightEye = other.rightEye;
+		rightEyeConfidence = other.rightEyeConfidence;
+
+		hasAdditionalFaceInformation = other.hasAdditionalFaceInformation;
+
+		noseLocation = other.noseLocation;
+		noseLocationConfidence = other.noseLocationConfidence;
+
+		isMale = other.isMale;
+		genderConfidence = other.genderConfidence;
+
+		isHappy = other.isHappy;
+		expressionConfidence = other.expressionConfidence;
+
+		wearingDarkGlasses = other.wearingDarkGlasses;
+		wearingDarkGlassesConfidence = other.wearingDarkGlassesConfidence;
+
+		wearingGlasses = other.wearingGlasses;
+		glassesConfidence = other.glassesConfidence;
+
+		mouthLocation = other.mouthLocation;
+		mouthLocationConfidence = other.mouthLocationConfidence;
+
+		mouthOpen = other.mouthOpen;
+		mouthOpenConfidence = other.mouthOpenConfidence;
+	}
+
+	return *this;
+}
+
+//FaceDetectionDetails::FaceDetectionDetails(const FaceDetectionDetails &otherFaceDetails)
+//{
+//	this.faceRect = otherFaceDetails.faceRect;
+//}
+
 // end of namespaces
 	}
 }

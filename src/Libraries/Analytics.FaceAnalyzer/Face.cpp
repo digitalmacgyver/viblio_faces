@@ -41,7 +41,7 @@ Face::Face(const Mat frame, uint64_t frameTimestamp, Rect initialFaceRegion,Face
 	
 	Thumbnail_path = faceAnalyzerConfig->faceThumbnailOutputPath;
 	Filenameprefix = faceAnalyzerConfig->filenameprefix;
-	Thumbnail_generator = new Thumbnail(faceAnalyzerConfig);
+	Thumbnail_generator.reset(new Thumbnail(faceAnalyzerConfig));
 
 	m_lostFaceProcessingInterval = faceAnalyzerConfig->lostFaceProcessFrequency;
 
@@ -177,7 +177,7 @@ bool Face::Process(const Mat &frame, uint64_t frameTimestamp)
 				float confidence = 0.0f;
 				ThumbnailDetails thumbnail_detail;
 				//thumbnail_detail.reset(new ThumbnailDetails());
-				Mat thumbnail_temp = Thumbnail_generator->ExtractThumbnail(frame.clone(), m_currentEstimatedPosition, confidence,&thumbnail_detail);
+				bool extractionSuccess = Thumbnail_generator->ExtractThumbnail(frame.clone(), m_currentEstimatedPosition, confidence, thumbnail_detail);
 				
 				//confidence =Thumbnail_generator->GetConfidencevalue(thumbnail_temp,has_thumbnails,m_faceTracker->GetConfidence());
 				if(confidence > 0.0)

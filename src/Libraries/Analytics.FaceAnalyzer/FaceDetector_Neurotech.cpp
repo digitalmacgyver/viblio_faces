@@ -455,6 +455,8 @@ std::vector<FaceDetectionDetails> FaceDetector_Neurotech::Detect(const cv::Mat &
 				continue;
 			}
 
+			currentFaceDeets.hasAdditionalFaceInformation = true;
+
 			// success
 			currentFaceDeets.roll = details.Face.Rotation.Roll;
 			currentFaceDeets.yaw = details.Face.Rotation.Yaw;
