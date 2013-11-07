@@ -3,7 +3,7 @@
 #include "Analytics.FaceAnalyzer/FaceAnalyzerConfiguration.h"
 #include "opencv2/opencv.hpp"
 #include "FaceTests.h"
-
+#include "Analytics.FaceAnalyzer/ThumbnailDetails.h"
 using namespace Analytics::FaceAnalyzer;
 using namespace std;
 
@@ -206,11 +206,12 @@ void FaceTests::TestMergeFunctionalitySimplethumbnails()
 	tracker1.m_currentFaceVisiblePair.first = 15000;
 	tracker1.m_currentFaceVisiblePair.second = 0;
 	tracker1.m_mostRecentFrameTimestamp = 17000;
-	cv::Mat a(10,10,CV_16U);
-	tracker1.m_thumbnailConfidence.insert(tracker1.m_thumbnailConfidence.end(), pair<float,cv::Mat>(0.50,a));
-	tracker1.m_thumbnailConfidence.insert(tracker1.m_thumbnailConfidence.end(), pair<float,cv::Mat>(0.25,a));
-	tracker1.m_thumbnailConfidence.insert(tracker1.m_thumbnailConfidence.end(), pair<float,cv::Mat>(0.70,a));
-	tracker1.m_thumbnailConfidence.insert(tracker1.m_thumbnailConfidence.end(), pair<float,cv::Mat>(0.65,a));
+	//cv::Mat a(10,10,CV_16U);
+	ThumbnailDetails a;
+	tracker1.m_thumbnailConfidence.insert(tracker1.m_thumbnailConfidence.end(), pair<float,ThumbnailDetails>(0.50,a));
+	tracker1.m_thumbnailConfidence.insert(tracker1.m_thumbnailConfidence.end(), pair<float,ThumbnailDetails>(0.25,a));
+	tracker1.m_thumbnailConfidence.insert(tracker1.m_thumbnailConfidence.end(), pair<float,ThumbnailDetails>(0.70,a));
+	tracker1.m_thumbnailConfidence.insert(tracker1.m_thumbnailConfidence.end(), pair<float,ThumbnailDetails>(0.65,a));
 
 
 	Face tracker2(frame, 0, cv::Rect(20, 20, 40, 40), &faceAnalyzerConfig);
@@ -218,11 +219,11 @@ void FaceTests::TestMergeFunctionalitySimplethumbnails()
 	tracker2.m_currentFaceVisiblePair.second = 0;
 	tracker2.m_mostRecentFrameTimestamp = 17000; // at time 17 seconds tracker 1 reacquires the face, this is when we detect we have to merge
 	
-	cv::Mat b(10,10,CV_16U);
-	
-	tracker2.m_thumbnailConfidence.insert(tracker2.m_thumbnailConfidence.end(), pair<float,cv::Mat>(0.8,a));
-	tracker2.m_thumbnailConfidence.insert(tracker2.m_thumbnailConfidence.end(), pair<float,cv::Mat>(0.9,a));
-	tracker2.m_thumbnailConfidence.insert(tracker2.m_thumbnailConfidence.end(), pair<float,cv::Mat>(0.2,a));
+	//cv::Mat b(10,10,CV_16U);
+	ThumbnailDetails b;
+	tracker2.m_thumbnailConfidence.insert(tracker2.m_thumbnailConfidence.end(), pair<float,ThumbnailDetails>(0.8,a));
+	tracker2.m_thumbnailConfidence.insert(tracker2.m_thumbnailConfidence.end(), pair<float,ThumbnailDetails>(0.9,a));
+	tracker2.m_thumbnailConfidence.insert(tracker2.m_thumbnailConfidence.end(), pair<float,ThumbnailDetails>(0.2,a));
 	
 
 	// we have just detected that tracker2 & tracker1 are tracking the same face! time to merge
@@ -241,7 +242,7 @@ void FaceTests::TestMergeFunctionalitySimplethumbnails()
 
 	EXPECT_EQ(5, tracker1.m_thumbnailConfidence.size());
 	EXPECT_EQ(0.5,tracker1.m_thumbnailConfidence.begin()->first);
-	std::map<float,cv::Mat>::iterator it = tracker1.m_thumbnailConfidence.begin();
+	std::map<float,ThumbnailDetails>::iterator it = tracker1.m_thumbnailConfidence.begin();
 	std::advance(it,tracker1.m_thumbnailConfidence.size()-1);
 	EXPECT_FLOAT_EQ(0.9,it->first);
 	

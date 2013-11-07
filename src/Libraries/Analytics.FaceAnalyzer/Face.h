@@ -13,7 +13,7 @@
 #include <chrono>
 #include <opencv2/opencv.hpp>
 #include <boost/uuid/uuid.hpp>
-
+#include "ThumbnailDetails.h"
 namespace Analytics
 {
 	namespace FaceAnalyzer
@@ -67,7 +67,7 @@ private:
 
 	uint64_t last_thumbnail_time;
 	std::map<uint64_t, cv::Rect> m_faceLocationHistory;
-	std::map<float, cv::Mat> m_thumbnailConfidence;
+	std::map<float, ThumbnailDetails> m_thumbnailConfidence;
 
 	// a vector of times when the face was visible in the scene. It is a vector of pairs of timestamps when the face entered and left (or was lost track of)
 	std::vector<std::pair<uint64_t, uint64_t>> m_timesWhenFaceVisible;
