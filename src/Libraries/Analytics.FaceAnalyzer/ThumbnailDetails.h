@@ -19,7 +19,9 @@ private:
 public:
 	ThumbnailDetails();
 	~ThumbnailDetails();
-
+	float backgroundUniformity;
+	float sharpness;
+	float grayscaleDensity;
 	void FillThumbnailDetails(const cv::Mat &frame,  FaceDetectionDetails ThumbnailLocation);
 
 	void SetThumbnail(cv::Mat newThumbnail){ thumbnail = newThumbnail; }
