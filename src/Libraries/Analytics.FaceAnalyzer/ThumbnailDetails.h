@@ -26,7 +26,7 @@ public:
 
 	void SetThumbnail(cv::Mat newThumbnail){ thumbnail = newThumbnail; }
 	cv::Mat GetThumbnail(){ return thumbnail; }
-
+	FaceDetectionDetails GetDetailedInformation(){return thumbnaildeets;}
 	void SetDetailedInformation(const FaceDetectionDetails &detailedFaceInfo){ thumbnaildeets = detailedFaceInfo; }
 };
 

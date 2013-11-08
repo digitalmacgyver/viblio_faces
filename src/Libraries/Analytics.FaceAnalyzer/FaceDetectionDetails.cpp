@@ -54,7 +54,7 @@ FaceDetectionDetails & FaceDetectionDetails::operator= (FaceDetectionDetails oth
 	if (this != &other) // protect against invalid self-assignment
 	{
 		faceRect = other.faceRect;
-
+		faceDetectionConfidence=other.faceDetectionConfidence;
 		roll = other.roll;
 		pitch = other.pitch;
 		yaw = other.yaw;

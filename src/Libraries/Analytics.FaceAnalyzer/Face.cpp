@@ -335,22 +335,51 @@ string Face::GetOutput(int trackno)
 		imagepath =Thumbnail_path+"/"+Filenameprefix+"_face_"+tracknumber.str()+"_"+oss.str()+".jpg";
 		string pass = Filenameprefix +"/"+ Filenameprefix+"_face_"+tracknumber.str()+"_"+oss.str()+".jpg";
 		string temp;
-		temp = face_detector_neuro->Detect_return_json(k,pass,count-1);
-		cout << temp;
-		Jzon::Object tempNode;
-		Jzon::Parser parser(tempNode, temp);
-		if (!parser.Parse())
-		{
-			std::cout << "Error: " << parser.GetError() << std::endl;
-		}
-		//face_detector_neuro->Detect(k);
-		if(!temp.empty())
-		{
-			listOfStuff.Add(tempNode);
-			imwrite( imagepath,k);
-		}
-		//	all_thumbnails = all_thumbnails + temp ;
-		//cout << all_thumbnails;
+		
+		// Adding data and details .....
+		Jzon::Object root1;
+		 root1.Add("face_id",count-1);
+		 root1.Add("s3_bucket","s3_bucket");
+		 root1.Add("s3_key",pass);
+		 root1.Add("md5sum","md5sum");
+		 root1.Add("face_confidence",iter->second.GetDetailedInformation().faceDetectionConfidence);
+		 root1.Add("face_rotation_pitch",iter->second.GetDetailedInformation().pitch);
+		 root1.Add("face_rotation_roll",iter->second.GetDetailedInformation().roll);
+		 root1.Add("face_rotation_yaw",iter->second.GetDetailedInformation().yaw);
+		 root1.Add("width",iter->second.GetDetailedInformation().faceRect.width);
+		 root1.Add("height",iter->second.GetDetailedInformation().faceRect.height);
+		 root1.Add("backgroundUniformity",iter->second.backgroundUniformity);
+		 root1.Add("sharpness",iter->second.sharpness);
+		 root1.Add("grayscaleDensity",iter->second.grayscaleDensity);
+		 root1.Add("hasAdditionalFaceInformation",iter->second.GetDetailedInformation().hasAdditionalFaceInformation);
+		 Jzon::Array left_eye;
+		 left_eye.Add(int(iter->second.GetDetailedInformation().leftEye.x));left_eye.Add(int(iter->second.GetDetailedInformation().leftEye.x));
+		 root1.Add("leftEyeCenter",left_eye);
+		 root1.Add("leftEyeConfidence",iter->second.GetDetailedInformation().leftEyeConfidence);
+		 Jzon::Array right_eye;
+		 right_eye.Add(int(iter->second.GetDetailedInformation().rightEye.x));right_eye.Add(int(iter->second.GetDetailedInformation().rightEye.y));
+		 root1.Add("rightEyeCenter",right_eye);
+		 root1.Add("rightEyeConfidence",iter->second.GetDetailedInformation().rightEyeConfidence);
+		 Jzon::Array NoseLocation;
+		 NoseLocation.Add(int(iter->second.GetDetailedInformation().noseLocation.x));NoseLocation.Add(int(iter->second.GetDetailedInformation().noseLocation.y));
+		 root1.Add("noseLocation",NoseLocation);
+		 root1.Add("noseLocationConfidence",iter->second.GetDetailedInformation().noseLocationConfidence);
+		 Jzon::Array MouthLocation;
+		 MouthLocation.Add(int(iter->second.GetDetailedInformation().mouthLocation.x));MouthLocation.Add(int(iter->second.GetDetailedInformation().mouthLocation.y));
+		 root1.Add("mouthLocation",MouthLocation);
+		 root1.Add("mouthLocationConfidence",iter->second.GetDetailedInformation().mouthLocationConfidence);
+		 root1.Add("mouthOpen",iter->second.GetDetailedInformation().mouthOpen);
+		 root1.Add("mouthOpenConfidence",iter->second.GetDetailedInformation().mouthOpenConfidence);
+		 root1.Add("isMale",iter->second.GetDetailedInformation().isMale);
+		 root1.Add("genderConfidence",iter->second.GetDetailedInformation().genderConfidence);
+		 root1.Add("isHappy",iter->second.GetDetailedInformation().isHappy);
+		 root1.Add("expressionConfidence",iter->second.GetDetailedInformation().expressionConfidence);
+		 root1.Add("wearingGlasses",iter->second.GetDetailedInformation().wearingGlasses);
+		 root1.Add("glassesConfidence",iter->second.GetDetailedInformation().glassesConfidence);
+
+		 listOfStuff.Add(root1);
+		 imwrite( imagepath,k);
+		
 	}
 
 

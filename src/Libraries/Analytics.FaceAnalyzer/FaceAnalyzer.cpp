@@ -85,50 +85,50 @@ void FaceAnalysis::Process(const Mat &frame, uint64_t frameTimestamp)
    
 	// multithreaded version - do 2 things in parallel here
 	// 1. Perform face detection	
-	//std::future<vector<Rect>> detectedFacesFuture;
+	std::future<vector<FaceDetectionDetails>> detectedFacesFuture;
 
-	//if( m_currentFrameNumber%m_faceDetectionFrequency == 0 )
-	//{
-	//	try
-	//	{
-	//		// its a pity but we have to make use of the underlying Face Detector that is managed by the unique_ptr, but
-	//		// std::async doesn't seem to like it any other way
-	//		detectedFacesFuture = std::async(std::launch::async, &Analytics::FaceAnalyzer::FaceDetector_OpenCV::Detect, m_faceDetector.get(), resizedFrame);
-	//	}
-	//	catch(Exception e)
-	//	{
-	//		cout << "Exception: " << e.msg << endl;
-	//	}
-	//}
-	//
+	if( m_currentFrameNumber%m_faceDetectionFrequency == 0 )
+	{
+		try
+		{
+			// its a pity but we have to make use of the underlying Face Detector that is managed by the unique_ptr, but
+			// std::async doesn't seem to like it any other way
+			detectedFacesFuture = std::async(std::launch::async, &Analytics::FaceAnalyzer::FaceDetector_Neurotech::Detect, m_faceDetector.get(), resizedFrame,false);
+		}
+		catch(Exception e)
+		{
+			cout << "Exception: " << e.msg << endl;
+		}
+	}
+	
 	// 2. Pass the frame off to the tracking controller to update any active trackers
-	//std::future<void> trackingFuture = std::async(std::launch::async, &Analytics::FaceAnalyzer::TrackingController::Process, m_trackingController.get(), resizedFrame, frameTimestamp);
-	//
+	std::future<void> trackingFuture = std::async(std::launch::async, &Analytics::FaceAnalyzer::TrackingController::Process, m_trackingController.get(), resizedFrame, frameTimestamp);
+	
 	// make sure the detector and the tracking controller have been called
-	//if( detectedFacesFuture.valid() )
-	//	detectedFacesFuture.wait();
-	//trackingFuture.wait();
-	//
-	//vector<Rect> detectedFaces;
-	//if( detectedFacesFuture.valid() )
-	//{
-	//	try
-	//	{
-	//		detectedFaces = detectedFacesFuture.get();
-	//	}
-	//	catch(...)
-	//	{
-	//		cout << "Caught exception" << endl;
-	//	}
-	//}
+	if( detectedFacesFuture.valid() )
+		detectedFacesFuture.wait();
+	trackingFuture.wait();
+	
+	vector<FaceDetectionDetails> detectedFaces;
+	if( detectedFacesFuture.valid() )
+	{
+		try
+		{
+			detectedFaces = detectedFacesFuture.get();
+		}
+		catch(...)
+		{
+			cout << "Caught exception" << endl;
+		}
+	}
 
-	// Single threaded version
+/*	// Single threaded version
 	vector<FaceDetectionDetails> detectedFaces;
 	if( m_currentFrameNumber%m_faceDetectionFrequency == 0 )
 		detectedFaces = m_faceDetector->Detect(resizedFrame);
 
 	m_trackingController->Process(resizedFrame, frameTimestamp);
-
+	*/
 	auto end = std::chrono::monotonic_clock::now();
 
 	auto diff = end - start;

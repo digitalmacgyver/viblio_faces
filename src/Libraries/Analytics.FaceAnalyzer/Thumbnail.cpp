@@ -33,7 +33,7 @@ Thumbnail::Thumbnail(FaceAnalyzerConfiguration *faceAnalyzerConfig)
 	//	eye_detector_check.reset(new EyeDetector_OpenCV(faceAnalyzerConfig->eyeDetectorCascadeFile));
 	//}
 	
-	Thumbnail_enlarge_percentage = 0.75f;
+	Thumbnail_enlarge_percentage = 0.20f;
 	NBool available = false;
 
 	NResult result = N_OK;
@@ -271,51 +271,6 @@ Mat Thumbnail::HNImageToMat(HNImage *hnImage)
 	return matImage;
 }
 
-float Thumbnail::GetConfidencevalue(const cv::Mat &Thumbnail,bool &has_thumbnails,const float &tracker_confidence )
-{
-	std::vector<float> v;
-	float confidence = 1;
-
-	string faces_detected =face_detector_check->Detect_return_json(Thumbnail,"temp",1);
-	Jzon::Object rootNode;
-	Jzon::Parser parser(rootNode, faces_detected);
-	if(faces_detected.empty())
-	{
-		confidence = 0;
-		return confidence;
-	}
-	has_thumbnails = true;
-	if (!parser.Parse())
-	{
-		std::cout << "Error: " << parser.GetError() << std::endl;
-	}
-	else
-	{
-
-		v.push_back(rootNode.Get("face_confidence").ToFloat());
-		if(rootNode.Get("Genderconfidence").ToFloat()<255)
-			v.push_back(rootNode.Get("Genderconfidence").ToFloat());
-		if(rootNode.Get("Blinkconfidence").ToFloat()<255)
-			v.push_back(rootNode.Get("Blinkconfidence").ToFloat());
-		if(rootNode.Get("MouthOpenConfidence").ToFloat()<255)
-			v.push_back(rootNode.Get("MouthOpenConfidence").ToFloat());
-
-	}
-
-	// Take Geometric mean 
-	/*
-	for(std::vector<float>::iterator it = v.begin(); it != v.end(); ++it) {
-    confidence = confidence * *it;
-			}
-	float temp = 1.0/ v.size();
-	confidence =  pow(confidence ,temp);
-	*/
-
-	// Arithnmetic mean
-	confidence = std::accumulate(v.begin(), v.end(), 0.0) / v.size();
-	return confidence;
-
-}
 
 // Ensures that the rect passed in is valid based on the image size it is supposedly from. Returns
 // a rect that is sure to be inside the bounds of the image

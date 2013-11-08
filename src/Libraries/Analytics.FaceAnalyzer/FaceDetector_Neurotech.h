@@ -7,7 +7,6 @@
 #include <memory>
 #include <opencv2/objdetect/objdetect.hpp>
 #include <string>
-
 #include <NCore.h>
 #include <NImages.h>
 #include <NLExtractor.h>
@@ -62,7 +61,7 @@ public:
 	FaceDetector_Neurotech(void);
 	~FaceDetector_Neurotech(void);
 	std::vector<FaceDetectionDetails> Detect(const cv::Mat &frame, bool getDetailedInformation=false);
-	std::string Detect_return_json(const cv::Mat &frame, const std::string &path,int id);
+	
 	void RenderVisualization(cv::Mat &frame, const std::vector<FaceDetectionDetails> &detectedFaces);
 };
 

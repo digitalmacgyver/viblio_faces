@@ -36,7 +36,7 @@ public:
 	
 	bool ExtractThumbnail( const cv::Mat &frame,const  cv::Rect &ThumbnailLocation, float &confidence, ThumbnailDetails &thumbnail_details);
 	
-    float GetConfidencevalue(const cv::Mat &Thumbnail,bool &has_thumbnails,const float &tracker_confidence);
+ 
 	
 
 };
