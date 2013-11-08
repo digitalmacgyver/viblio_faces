@@ -170,9 +170,9 @@ void FaceAnalysis::Process(const Mat &frame, uint64_t frameTimestamp)
 	m_currentFrameNumber++;
 }
 
-std::string FaceAnalysis::GetOutput()
+ void FaceAnalysis::GetOutput(Jzon::Object*& root)
 {
-	return m_trackingController->GetOutput();
+    m_trackingController->GetOutput(root);
 }
 
 // end of namespaces

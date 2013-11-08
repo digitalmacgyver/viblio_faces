@@ -209,7 +209,7 @@ void TrackingController::ResolveDuplicates(int duplicateFaceIndex1, int duplicat
 	std::cout << "Finished resolving duplicates, number faces " << m_trackedFaces.size() << std::endl;
 }
 
-string TrackingController::GetOutput()
+void TrackingController::GetOutput(Jzon::Object*& root)
 {
 
 	string facesArrayJson = "";
@@ -224,14 +224,9 @@ string TrackingController::GetOutput()
 		root = NULL;
 
 	}
-	Jzon::Object root1;
-	root1.Add("tracks",listOfStuff2);
-
-	Jzon::Writer writer(root1, Jzon::StandardFormat);
-	writer.Write();
-	// Writing everything ot a string to export
-	facesArrayJson = writer.GetResult();
-	return facesArrayJson;
+	
+	root->Add("tracks",listOfStuff2);
+	return;
 }
 
 void TrackingController::RenderVisualization(Mat &frame)

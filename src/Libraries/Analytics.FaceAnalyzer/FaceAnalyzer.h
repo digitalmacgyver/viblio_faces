@@ -5,6 +5,7 @@
 #include <opencv2/opencv.hpp>
 #include "Analyzer.h"
 //#include "FaceDetector_OpenCV.h"
+#include "Jzon/Jzon.h"
 
 namespace Analytics
 {
@@ -42,7 +43,7 @@ public:
 
 	void Process(const cv::Mat &frame, uint64_t frameTimestamp);
 
-	std::string GetOutput();
+	void GetOutput(Jzon::Object*& root);
 };
 
 // end of namespaces

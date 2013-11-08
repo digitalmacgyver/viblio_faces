@@ -132,73 +132,21 @@ void VideoProcessor::OutputJobSummaryStatistics()
 
 bool VideoProcessor::DumpOutput(const JobConfiguration &jobConfig)
 {
-	/*
-	{
-		"video_file_processed": "C:\temp\example_video_file.avi",
-		.
-		.
-		.
 
-		- Video file that was processed
-		- An array of Analyzer information
-- For each analyzer, output the type of analyzer it is
-- If its a face analyzer
--     Thumbnail path that the user passed in
--     An array of faces
--        Each face will store the number of thumbnails generated
--        Each face will store the UUID
--        Each face will also store the visibility information
--        Each face will store the face rectangle information 
-	*/
-
-	string outputJsonData = "";
-
-		//Jzon::Array listOfStuff3;
-	Jzon::Object tempNode;
+	Jzon::Object *tempNode = new Jzon::Object() ;
 	for(auto startIter=m_analyzers.begin(); startIter != m_analyzers.end(); ++startIter)
 	{
-		//outputJsonData += (*startIter)->GetOutput();
-
-		string temp;
-		temp = (*startIter)->GetOutput();
-		 
-         Jzon::Parser parser(tempNode,temp );
-		 if (!parser.Parse())
-		    {
-               std::cout << "Error: " << parser.GetError() << std::endl;
-		     }
-		// tempNode.Add("Analyzer",startIter-m_analyzers.begin());
-				//face_detector_neuro->Detect(k);
-				//listOfStuff3.Add(tempNode);
-
+		(*startIter)->GetOutput(tempNode);
 	}
 
 
-	//Jzon::Object root2;
-   // root2.Add("AnalyzerInfo",listOfStuff3);
+	tempNode->Add("user_uuid","user_uuid");
+	tempNode->Add("media_uuid",jobConfig.faceAnalyzerConfig->filenameprefix);
 
-	Jzon::Writer writer(tempNode, Jzon::StandardFormat);
-     writer.Write();
-		// Writing everything ot a string to export
-     outputJsonData = writer.GetResult();
+	string temppath;
+	temppath = jobConfig.faceAnalyzerConfig->faceThumbnailOutputPath +"/"+jobConfig.faceAnalyzerConfig->filenameprefix+".json";
 
-	Jzon::Object rootNode;
-        Jzon::Parser parser(rootNode,outputJsonData);
-		if (!parser.Parse())
-        {
-                std::cout << "Error: " << parser.GetError() << std::endl;
-        }
-		rootNode.Add("user_uuid","user_uuid");
-		rootNode.Add("media_uuid",jobConfig.faceAnalyzerConfig->filenameprefix);
-		//rootNode.Add("protocol_version","protocol_version");
-
-		boost::uuids::uuid uuid = boost::uuids::random_generator()();
-		std::stringstream ss;
-		ss << uuid;
-		string temppath;
-		temppath = jobConfig.faceAnalyzerConfig->faceThumbnailOutputPath +"/"+jobConfig.faceAnalyzerConfig->filenameprefix+".json";
-		cout << temppath;
-		Jzon::FileWriter::WriteFile(temppath, rootNode, Jzon::StandardFormat);
+	Jzon::FileWriter::WriteFile(temppath, *tempNode, Jzon::StandardFormat);
 
 	// now open a file (perhaps using the unique Job ID as the file name, with a .json extension) and dump the data to it
 

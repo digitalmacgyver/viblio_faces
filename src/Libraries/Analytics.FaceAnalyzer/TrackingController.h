@@ -14,6 +14,7 @@
 #include <opencv2/opencv.hpp>
 #include "FaceAnalyzerConfiguration.h"
 #include <stdint.h>
+#include "Jzon/Jzon.h"
 
 namespace Analytics
 {
@@ -48,7 +49,7 @@ public:
 
 	void Process(const cv::Mat &frame, uint64_t frameTimestamp);
 
-	std::string GetOutput();
+    void  GetOutput(Jzon::Object*& root);
 
 	void RenderVisualization(cv::Mat &frame);
 };

@@ -13,7 +13,7 @@
 #include <opencv2/opencv.hpp>
 #include "FaceDetector_OpenCV.h"
 #include "FaceDetector_Neurotech.h"
-
+#include "Jzon/Jzon.h"
 namespace Analytics
 {
 
@@ -33,7 +33,7 @@ public:
 
 	virtual void Process(const cv::Mat &frame, uint64_t frameTimestamp) = 0;
 
-	virtual std::string GetOutput() = 0;
+	virtual void  GetOutput(Jzon::Object*& root) = 0;
 };
 
 // end of namespaces
