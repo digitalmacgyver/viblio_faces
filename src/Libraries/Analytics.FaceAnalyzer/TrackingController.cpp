@@ -217,28 +217,20 @@ string TrackingController::GetOutput()
 
 	for( auto startIter=m_trackedFaces.begin(); startIter!=m_trackedFaces.end(); ++startIter)
 	{
-		string temp;
-		temp = (*startIter)->GetOutput(startIter-m_trackedFaces.begin());
-		 Jzon::Object tempNode;
-         Jzon::Parser parser(tempNode,temp );
-		 if (!parser.Parse())
-		    {
-               std::cout << "Error: " << parser.GetError() << std::endl;
-		     }
-		// tempNode.Add("Trackid",startIter-m_trackedFaces.begin());
-				//face_detector_neuro->Detect(k);
-		        if(!temp.empty())
-				listOfStuff2.Add(tempNode);
-		//facesArrayJson += (*startIter)->GetOutput();
+		Jzon::Object *root = new Jzon::Object;
+		(*startIter)->GetOutput(startIter-m_trackedFaces.begin(),root);
+		if((root->GetCount())>0)
+			listOfStuff2.Add(*root);
+		root = NULL;
+
 	}
-		 Jzon::Object root1;
-		 root1.Add("tracks",listOfStuff2);
+	Jzon::Object root1;
+	root1.Add("tracks",listOfStuff2);
 
-		 Jzon::Writer writer(root1, Jzon::StandardFormat);
-         writer.Write();
-		// Writing everything ot a string to export
-        facesArrayJson = writer.GetResult();
-
+	Jzon::Writer writer(root1, Jzon::StandardFormat);
+	writer.Write();
+	// Writing everything ot a string to export
+	facesArrayJson = writer.GetResult();
 	return facesArrayJson;
 }
 

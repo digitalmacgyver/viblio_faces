@@ -14,6 +14,7 @@
 #include <opencv2/opencv.hpp>
 #include <boost/uuid/uuid.hpp>
 #include "ThumbnailDetails.h"
+#include "Jzon/Jzon.h"
 namespace Analytics
 {
 	namespace FaceAnalyzer
@@ -108,7 +109,7 @@ public:
 
 	cv::Rect GetMostRecentFacePosition(){ return m_currentEstimatedPosition; }
 
-	std::string GetOutput(int trackno);
+	void GetOutput(int trackno,Jzon::Object*& root);
 
 	void RenderVisualization(cv::Mat &frame);
 

@@ -80,9 +80,9 @@ void FaceAnalysis::Process(const Mat &frame, uint64_t frameTimestamp)
 		else
 			resizedFrame = frame;
 	}
-	 
+
 	auto start = std::chrono::monotonic_clock::now();
-   
+
 	// multithreaded version - do 2 things in parallel here
 	// 1. Perform face detection	
 	std::future<vector<FaceDetectionDetails>> detectedFacesFuture;
@@ -100,15 +100,15 @@ void FaceAnalysis::Process(const Mat &frame, uint64_t frameTimestamp)
 			cout << "Exception: " << e.msg << endl;
 		}
 	}
-	
+
 	// 2. Pass the frame off to the tracking controller to update any active trackers
 	std::future<void> trackingFuture = std::async(std::launch::async, &Analytics::FaceAnalyzer::TrackingController::Process, m_trackingController.get(), resizedFrame, frameTimestamp);
-	
+
 	// make sure the detector and the tracking controller have been called
 	if( detectedFacesFuture.valid() )
 		detectedFacesFuture.wait();
 	trackingFuture.wait();
-	
+
 	vector<FaceDetectionDetails> detectedFaces;
 	if( detectedFacesFuture.valid() )
 	{
@@ -122,10 +122,10 @@ void FaceAnalysis::Process(const Mat &frame, uint64_t frameTimestamp)
 		}
 	}
 
-/*	// Single threaded version
+	/*	// Single threaded version
 	vector<FaceDetectionDetails> detectedFaces;
 	if( m_currentFrameNumber%m_faceDetectionFrequency == 0 )
-		detectedFaces = m_faceDetector->Detect(resizedFrame);
+	detectedFaces = m_faceDetector->Detect(resizedFrame);
 
 	m_trackingController->Process(resizedFrame, frameTimestamp);
 	*/
