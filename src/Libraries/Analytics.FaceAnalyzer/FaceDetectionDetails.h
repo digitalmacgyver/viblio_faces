@@ -27,6 +27,9 @@ public:
 	cv::Point rightEye;
 	float rightEyeConfidence;
 
+	// measures the distance between the eyes in pixels
+	float intereyeDistance;
+
 	// Nose location information
 	cv::Point noseLocation;
 	float noseLocationConfidence;

@@ -307,22 +307,25 @@ std::vector<FaceDetectionDetails> FaceDetector_Neurotech::Detect(const cv::Mat &
 			{
 				currentFaceDeets.leftEye.x = details.LeftEyeCenter.X;
 				currentFaceDeets.leftEye.y = details.LeftEyeCenter.Y;
-				currentFaceDeets.leftEyeConfidence = details.LeftEyeCenter.Confidence;
+				currentFaceDeets.leftEyeConfidence = (float)(details.LeftEyeCenter.Confidence / 255.0f);
 
 				currentFaceDeets.rightEye.x = details.RightEyeCenter.X;
 				currentFaceDeets.rightEye.y = details.RightEyeCenter.Y;
-				currentFaceDeets.rightEyeConfidence = details.RightEyeCenter.Confidence;
+				currentFaceDeets.rightEyeConfidence = (float)(details.RightEyeCenter.Confidence / 255.0f);
+
+				currentFaceDeets.intereyeDistance = sqrt( pow( currentFaceDeets.leftEye.x - currentFaceDeets.rightEye.x, 2 )
+														 +pow( currentFaceDeets.leftEye.y - currentFaceDeets.rightEye.y, 2 ) );
 			}
 
 			// grab the mouth location information
 			currentFaceDeets.mouthLocation.x = details.MouthCenter.X;
 			currentFaceDeets.mouthLocation.y = details.MouthCenter.Y;
-			currentFaceDeets.mouthLocationConfidence = details.MouthCenter.Confidence;
+			currentFaceDeets.mouthLocationConfidence = (float)(details.MouthCenter.Confidence / 255.0f);
 
 			// grab the nose location information
 			currentFaceDeets.noseLocation.x = details.NoseTip.X;
 			currentFaceDeets.noseLocation.y = details.NoseTip.Y;
-			currentFaceDeets.noseLocationConfidence = details.NoseTip.Confidence;
+			currentFaceDeets.noseLocationConfidence = (float)(details.NoseTip.Confidence / 255.0f);
 
 			// see if we have gender information
 			if(details.Gender == ngUnspecified || details.Gender == ngUnknown)
@@ -332,7 +335,7 @@ std::vector<FaceDetectionDetails> FaceDetector_Neurotech::Detect(const cv::Mat &
 			else
 			{
 				currentFaceDeets.isMale = details.Gender == ngMale;
-				currentFaceDeets.genderConfidence = details.GenderConfidence;
+				currentFaceDeets.genderConfidence = (float)(details.GenderConfidence / 255.0f);
 			}
 
 			// see if we have expression information
@@ -342,7 +345,7 @@ std::vector<FaceDetectionDetails> FaceDetector_Neurotech::Detect(const cv::Mat &
 			{
 				// we need to convert the expression into one of our own enums for the various expressions
 				// it could detect
-				currentFaceDeets.expressionConfidence = details.ExpressionConfidence;
+				currentFaceDeets.expressionConfidence = (float)(details.ExpressionConfidence / 255.0f);
 			}
 		}
 
