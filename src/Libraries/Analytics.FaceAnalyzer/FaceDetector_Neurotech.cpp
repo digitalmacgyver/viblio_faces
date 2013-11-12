@@ -209,7 +209,18 @@ FaceDetector_Neurotech::FaceDetector_Neurotech(void)
 		throw e;
 	}
 
-
+	
+	try
+	{
+	   result = NObjectSetParameterEx(extractor, NLEP_TEMPLATE_SIZE, -1, &templateSize, sizeof(NleTemplateSize));
+		 if (NFailed(result))
+			 throw 20;
+	}
+	catch(int e)
+	{
+		cout << "NObjectSetParameter() failed (result = " << result<< ")!" << endl;
+		throw e;
+	}
 	
 }
 //
@@ -294,6 +305,13 @@ std::vector<FaceDetectionDetails> FaceDetector_Neurotech::Detect(const cv::Mat &
 				
 				continue;
 			}
+			 // gender, expression and other proeprties only detected during extraction
+			result = NleExtractUsingDetails(extractor, grayscale, &details, &status, &tmpl);
+			if(NFailed(result))
+			{
+				cout << "NleExtractUsingDetails() failed (result = " << result<< "), maybe feature points were not found!" << endl;
+				continue;
+			}
 
 			currentFaceDeets.hasAdditionalFaceInformation = true;
 
@@ -347,6 +365,7 @@ std::vector<FaceDetectionDetails> FaceDetector_Neurotech::Detect(const cv::Mat &
 				// it could detect
 				currentFaceDeets.expressionConfidence = (float)(details.ExpressionConfidence / 255.0f);
 			}
+			
 		}
 
 		faces_returned.push_back(currentFaceDeets);

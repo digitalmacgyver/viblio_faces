@@ -362,6 +362,7 @@ void Face::GetOutput(int trackno, Jzon::Object*& root)
 		right_eye.Add(int(iter->second.GetDetailedInformation().rightEye.x));right_eye.Add(int(iter->second.GetDetailedInformation().rightEye.y));
 		root1.Add("rightEyeCenter",right_eye);
 		root1.Add("rightEyeConfidence",iter->second.GetDetailedInformation().rightEyeConfidence);
+		root1.Add("interEyeDistance",iter->second.GetDetailedInformation().intereyeDistance);
 		Jzon::Array NoseLocation;
 		NoseLocation.Add(int(iter->second.GetDetailedInformation().noseLocation.x));NoseLocation.Add(int(iter->second.GetDetailedInformation().noseLocation.y));
 		root1.Add("noseLocation",NoseLocation);
