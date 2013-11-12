@@ -30,7 +30,7 @@ private:
 	NleExtractionStatus status;
 
 	HNImage image ;
-	HNGrayscaleImage grayscale,grayscale1 ;
+	HNGrayscaleImage grayscale ;
 
 	int faceCount;
 	NleFace *faces ;
