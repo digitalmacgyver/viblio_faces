@@ -118,6 +118,20 @@ void TrackingController::Process(const Mat &frame, uint64_t frameTimestamp)
 		(*startIter)->Process( frame, frameTimestamp );
 	}
 
+	// Moving any discarded faces to new vector
+	for( auto startIter=m_trackedFaces.begin(); startIter!=m_trackedFaces.end(); )
+	{
+		if((*startIter)->move_to_discarded)
+		{  discardedFaces.push_back((*startIter));
+		startIter = m_trackedFaces.erase(startIter);
+		}
+		else
+		{
+			++startIter;
+		}
+
+	}
+
 	// multithreaded
 	//for(auto &e : futures) 
 	//{
@@ -214,6 +228,9 @@ void TrackingController::GetOutput(Jzon::Object*& root)
 
 	string facesArrayJson = "";
 	Jzon::Array listOfStuff2;
+
+	//Appending the discardedFaces track
+	m_trackedFaces.insert(m_trackedFaces.end(),discardedFaces.begin(),discardedFaces.end());
 
 	for( auto startIter=m_trackedFaces.begin(); startIter!=m_trackedFaces.end(); ++startIter)
 	{

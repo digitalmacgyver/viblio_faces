@@ -28,7 +28,8 @@ Face::Face(const Mat frame, uint64_t frameTimestamp, Rect initialFaceRegion,Face
 	  m_overlapThresholdForSameFace(0.5f),
 	  m_faceTrackerConfidenceThreshold(0.5f),
 	  m_thumbnailConfidenceSize(5),
-	  m_frameProcessedNumber(0)
+	  m_frameProcessedNumber(0),
+	  move_to_discarded(false)
 {
 	// in a real system we will probably take a copy of the tracker to initialize the face from as it has learned the background,
 	// however this is yet TBD
@@ -36,6 +37,7 @@ Face::Face(const Mat frame, uint64_t frameTimestamp, Rect initialFaceRegion,Face
 	face_detector_neuro.reset( new FaceDetector_Neurotech());
 
 	last_thumbnail_time = 0;
+	lost_thumbnail = 0;
     Thumbnail_frequency = faceAnalyzerConfig->Thumbnail_generation_frequency;
 	m_faceTracker->InitialiseTrack(frame, initialFaceRegion);
 	
@@ -111,6 +113,7 @@ void Face::Merge(Face *theOtherFace)
 
 bool Face::Process(const Mat &frame, uint64_t frameTimestamp)
 {
+	
 	m_wasLostIsNowFound = false;
 	
 	m_frameProcessedNumber++;
@@ -122,6 +125,12 @@ bool Face::Process(const Mat &frame, uint64_t frameTimestamp)
 		
 	std::ostringstream oss;
 	std::string imagepath;
+
+	if(m_isLost && (frameTimestamp - lost_thumbnail) > 15000 && (lost_thumbnail!=0)) // 15 seconds
+	{
+		move_to_discarded = true;
+		return true;
+	}
 
 	if( m_isLost && m_faceTracker->GetConfidence() >= m_faceTrackerConfidenceThreshold )
 	{
@@ -141,6 +150,7 @@ bool Face::Process(const Mat &frame, uint64_t frameTimestamp)
 		// the face wasn't lost but it is now
 
 		m_isLost = true;
+		lost_thumbnail = frameTimestamp;
 
 		// this is the end of the time measurement pair
 		m_currentFaceVisiblePair.second = frameTimestamp;

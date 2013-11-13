@@ -29,6 +29,7 @@ class TrackingController
 {
 private:
 	std::vector<Face*> m_trackedFaces;
+	std::vector<Face*> discardedFaces;
 
 	// no copy constructor or assignment operator
 	TrackingController(const TrackingController&);

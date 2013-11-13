@@ -68,6 +68,7 @@ private:
 	uint32_t m_thumbnailConfidenceSize;
 
 	uint64_t last_thumbnail_time;
+	uint64_t lost_thumbnail;
 	std::map<uint64_t, cv::Rect> m_faceLocationHistory;
 	std::map<float, ThumbnailDetails> m_thumbnailConfidence;
 
@@ -87,6 +88,7 @@ private:
 	void MergeFaceVisibleTimes(std::vector<std::pair<uint64_t, uint64_t>> otherFaceTimesWhenFaceVisible);
 
 	cv::Scalar RandomColor( cv::RNG& rng );
+	
 public:
    	Face(const cv::Mat frame, uint64_t frameTimestamp, cv::Rect initialFaceRegion,FaceAnalyzerConfiguration *faceAnalyzerConfig);
 	~Face();
@@ -114,6 +116,8 @@ public:
 	void RenderVisualization(cv::Mat &frame);
 
 	boost::uuids::uuid GetFaceId(){ return m_faceId; }
+
+	bool move_to_discarded;
 };
 
 // end of namespaces
