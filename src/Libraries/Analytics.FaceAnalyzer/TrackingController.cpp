@@ -119,11 +119,15 @@ void TrackingController::Process(const Mat &frame, uint64_t frameTimestamp)
 	}
 
 	// Moving any discarded faces to new vector
-	for( auto startIter=m_trackedFaces.begin(); startIter!=m_trackedFaces.end(); )
+	auto startIter=m_trackedFaces.begin();
+	for(  ;startIter!=m_trackedFaces.end(); )
 	{
-		if((*startIter)->move_to_discarded)
-		{  discardedFaces.push_back((*startIter));
-		startIter = m_trackedFaces.erase(startIter);
+		if((*startIter)->discardStatus())
+
+		{   
+			(*startIter)->freeElements();
+			discardedFaces.push_back((*startIter));
+			startIter = m_trackedFaces.erase(startIter);
 		}
 		else
 		{

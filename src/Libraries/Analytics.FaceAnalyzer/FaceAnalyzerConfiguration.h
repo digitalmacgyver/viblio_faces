@@ -56,6 +56,7 @@ public:
 	int lostFaceProcessFrequency;
 	
 	int Thumbnail_generation_frequency;
+	int discarded_tracker_frequency;
 	// if enabled visualizations of the detection, tracking and recognition will be displayed during processing
 	bool renderVisualization;
 };

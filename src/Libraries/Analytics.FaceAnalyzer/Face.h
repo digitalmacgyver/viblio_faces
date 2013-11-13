@@ -50,6 +50,7 @@ private:
 	int m_frameProcessedNumber; // a count of the number of frames we have processed
 	int m_lostFaceProcessingInterval;
 	int Thumbnail_frequency;
+	int discard_frequency;
 
 	// indicates whether the face has had recognition applied to them yet
 	bool m_hasBeenRecognized;
@@ -88,6 +89,7 @@ private:
 	void MergeFaceVisibleTimes(std::vector<std::pair<uint64_t, uint64_t>> otherFaceTimesWhenFaceVisible);
 
 	cv::Scalar RandomColor( cv::RNG& rng );
+	bool move_to_discarded;
 	
 public:
    	Face(const cv::Mat frame, uint64_t frameTimestamp, cv::Rect initialFaceRegion,FaceAnalyzerConfiguration *faceAnalyzerConfig);
@@ -117,7 +119,9 @@ public:
 
 	boost::uuids::uuid GetFaceId(){ return m_faceId; }
 
-	bool move_to_discarded;
+	bool discardStatus(){return move_to_discarded;}
+	
+	void freeElements(){ m_faceTracker.release();Thumbnail_generator.release();}
 };
 
 // end of namespaces

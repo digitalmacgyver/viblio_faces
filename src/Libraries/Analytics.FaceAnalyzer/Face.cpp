@@ -39,6 +39,7 @@ Face::Face(const Mat frame, uint64_t frameTimestamp, Rect initialFaceRegion,Face
 	last_thumbnail_time = 0;
 	lost_thumbnail = 0;
     Thumbnail_frequency = faceAnalyzerConfig->Thumbnail_generation_frequency;
+	discard_frequency = faceAnalyzerConfig->discarded_tracker_frequency;
 	m_faceTracker->InitialiseTrack(frame, initialFaceRegion);
 	
 	Thumbnail_path = faceAnalyzerConfig->faceThumbnailOutputPath;
@@ -126,7 +127,7 @@ bool Face::Process(const Mat &frame, uint64_t frameTimestamp)
 	std::ostringstream oss;
 	std::string imagepath;
 
-	if(m_isLost && (frameTimestamp - lost_thumbnail) > 15000 && (lost_thumbnail!=0)) // 15 seconds
+	if(m_isLost && (frameTimestamp - lost_thumbnail) > discard_frequency && (lost_thumbnail!=0)) // 15 seconds
 	{
 		move_to_discarded = true;
 		return true;

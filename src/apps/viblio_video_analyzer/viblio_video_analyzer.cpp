@@ -53,6 +53,7 @@ int main(int argc, char* argv[])
 		("face_image_resize", po::value<float>()->default_value(1.0f), "specifies rescale factor for frames prior to performing face processing")
 		("lost_track_process_frequency", po::value<int>()->default_value(5), "set how often a lost face should perform processing when attempting to regain the track, e.g. a value of 5 means we only check every fifth frame, lower numbers means we check more frequently but this will be slower")
 		("Thumbnail_generation_frequency", po::value<int>()->default_value(1500), "set how often a thumbnail should be generated in milliseconds, e.g. a value of 1500 means we only check every frame after 1500 milliseconds and do thumbnail processing")
+		("discarded_tracker_frequency", po::value<int>()->default_value(90000), "set how often a track should be pushed to discarded state in milliseconds, e.g. a value of 90000 means one and half minute")
 		("render_visualization", "determines whether visualizations will be rendered")
 		;
 
@@ -178,6 +179,11 @@ void ExtractFaceAnalysisParameters( po::variables_map variableMap, Analytics::Fa
 	if (variableMap.count("Thumbnail_generation_frequency")) 
 	{
 		faceAnalyzerConfig->Thumbnail_generation_frequency = variableMap["Thumbnail_generation_frequency"].as<int>();
+	}
+
+	if (variableMap.count("discarded_tracker_frequency")) 
+	{
+		faceAnalyzerConfig->discarded_tracker_frequency = variableMap["discarded_tracker_frequency"].as<int>();
 	}
 
 	if (variableMap.count("face_image_resize")) 
