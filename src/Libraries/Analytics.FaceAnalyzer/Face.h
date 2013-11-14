@@ -100,7 +100,7 @@ public:
 	void Merge(Face *theOtherFace);
 
 	bool Process(const cv::Mat &frame, uint64_t frameTimestamp);
-	std::unique_ptr<FaceDetector_Neurotech> face_detector_neuro;
+	
 	// Returns the timestamp at which this face was first created
 	uint64_t Age();
 
@@ -119,9 +119,9 @@ public:
 
 	boost::uuids::uuid GetFaceId(){ return m_faceId; }
 
-	bool discardStatus(){return move_to_discarded;}
+	bool DiscardStatus(){return move_to_discarded;}
 	
-	void freeElements(){ m_faceTracker.release();Thumbnail_generator.release();}
+	void FreeResources(){ m_faceTracker.release();Thumbnail_generator.release();}
 };
 
 // end of namespaces

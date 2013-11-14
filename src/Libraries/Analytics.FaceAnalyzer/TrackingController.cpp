@@ -122,10 +122,8 @@ void TrackingController::Process(const Mat &frame, uint64_t frameTimestamp)
 	auto startIter=m_trackedFaces.begin();
 	for(  ;startIter!=m_trackedFaces.end(); )
 	{
-		if((*startIter)->discardStatus())
-
+		if((*startIter)->DiscardStatus())
 		{   
-			(*startIter)->freeElements();
 			discardedFaces.push_back((*startIter));
 			startIter = m_trackedFaces.erase(startIter);
 		}

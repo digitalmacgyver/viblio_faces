@@ -34,7 +34,6 @@ Face::Face(const Mat frame, uint64_t frameTimestamp, Rect initialFaceRegion,Face
 	// in a real system we will probably take a copy of the tracker to initialize the face from as it has learned the background,
 	// however this is yet TBD
 	m_faceTracker.reset(new Tracker_OpenTLD());//m_trackerToInitializeFrom;
-	face_detector_neuro.reset( new FaceDetector_Neurotech());
 
 	last_thumbnail_time = 0;
 	lost_thumbnail = 0;
@@ -121,6 +120,9 @@ bool Face::Process(const Mat &frame, uint64_t frameTimestamp)
 	if( m_isLost && m_frameProcessedNumber % m_lostFaceProcessingInterval != 0)
 		return true; // all good, we are just going to skip processing of this frame because this face is lost and we don't process every frame for lost faces otherwise it slows us down
 
+	if( move_to_discarded )
+		return true; // this face was moved into the discarded list, this is permanent
+
 	// perform the tracking on the latest frame
 	m_currentEstimatedPosition = m_faceTracker->Process(frame);
 		
@@ -129,6 +131,7 @@ bool Face::Process(const Mat &frame, uint64_t frameTimestamp)
 
 	if(m_isLost && (frameTimestamp - lost_thumbnail) > discard_frequency && (lost_thumbnail!=0)) // 15 seconds
 	{
+		FreeResources();
 		move_to_discarded = true;
 		return true;
 	}
