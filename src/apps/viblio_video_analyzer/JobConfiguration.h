@@ -35,6 +35,9 @@ public:
 		isSceneAnalyzerEnabled = false;
 
 		isEncodingEnabled = false; // encoding disabled unless told otherwise
+
+		faceAnalyzerConfig = NULL;
+
 	}
 
 	// information about the video source that we will be getting the frames from

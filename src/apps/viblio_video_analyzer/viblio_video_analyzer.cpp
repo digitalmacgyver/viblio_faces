@@ -25,6 +25,7 @@
 #include "Analytics.FaceAnalyzer/FaceAnalyzerConfiguration.h"
 #include "VideoProcessor.h"
 
+//#include <vld.h> // Visual Leak Detector
 
 namespace po = boost::program_options;
 using namespace std;
@@ -138,6 +139,9 @@ int main(int argc, char* argv[])
 	videoProcessor.OutputJobSummaryStatistics();
 
 	videoProcessor.DumpOutput(jobConfig);
+
+	if( jobConfig.faceAnalyzerConfig != NULL )
+		delete jobConfig.faceAnalyzerConfig;
 
 	return 0;
 }

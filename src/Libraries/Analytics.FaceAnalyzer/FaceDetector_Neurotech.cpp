@@ -226,15 +226,15 @@ FaceDetector_Neurotech::FaceDetector_Neurotech(void)
 //
 FaceDetector_Neurotech::~FaceDetector_Neurotech(void)
 {
+	if( extractor )
+		NObjectFree(extractor);
 
-	   NObjectFree(extractor);
-	   NObjectFree(extractor1);
-		NResult result2 = NLicenseReleaseComponents(components);
-		if (NFailed(result2))
-		{
-			cout << "NLicenseReleaseComponents() failed (result = " << result2<< ")!" << endl;
-			
-		}
+	NResult result2 = NLicenseReleaseComponents(components);
+	if (NFailed(result2))
+	{
+		cout << "NLicenseReleaseComponents() failed (result = " << result2<< ")!" << endl;
+
+	}
 
 }
 

@@ -56,6 +56,8 @@ VideoProcessor::~VideoProcessor()
 	}
 
 	// go through each of the analyzers and deallocate them
+	for( auto startIter=m_analyzers.begin(); startIter!=m_analyzers.end(); startIter++)
+		delete *startIter;
 }
 
 bool VideoProcessor::SetupAnalyzers(const JobConfiguration &jobConfig)
@@ -149,6 +151,8 @@ bool VideoProcessor::DumpOutput(const JobConfiguration &jobConfig)
 	Jzon::FileWriter::WriteFile(temppath, *tempNode, Jzon::StandardFormat);
 
 	// now open a file (perhaps using the unique Job ID as the file name, with a .json extension) and dump the data to it
+
+	delete tempNode;
 
 	return true;
 }
