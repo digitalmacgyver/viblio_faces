@@ -393,6 +393,8 @@ void Face::GetOutput(int trackno, Jzon::Object*& root)
 		root1.Add("expressionConfidence",iter->second.GetDetailedInformation().expressionConfidence);
 		root1.Add("wearingGlasses",iter->second.GetDetailedInformation().wearingGlasses);
 		root1.Add("glassesConfidence",iter->second.GetDetailedInformation().glassesConfidence);
+		root1.Add("wearingDarkGlasses",iter->second.GetDetailedInformation().wearingDarkGlasses);
+		root1.Add("wearingDarkGlassesConfidence",iter->second.GetDetailedInformation().wearingDarkGlassesConfidence);
 
 		listOfStuff.Add(root1);
 		imwrite( imagepath,k);

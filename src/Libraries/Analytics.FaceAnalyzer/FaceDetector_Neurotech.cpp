@@ -380,7 +380,51 @@ std::vector<FaceDetectionDetails> FaceDetector_Neurotech::Detect(const cv::Mat &
 				// it could detect
 				currentFaceDeets.expressionConfidence = (float)(details.ExpressionConfidence / 100.0f);
 			}
+
+			if(details.GlassesConfidence ==255)
+			{
+				currentFaceDeets.wearingGlasses = false;
+				currentFaceDeets.glassesConfidence =0.0f;
+			}
+			else
+			{
+				if((details.Properties & nlpGlasses) == nlpGlasses)
+				currentFaceDeets.wearingGlasses = true;
+				else
+				currentFaceDeets.wearingGlasses = false;
+
+				currentFaceDeets.glassesConfidence = (float)(details.GlassesConfidence/100.0f);
+			}
+
+			if(details.DarkGlassesConfidence ==255)
+			{
+				currentFaceDeets.wearingDarkGlasses = false;
+				currentFaceDeets.wearingDarkGlassesConfidence =0.0f;
+			}
+			else
+			{
+				if((details.Properties & nlpDarkGlasses) == nlpDarkGlasses)
+				currentFaceDeets.wearingDarkGlasses = true;
+				else
+				currentFaceDeets.wearingDarkGlasses = false;
+
+				currentFaceDeets.wearingDarkGlassesConfidence = (float)(details.DarkGlassesConfidence/100.0f);
+			}
 			
+			if(details.MouthOpenConfidence ==255)
+			{
+				currentFaceDeets.mouthOpen = false;
+				currentFaceDeets.mouthOpenConfidence =0.0f;
+			}
+			else
+			{
+				if((details.Properties & nlpMouthOpen) == nlpMouthOpen)
+					currentFaceDeets.mouthOpen = true;
+				else
+					currentFaceDeets.mouthOpen = false;
+
+				currentFaceDeets.mouthOpenConfidence = (float)(details.MouthOpenConfidence/100.0f);
+			}
 		}
 
 		faces_returned.push_back(currentFaceDeets);
