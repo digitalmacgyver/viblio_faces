@@ -127,7 +127,7 @@ void TrackingController::Process(const Mat &frame, uint64_t frameTimestamp)
 		{   
 			Jzon::Object *root1 = new Jzon::Object;
 			(*startIter)->GetOutput(discardedFacesCount,root1);
-			startIter = m_trackedFaces.erase(startIter);
+			
 			if((root1->GetCount())>0)
 				discardedFacesJason.Add(*root1);
 			delete root1;
