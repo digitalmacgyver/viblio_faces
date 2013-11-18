@@ -25,7 +25,7 @@
 #include "Analytics.FaceAnalyzer/FaceAnalyzerConfiguration.h"
 #include "VideoProcessor.h"
 
-//#include <vld.h> // Visual Leak Detector
+#include <vld.h> // Visual Leak Detector
 
 namespace po = boost::program_options;
 using namespace std;
