@@ -27,6 +27,7 @@ namespace Analytics
 TrackingController::TrackingController(FaceAnalyzerConfiguration *faceAnalyzerConfiguration)
 {
 	faceAnalyzerConfig = faceAnalyzerConfiguration;
+	discardedFacesCount = 0;
 }
 
 TrackingController::~TrackingController()
@@ -124,8 +125,15 @@ void TrackingController::Process(const Mat &frame, uint64_t frameTimestamp)
 	{
 		if((*startIter)->DiscardStatus())
 		{   
-			discardedFaces.push_back((*startIter));
+			Jzon::Object *root1 = new Jzon::Object;
+			(*startIter)->GetOutput(discardedFacesCount,root1);
 			startIter = m_trackedFaces.erase(startIter);
+			if((root1->GetCount())>0)
+				discardedFacesJason.Add(*root1);
+			delete root1;
+			root1 = NULL;
+			startIter = m_trackedFaces.erase(startIter);
+			discardedFacesCount++;
 		}
 		else
 		{
@@ -229,22 +237,31 @@ void TrackingController::GetOutput(Jzon::Object*& root)
 {
 
 	string facesArrayJson = "";
-	Jzon::Array listOfStuff2;
+	//Jzon::Array listOfStuff2;
 
 	//Appending the discardedFaces track
-	m_trackedFaces.insert(m_trackedFaces.end(),discardedFaces.begin(),discardedFaces.end());
+	//m_trackedFaces.insert(m_trackedFaces.end(),discardedFaces.begin(),discardedFaces.end());
 
-	for( auto startIter=m_trackedFaces.begin(); startIter!=m_trackedFaces.end(); ++startIter)
+	auto startIter=m_trackedFaces.begin();
+	while( startIter!=m_trackedFaces.end() )
 	{
 		Jzon::Object *root = new Jzon::Object;
-		(*startIter)->GetOutput(startIter-m_trackedFaces.begin(),root);
+		(*startIter)->GetOutput(discardedFacesCount,root);
 		if((root->GetCount())>0)
-			listOfStuff2.Add(*root);
+			discardedFacesJason.Add(*root);
+		
+		delete root;
 		root = NULL;
+		discardedFacesCount++;
+		delete *startIter;
+		startIter = m_trackedFaces.erase(startIter);
 
 	}
+
+	// clean up
+
 	
-	root->Add("tracks",listOfStuff2);
+	root->Add("tracks",discardedFacesJason);
 	return;
 }
 
