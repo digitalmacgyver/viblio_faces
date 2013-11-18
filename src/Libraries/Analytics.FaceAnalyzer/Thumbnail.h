@@ -26,6 +26,14 @@ private:
 	float Thumbnail_enlarge_percentage;
 	bool has_eyecascade;
 
+	// The various confidence parameters that make up our final confidence result
+	float m_confidenceWeightFaceDetected;
+	float m_confidenceWeightEyesDetected;
+	float m_confidenceWeightNoseDetected;
+	float m_confidenceWeightMouthDetected;
+	float m_confidenceWeightGenderDetected;
+	float m_confidenceWeightQuality;
+
 	bool MatToHNImage(const cv::Mat &matImage, HNImage *hnImage);
 	cv::Mat HNImageToMat(HNImage *hnImage);
 	cv::Rect ConstrainRect(const cv::Rect &rectToConstrain, const cv::Size &imageSize);
