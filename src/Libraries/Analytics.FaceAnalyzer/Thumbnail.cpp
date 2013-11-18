@@ -20,7 +20,13 @@ namespace Analytics
 	{
 
 
-Thumbnail::Thumbnail(FaceAnalyzerConfiguration *faceAnalyzerConfig)
+Thumbnail::Thumbnail(FaceAnalyzerConfiguration *faceAnalyzerConfig) :
+	m_confidenceWeightFaceDetected(0.3f),
+	m_confidenceWeightEyesDetected(0.2f),
+	m_confidenceWeightNoseDetected(0.04f),
+	m_confidenceWeightMouthDetected(0.03f),
+	m_confidenceWeightGenderDetected(0.03f),
+	m_confidenceWeightQuality(0.4f) // all these confidence weights must add to 1
 {  
 	tokenFaceExtractor = NULL;
 	has_eyecascade= false;
@@ -80,6 +86,7 @@ Thumbnail::~Thumbnail()
 bool Thumbnail::ExtractThumbnail( const cv::Mat &frame, const cv::Rect &ThumbnailLocation, float &confidence, ThumbnailDetails &thumbnail_details)
 {   
 	cv::Mat thumbnail;
+	confidence = 0.0f;
 
 	Rect enlarged_thumbnail(ThumbnailLocation.x-(ThumbnailLocation.width*Thumbnail_enlarge_percentage),ThumbnailLocation.y-(ThumbnailLocation.height*Thumbnail_enlarge_percentage),ThumbnailLocation.width+(ThumbnailLocation.width*(Thumbnail_enlarge_percentage*2)),ThumbnailLocation.height+(ThumbnailLocation.height*Thumbnail_enlarge_percentage*2));
 	Rect constrainedRect = ConstrainRect(enlarged_thumbnail, Size(frame.cols, frame.rows));
@@ -91,31 +98,37 @@ bool Thumbnail::ExtractThumbnail( const cv::Mat &frame, const cv::Rect &Thumbnai
 	// perform a detailed face extraction to get some detailed information
 	vector<FaceDetectionDetails> detectedFaces = face_detector_check->Detect(thumbnail, true);
 
-
 	if( detectedFaces.size() > 1 || detectedFaces.size() == 0 )
 	{
 		// if we find either no faces or more than 1 face in this 'little' region then we have 0 confidence in
 		// this thumbnail
-		confidence = 0.0f;
 		return false;
 	}
-
 	
 	// now use the detailed information to create a token image
 	FaceDetectionDetails detailedFaceInfo;
 	detailedFaceInfo = detectedFaces.at(0);
+
+	// we have detected the face at least
+	confidence += m_confidenceWeightFaceDetected * (detailedFaceInfo.faceDetectionConfidence/100.0f);
+
+	// if we have detected the eyes then this gives us even more confidence
+	if( detailedFaceInfo.rightEyeConfidence > 0 && detailedFaceInfo.leftEyeConfidence > 0 )
+		confidence += ((m_confidenceWeightEyesDetected/2.0f) * detailedFaceInfo.rightEyeConfidence) + 
+					  ((m_confidenceWeightEyesDetected/2.0f) * detailedFaceInfo.leftEyeConfidence);
 
 	thumbnail_details.SetDetailedInformation(detailedFaceInfo);
 
 	// check to make sure we have the prerequisite information for token extraction before proceeding
 	if(detailedFaceInfo.leftEyeConfidence <= 0 || detailedFaceInfo.rightEyeConfidence <= 0)
 	{
-		confidence = 0.0f;
 		return false;
 	}
 
-	//thumbnail_detail->FillThumbnailDetails(thumbnail,uniqueface);
-
+	// Make use of the nose and mouth location information in our confidence estimation. Having one or both
+	// of these gives us more confidence
+	confidence += m_confidenceWeightNoseDetected * detailedFaceInfo.noseLocationConfidence;
+	confidence += m_confidenceWeightMouthDetected * detailedFaceInfo.noseLocationConfidence;
 
 	NResult result ;
 	NPoint first;
@@ -135,7 +148,6 @@ bool Thumbnail::ExtractThumbnail( const cv::Mat &frame, const cv::Rect &Thumbnai
 		if(image)
 			NObjectFree(image);
 
-		confidence = 0.0f;
 		return false;
 	}
 
@@ -153,7 +165,6 @@ bool Thumbnail::ExtractThumbnail( const cv::Mat &frame, const cv::Rect &Thumbnai
 		if( token)
 			NObjectFree(token);
 		
-		confidence = 0.0f;
 		return false;
 	}
 
@@ -174,9 +185,10 @@ bool Thumbnail::ExtractThumbnail( const cv::Mat &frame, const cv::Rect &Thumbnai
 		if (ntfiAttributes)
 			NObjectFree(ntfiAttributes);
 
-		confidence = 0.0f;
 		return false;
 	}
+
+	confidence += m_confidenceWeightQuality * quality;
 
 	// Determine the background uniformity - see page 729 in the SDK documentation
 	double backgroundUniformity = 0.0f;
