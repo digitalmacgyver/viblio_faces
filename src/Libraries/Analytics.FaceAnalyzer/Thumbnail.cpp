@@ -21,12 +21,15 @@ namespace Analytics
 
 
 Thumbnail::Thumbnail(FaceAnalyzerConfiguration *faceAnalyzerConfig) :
-	m_confidenceWeightFaceDetected(0.3f),
-	m_confidenceWeightEyesDetected(0.2f),
+	m_confidenceWeightFaceDetected(0.2f),
+	m_confidenceWeightEyesDetected(0.15f),
+	m_confidenceWeightIntereyeDistance(0.15f),
 	m_confidenceWeightNoseDetected(0.04f),
 	m_confidenceWeightMouthDetected(0.03f),
 	m_confidenceWeightGenderDetected(0.03f),
-	m_confidenceWeightQuality(0.4f) // all these confidence weights must add to 1
+	m_confidenceWeightQuality(0.4f), // all these confidence weights must add to 1
+	m_intereyeDistanceLowerBound(40.0f),
+	m_intereyeDistanceUpperBound(100.0f)
 {  
 	tokenFaceExtractor = NULL;
 	has_eyecascade= false;
@@ -114,8 +117,17 @@ bool Thumbnail::ExtractThumbnail( const cv::Mat &frame, const cv::Rect &Thumbnai
 
 	// if we have detected the eyes then this gives us even more confidence
 	if( detailedFaceInfo.rightEyeConfidence > 0 && detailedFaceInfo.leftEyeConfidence > 0 )
+	{
 		confidence += ((m_confidenceWeightEyesDetected/2.0f) * detailedFaceInfo.rightEyeConfidence) + 
 					  ((m_confidenceWeightEyesDetected/2.0f) * detailedFaceInfo.leftEyeConfidence);
+
+		// based on the intereye distance calculate how much additional confidence to add
+		float adjustedIntereyeDist = max(0.0f, detailedFaceInfo.intereyeDistance - m_intereyeDistanceLowerBound);
+
+		float intereyeWeightAdjusted = min(1.0f, adjustedIntereyeDist / (m_intereyeDistanceUpperBound - m_intereyeDistanceLowerBound));
+
+		confidence += m_confidenceWeightIntereyeDistance * intereyeWeightAdjusted;
+	}
 
 	thumbnail_details.SetDetailedInformation(detailedFaceInfo);
 

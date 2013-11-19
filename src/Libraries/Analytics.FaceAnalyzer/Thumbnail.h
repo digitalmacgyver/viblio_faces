@@ -27,12 +27,15 @@ private:
 	bool has_eyecascade;
 
 	// The various confidence parameters that make up our final confidence result
-	float m_confidenceWeightFaceDetected;
-	float m_confidenceWeightEyesDetected;
-	float m_confidenceWeightNoseDetected;
-	float m_confidenceWeightMouthDetected;
-	float m_confidenceWeightGenderDetected;
-	float m_confidenceWeightQuality;
+	float m_confidenceWeightFaceDetected; // If the face is simply redetected in the thumbnail it gives us more confidence
+	float m_confidenceWeightEyesDetected; // detecting the eyes in the thumbnail gives us confidence
+	float m_confidenceWeightIntereyeDistance; // the larger the intereye distance the better... < lower intereye bound gives 0 additional confidence, > upper bound gives maximum bonus
+	const float m_intereyeDistanceLowerBound;
+	const float m_intereyeDistanceUpperBound;
+	float m_confidenceWeightNoseDetected; // If nose is detected we get a small boost
+	float m_confidenceWeightMouthDetected;// If mouth is detected we get a small boost
+	float m_confidenceWeightGenderDetected;// If gender is detected we get a small boost
+	float m_confidenceWeightQuality;	  // Neurotech quality metric which is a combination of grayscale density, background uniformity & sharpness
 
 	bool MatToHNImage(const cv::Mat &matImage, HNImage *hnImage);
 	cv::Mat HNImageToMat(HNImage *hnImage);
