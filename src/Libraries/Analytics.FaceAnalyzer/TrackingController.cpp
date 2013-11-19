@@ -105,7 +105,7 @@ void TrackingController::AddNewTrack(const Mat &frame, uint64_t frameTimestamp, 
 	Updates each of the trackers that are active so that they can estimate the new position of
 	the object/face they are tracking
 */
-void TrackingController::Process(const Mat &frame, uint64_t frameTimestamp)
+void TrackingController::Process(const Mat &frame, uint64_t frameTimestamp, Frame &origFrame)
 {
 	// could call each of these trackers in parallel assuming they are independent (they should 
 	// be at least when they are estimating the new position of the object/face)
@@ -116,7 +116,7 @@ void TrackingController::Process(const Mat &frame, uint64_t frameTimestamp)
 		//futures.push_back(async(std::launch::async, &Analytics::FaceAnalyzer::Face::Process, (*startIter), frame, frameTimestamp));
 
 		// single threaded
-		(*startIter)->Process( frame, frameTimestamp );
+		(*startIter)->Process( frame, frameTimestamp,origFrame);
 	}
 
 	// Moving any discarded faces to new vector

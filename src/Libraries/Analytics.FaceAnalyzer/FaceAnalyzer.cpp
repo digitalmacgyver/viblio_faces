@@ -66,8 +66,13 @@ FaceAnalysis::~FaceAnalysis()
 void FaceAnalysis::Process(const Mat &frame, uint64_t frameTimestamp)
 {
 	Mat resizedFrame;
+	frameInfo.setoriginalFrame(frame);
 	if( m_imageRescaleFactor != 1.0f )
+	{
 		resize(frame, resizedFrame, Size(frame.cols * m_imageRescaleFactor, frame.rows * m_imageRescaleFactor));
+		frameInfo.setscale((1.0 /m_imageRescaleFactor));
+		
+	}
 	else
 	{// Auto resize to 480p ( 640 x 480)
 		const int DETECTION_WIDTH = 640;
@@ -76,9 +81,14 @@ void FaceAnalysis::Process(const Mat &frame, uint64_t frameTimestamp)
 		{ // Shrink the image while keeping the same aspect ratio
 			int scaledHeight = cvRound(frame.rows/scale);
 			resize(frame, resizedFrame, Size(DETECTION_WIDTH, scaledHeight));
+			frameInfo.setscale(scale);
+		
 		}
 		else
-			resizedFrame = frame;
+		{ resizedFrame = frame;
+		  frameInfo.setscale(1.0);
+		  
+		}
 	}
 
 	auto start = std::chrono::monotonic_clock::now();
@@ -102,7 +112,7 @@ void FaceAnalysis::Process(const Mat &frame, uint64_t frameTimestamp)
 	}
 
 	// 2. Pass the frame off to the tracking controller to update any active trackers
-	std::future<void> trackingFuture = std::async(std::launch::async, &Analytics::FaceAnalyzer::TrackingController::Process, m_trackingController.get(), resizedFrame, frameTimestamp);
+	std::future<void> trackingFuture = std::async(std::launch::async, &Analytics::FaceAnalyzer::TrackingController::Process, m_trackingController.get(), resizedFrame, frameTimestamp,frameInfo);
 
 	// make sure the detector and the tracking controller have been called
 	if( detectedFacesFuture.valid() )

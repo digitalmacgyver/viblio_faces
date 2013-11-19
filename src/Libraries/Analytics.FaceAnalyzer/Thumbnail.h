@@ -3,6 +3,7 @@
 #include "FaceAnalyzerConfiguration.h"
 #include <Ntfi.h>
 #include "ThumbnailDetails.h"
+#include "Frame.h"
 using namespace cv;
 using namespace std;
 
@@ -45,7 +46,7 @@ public:
 	Thumbnail(FaceAnalyzerConfiguration *faceAnalyzerConfig);
 	~Thumbnail(void);
 	
-	bool ExtractThumbnail( const cv::Mat &frame,const  cv::Rect &ThumbnailLocation, float &confidence, ThumbnailDetails &thumbnail_details);
+	bool ExtractThumbnail( const cv::Mat &frame,const  cv::Rect &ThumbnailLocation, float &confidence, ThumbnailDetails &thumbnail_details,Frame &origFrame);
 	
  
 	

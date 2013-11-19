@@ -4,6 +4,7 @@
 #include "EyeDetector_OpenCV.h"
 #include "Jzon/Jzon.h"
 #include <numeric>
+#include "Frame.h"
 
 // Neurotech related libraries for token image generation
 #include <NImages.h>
@@ -86,16 +87,19 @@ Thumbnail::~Thumbnail()
 
 
 
-bool Thumbnail::ExtractThumbnail( const cv::Mat &frame, const cv::Rect &ThumbnailLocation, float &confidence, ThumbnailDetails &thumbnail_details)
+bool Thumbnail::ExtractThumbnail( const cv::Mat &frame, const cv::Rect &ThumbnailLocation, float &confidence, ThumbnailDetails &thumbnail_details,Frame &origFrame)
 {   
 	cv::Mat thumbnail;
 	confidence = 0.0f;
+	
+	float scalefactor = origFrame.getscale();
+	
 
-	Rect enlarged_thumbnail(ThumbnailLocation.x-(ThumbnailLocation.width*Thumbnail_enlarge_percentage),ThumbnailLocation.y-(ThumbnailLocation.height*Thumbnail_enlarge_percentage),ThumbnailLocation.width+(ThumbnailLocation.width*(Thumbnail_enlarge_percentage*2)),ThumbnailLocation.height+(ThumbnailLocation.height*Thumbnail_enlarge_percentage*2));
-	Rect constrainedRect = ConstrainRect(enlarged_thumbnail, Size(frame.cols, frame.rows));
+	Rect enlarged_thumbnail((int)(ThumbnailLocation.x*scalefactor)-(int)(ThumbnailLocation.width*Thumbnail_enlarge_percentage*scalefactor),(int)(ThumbnailLocation.y*scalefactor)-(int)(ThumbnailLocation.height*scalefactor*Thumbnail_enlarge_percentage),(int)(ThumbnailLocation.width*scalefactor)+(int)(ThumbnailLocation.width*scalefactor*(Thumbnail_enlarge_percentage*2)),(int)(ThumbnailLocation.height*scalefactor)+(int)(ThumbnailLocation.height*scalefactor*Thumbnail_enlarge_percentage*2));
+	Rect constrainedRect = ConstrainRect(enlarged_thumbnail, Size(origFrame.getcols(), origFrame.getrows()));
 
-	thumbnail = frame(constrainedRect);
-
+	thumbnail = origFrame.GetThumbnail(constrainedRect);
+ 
 	thumbnail_details.SetThumbnail(thumbnail);
 
 	// perform a detailed face extraction to get some detailed information

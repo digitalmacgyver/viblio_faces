@@ -6,7 +6,7 @@
 #include "Analyzer.h"
 //#include "FaceDetector_OpenCV.h"
 #include "Jzon/Jzon.h"
-
+#include "Frame.h"
 namespace Analytics
 {
 	namespace FaceAnalyzer
@@ -17,7 +17,7 @@ class FaceAnalyzerConfiguration;
 class FaceDetector_OpenCV;
 class TrackingController;
 class FaceDetector_Neurotech;
-
+class Frame;
 class FaceAnalysis : public Analyzer
 {
 private:
@@ -25,6 +25,8 @@ private:
 	std::unique_ptr<FaceDetector_Neurotech> m_faceDetector;
 
 	std::unique_ptr<TrackingController> m_trackingController;
+
+	Frame frameInfo;
 
 	int m_faceDetectionFrequency;
 	int m_currentFrameNumber;

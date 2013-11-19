@@ -15,6 +15,7 @@
 #include "FaceAnalyzerConfiguration.h"
 #include <stdint.h>
 #include "Jzon/Jzon.h"
+#include "Frame.h"
 
 namespace Analytics
 {
@@ -50,7 +51,7 @@ public:
 
 	void AddNewTrack(const cv::Mat &frame, uint64_t frameTimestamp, cv::Rect &objectLocation);
 
-	void Process(const cv::Mat &frame, uint64_t frameTimestamp);
+	void Process(const cv::Mat &frame, uint64_t frameTimestamp , Frame &origFrame);
 
     void  GetOutput(Jzon::Object*& root);
 

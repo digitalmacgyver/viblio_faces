@@ -109,12 +109,12 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_VARIADIC_MAX=10;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\Libraries;..\..\..\libs\boost_1_54_0\include;..\..\..\libs\OpenCV-2.4.5\include;..\..\..\libs\OpenTLD\src\libopentld\tld;..\..\..\libs\gtest-1.7.0\include\;..\..\..\libs\json_spirit_v4.06\json_spirit;..\..\..\libs\Neurotec_Biometric_4_5_SDK_Trial\Include;..\..\..\libs\Neurotec_Biometric_4_5_SDK_Trial\Tutorials\Common\C;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Program Files %28x86%29\Visual Leak Detector\include;..\..\Libraries;..\..\..\libs\boost_1_54_0\include;..\..\..\libs\OpenCV-2.4.5\include;..\..\..\libs\OpenTLD\src\libopentld\tld;..\..\..\libs\gtest-1.7.0\include\;..\..\..\libs\json_spirit_v4.06\json_spirit;..\..\..\libs\Neurotec_Biometric_4_5_SDK_Trial\Include;..\..\..\libs\Neurotec_Biometric_4_5_SDK_Trial\Tutorials\Common\C;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\..\..\libs\OpenTLD\bin\lib\Debug;..\..\..\libs\OpenCV-2.4.5\lib\Debug;..\..\..\libs\boost_1_54_0\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Program Files %28x86%29\Visual Leak Detector\lib\Win32;..\..\..\libs\OpenTLD\bin\lib\Debug;..\..\..\libs\OpenCV-2.4.5\lib\Debug;..\..\..\libs\boost_1_54_0\lib</AdditionalLibraryDirectories>
       <AdditionalDependencies>opencv_core245d.lib;opencv_features2d245d.lib;opencv_legacy245d.lib;opencv_highgui245d.lib;opencv_imgproc245d.lib;opencv_nonfree245d.lib;opencv_calib3d245d.lib;opencv_objdetect245d.lib;opencv_contrib245d.lib;opencv_video245d.lib;opentld.lib;cvblobs.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>

@@ -15,6 +15,7 @@
 #include <boost/uuid/uuid.hpp>
 #include "ThumbnailDetails.h"
 #include "Jzon/Jzon.h"
+#include "Frame.h"
 namespace Analytics
 {
 	namespace FaceAnalyzer
@@ -99,7 +100,7 @@ public:
 	// information from theOtherFace and combine it into this face
 	void Merge(Face *theOtherFace);
 
-	bool Process(const cv::Mat &frame, uint64_t frameTimestamp);
+	bool Process(const cv::Mat &frame, uint64_t frameTimestamp,Frame &origFrame);
 	
 	// Returns the timestamp at which this face was first created
 	uint64_t Age();
