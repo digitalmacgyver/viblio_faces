@@ -42,7 +42,11 @@ Tracker_OpenTLD::Tracker_OpenTLD()
 Tracker_OpenTLD::~Tracker_OpenTLD()
 {
 	if( m_tldTracker != NULL )
+	{
+		m_tldTracker->release();
 		delete m_tldTracker;
+
+	}
 }
 
 void Tracker_OpenTLD::InitialiseTrack(const Mat &frame, Rect &boundingRegion)
