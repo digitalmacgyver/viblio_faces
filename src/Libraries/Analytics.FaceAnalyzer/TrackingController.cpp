@@ -132,6 +132,7 @@ void TrackingController::Process(const Mat &frame, uint64_t frameTimestamp)
 				discardedFacesJason.Add(*root1);
 			delete root1;
 			root1 = NULL;
+			delete *startIter;
 			startIter = m_trackedFaces.erase(startIter);
 			discardedFacesCount++;
 		}
