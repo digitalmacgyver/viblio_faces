@@ -66,7 +66,7 @@ FaceAnalysis::~FaceAnalysis()
 void FaceAnalysis::Process(const Mat &frame, uint64_t frameTimestamp)
 {
 	Mat resizedFrame;
-	frameInfo.setoriginalFrame(frame);
+	Frame frameInfo(frame);
 	if( m_imageRescaleFactor != 1.0f )
 	{
 		resize(frame, resizedFrame, Size(frame.cols * m_imageRescaleFactor, frame.rows * m_imageRescaleFactor));

@@ -26,7 +26,7 @@ private:
 
 	std::unique_ptr<TrackingController> m_trackingController;
 
-	Frame frameInfo;
+	//Frame frameInfo;
 
 	int m_faceDetectionFrequency;
 	int m_currentFrameNumber;
