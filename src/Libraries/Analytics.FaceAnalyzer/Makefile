@@ -8,6 +8,7 @@ FaceDetector_Neurotech.cpp\
 Tracker_OpenTLD.cpp\
 TrackingController.cpp\
 FaceDetectionDetails.cpp\
+Frame.cpp\
 ThumbnailDetails.cpp\
 ../Jzon/Jzon.cpp\
 Thumbnail.cpp
