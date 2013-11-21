@@ -20,8 +20,17 @@ cv::Mat Frame::GetScaledMat()
 {
 	if( scaledFrame.empty() )
 	{
-		// the scaled version of the frame doesn't exist yet, produce the scaled frame here
-		// Ramsri: add code here
+		if(Scale == 1.0)
+			return originalFrame;
+		else
+		{
+		   const int DETECTION_WIDTH = 640;
+		// Shrink the image while keeping the same aspect ratio
+			int scaledHeight = cvRound(originalFrame.rows/Scale);
+			resize(originalFrame,scaledFrame, Size(DETECTION_WIDTH, scaledHeight));
+			return scaledFrame;
+		}
+		
 	}
 	else
 		// we already have the scaled frame so return it here
