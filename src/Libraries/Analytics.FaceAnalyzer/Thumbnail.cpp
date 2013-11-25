@@ -234,7 +234,7 @@ bool Thumbnail::ExtractThumbnail( const cv::Mat &frame, const cv::Rect &Thumbnai
 	if (ntfiAttributes)
 		NObjectFree(ntfiAttributes);
 
-	confidence = quality;
+//	confidence = quality;
 
 	return true;
 }
