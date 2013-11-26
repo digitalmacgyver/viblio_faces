@@ -111,7 +111,7 @@ void Face::Merge(Face *theOtherFace)
 	theOtherFace->m_faceTracker = NULL; // make sure when we destroy the other face we don't kill the tracker as well because now we will be using it
 }
 
-bool Face::Process(const Mat &frame, uint64_t frameTimestamp, Frame &origFrame)
+bool Face::Process( uint64_t frameTimestamp, Frame &frame)
 {
 	
 	m_wasLostIsNowFound = false;
@@ -124,7 +124,7 @@ bool Face::Process(const Mat &frame, uint64_t frameTimestamp, Frame &origFrame)
 		return true; // this face was moved into the discarded list, this is permanent
 
 	// perform the tracking on the latest frame
-	m_currentEstimatedPosition = m_faceTracker->Process(frame);
+	m_currentEstimatedPosition = m_faceTracker->Process(frame.GetScaledMat());
 		
 	std::ostringstream oss;
 	std::string imagepath;
@@ -191,7 +191,7 @@ bool Face::Process(const Mat &frame, uint64_t frameTimestamp, Frame &origFrame)
 				float confidence = 0.0f;
 				ThumbnailDetails thumbnail_detail;
 				//thumbnail_detail.reset(new ThumbnailDetails());
-				bool extractionSuccess = Thumbnail_generator->ExtractThumbnail(frame.clone(), m_currentEstimatedPosition, confidence, thumbnail_detail,origFrame);
+				bool extractionSuccess = Thumbnail_generator->ExtractThumbnail( m_currentEstimatedPosition, confidence, thumbnail_detail,frame);
 				
 				//confidence =Thumbnail_generator->GetConfidencevalue(thumbnail_temp,has_thumbnails,m_faceTracker->GetConfidence());
 				if(confidence > 0.0)

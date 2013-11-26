@@ -87,7 +87,7 @@ Thumbnail::~Thumbnail()
 
 
 
-bool Thumbnail::ExtractThumbnail( const cv::Mat &frame, const cv::Rect &ThumbnailLocation, float &confidence, ThumbnailDetails &thumbnail_details,Frame &origFrame)
+bool Thumbnail::ExtractThumbnail(const cv::Rect &ThumbnailLocation, float &confidence, ThumbnailDetails &thumbnail_details,Frame &origFrame)
 {   
 	cv::Mat thumbnail;
 	confidence = 0.0f;
@@ -103,7 +103,7 @@ bool Thumbnail::ExtractThumbnail( const cv::Mat &frame, const cv::Rect &Thumbnai
 	thumbnail_details.SetThumbnail(thumbnail);
 
 	// perform a detailed face extraction to get some detailed information
-	vector<FaceDetectionDetails> detectedFaces = face_detector_check->Detect(thumbnail, true);
+	vector<FaceDetectionDetails> detectedFaces = face_detector_check->Detect(origFrame, true);
 
 	if( detectedFaces.size() > 1 || detectedFaces.size() == 0 )
 	{
