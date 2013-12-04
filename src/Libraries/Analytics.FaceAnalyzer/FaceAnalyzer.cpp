@@ -75,7 +75,7 @@ void FaceAnalysis::Process(const Mat &frame, uint64_t frameTimestamp)
 		scale = 1.0;
 
 	frameInfo.setscale((scale));
-	//resizedFrame = frameInfo.GetScaledMat();
+	resizedFrame = frameInfo.GetScaledMat();
 	
 	auto start = std::chrono::monotonic_clock::now();
 
