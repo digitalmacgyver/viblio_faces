@@ -100,7 +100,7 @@ public:
 	// information from theOtherFace and combine it into this face
 	void Merge(Face *theOtherFace);
 
-	bool Process(const cv::Mat &frame, uint64_t frameTimestamp,Frame &origFrame);
+	bool Process( uint64_t frameTimestamp,Frame &frame);
 	
 	// Returns the timestamp at which this face was first created
 	uint64_t Age();

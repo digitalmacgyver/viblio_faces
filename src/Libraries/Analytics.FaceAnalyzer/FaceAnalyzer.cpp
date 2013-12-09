@@ -89,7 +89,7 @@ void FaceAnalysis::Process(const Mat &frame, uint64_t frameTimestamp)
 		{
 			// its a pity but we have to make use of the underlying Face Detector that is managed by the unique_ptr, but
 			// std::async doesn't seem to like it any other way
-			detectedFacesFuture = std::async(std::launch::async, &Analytics::FaceAnalyzer::FaceDetector_Neurotech::Detect, m_faceDetector.get(), resizedFrame,false);
+			detectedFacesFuture = std::async(std::launch::async, &Analytics::FaceAnalyzer::FaceDetector_Neurotech::Detect, m_faceDetector.get(), frameInfo,false);
 		}
 		catch(Exception e)
 		{
@@ -98,7 +98,7 @@ void FaceAnalysis::Process(const Mat &frame, uint64_t frameTimestamp)
 	}
 
 	// 2. Pass the frame off to the tracking controller to update any active trackers
-	std::future<void> trackingFuture = std::async(std::launch::async, &Analytics::FaceAnalyzer::TrackingController::Process, m_trackingController.get(), resizedFrame, frameTimestamp,frameInfo);
+	std::future<void> trackingFuture = std::async(std::launch::async, &Analytics::FaceAnalyzer::TrackingController::Process, m_trackingController.get(),frameTimestamp,frameInfo);
 
 	// make sure the detector and the tracking controller have been called
 	if( detectedFacesFuture.valid() )

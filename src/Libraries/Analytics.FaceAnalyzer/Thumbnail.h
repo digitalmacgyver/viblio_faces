@@ -53,7 +53,7 @@ public:
 	Thumbnail(FaceAnalyzerConfiguration *faceAnalyzerConfig);
 	~Thumbnail(void);
 	
-	bool ExtractThumbnail( const cv::Mat &frame,const  cv::Rect &ThumbnailLocation, float &confidence, ThumbnailDetails &thumbnail_details,Frame &origFrame);
+	bool ExtractThumbnail(const  cv::Rect &ThumbnailLocation, float &confidence, ThumbnailDetails &thumbnail_details,Frame &origFrame);
 	
  
 	

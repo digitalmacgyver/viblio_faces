@@ -51,7 +51,7 @@ public:
 
 	void AddNewTrack(const cv::Mat &frame, uint64_t frameTimestamp, cv::Rect &objectLocation);
 
-	void Process(const cv::Mat &frame, uint64_t frameTimestamp , Frame &origFrame);
+	void Process(uint64_t frameTimestamp , Frame &frame);
 
     void  GetOutput(Jzon::Object*& root);
 
