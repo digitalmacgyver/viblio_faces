@@ -27,6 +27,11 @@ private:
 	float Thumbnail_enlarge_percentage;
 	bool has_eyecascade;
 
+	// properties related to the region we choose for the thumbnail
+	float m_upperThumbnailRegion;
+	float m_lowerThumbnailRegion;
+	float m_leftRightThumbnailRegion;
+
 	// The various confidence parameters that make up our final confidence result
 	float m_confidenceWeightFaceDetected; // If the face is simply redetected in the thumbnail it gives us more confidence
 	float m_confidenceWeightEyesDetected; // detecting the eyes in the thumbnail gives us confidence
@@ -41,6 +46,8 @@ private:
 	bool MatToHNImage(const cv::Mat &matImage, HNImage *hnImage);
 	cv::Mat HNImageToMat(HNImage *hnImage);
 	cv::Rect ConstrainRect(const cv::Rect &rectToConstrain, const cv::Size &imageSize);
+	bool GetFaceRegion(const cv::Mat &frame, cv::Point leftEye, cv::Point rightEye,
+                       float intereyeDistance, float aboveEyeBuffer, float belowEyeBuffer, float besideEyeBuffer);
 
 public:
 	Thumbnail(FaceAnalyzerConfiguration *faceAnalyzerConfig);

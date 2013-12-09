@@ -337,9 +337,14 @@ std::vector<FaceDetectionDetails> FaceDetector_Neurotech::Detect(const cv::Mat &
 					currentFaceDeets.rightEyeConfidence = (float)(details.RightEyeCenter.Confidence / 100.0f);
 
 				if( currentFaceDeets.rightEyeConfidence > 0.0f && currentFaceDeets.leftEyeConfidence > 0.0f )
+				{
 					// we can only calculate the intereye distance if we have both eye locations
-					currentFaceDeets.intereyeDistance = sqrt( pow( currentFaceDeets.leftEye.x - currentFaceDeets.rightEye.x, 2 )
-															 +pow( currentFaceDeets.leftEye.y - currentFaceDeets.rightEye.y, 2 ) );
+					if( currentFaceDeets.leftEye.x == currentFaceDeets.rightEye.x )
+						currentFaceDeets.intereyeDistance = float(currentFaceDeets.leftEye.x - currentFaceDeets.rightEye.x);
+					else
+						currentFaceDeets.intereyeDistance = sqrt( pow( currentFaceDeets.leftEye.x - currentFaceDeets.rightEye.x, 2 )
+																 +pow( currentFaceDeets.leftEye.y - currentFaceDeets.rightEye.y, 2 ) );
+				}
 				else
 					currentFaceDeets.intereyeDistance = 0.0f;
 			}
