@@ -89,7 +89,7 @@ void FaceAnalysis::Process(const Mat &frame, uint64_t frameTimestamp)
 		{
 			// its a pity but we have to make use of the underlying Face Detector that is managed by the unique_ptr, but
 			// std::async doesn't seem to like it any other way
-			detectedFacesFuture = std::async(std::launch::async, &Analytics::FaceAnalyzer::FaceDetector_Neurotech::Detect, m_faceDetector.get(), frameInfo,false);
+			detectedFacesFuture = std::async(std::launch::async, &Analytics::FaceAnalyzer::FaceDetector_Neurotech::Detect, m_faceDetector.get(), resizedFrame,false);
 		}
 		catch(Exception e)
 		{

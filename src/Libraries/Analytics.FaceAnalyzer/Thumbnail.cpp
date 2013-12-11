@@ -108,7 +108,7 @@ bool Thumbnail::ExtractThumbnail(const cv::Rect &ThumbnailLocation, float &confi
 	thumbnail_details.SetThumbnail(thumbnail);
 
 	// perform a detailed face extraction to get some detailed information
-	vector<FaceDetectionDetails> detectedFaces = face_detector_check->Detect(origFrame, true);
+	vector<FaceDetectionDetails> detectedFaces = face_detector_check->Detect(thumbnail, true);
 
 	if( detectedFaces.size() > 1 || detectedFaces.size() == 0 )
 	{

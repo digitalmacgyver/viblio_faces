@@ -62,7 +62,7 @@ public:
 	
 	FaceDetector_Neurotech(void);
 	~FaceDetector_Neurotech(void);
-	std::vector<FaceDetectionDetails> Detect(Frame &frame, bool getDetailedInformation=false);
+	std::vector<FaceDetectionDetails> Detect(const cv::Mat &frame, bool getDetailedInformation=false);
 	
 	void RenderVisualization(cv::Mat &frame, const std::vector<FaceDetectionDetails> &detectedFaces);
 };

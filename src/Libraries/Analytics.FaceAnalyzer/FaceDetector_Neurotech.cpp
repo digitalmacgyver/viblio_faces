@@ -239,10 +239,10 @@ FaceDetector_Neurotech::~FaceDetector_Neurotech(void)
 }
 
 
-std::vector<FaceDetectionDetails> FaceDetector_Neurotech::Detect(Frame &frame, bool getDetailedInformation)
+std::vector<FaceDetectionDetails> FaceDetector_Neurotech::Detect(const cv::Mat &frame, bool getDetailedInformation)
 {
 	Mat temp;
-	cvtColor( frame.GetScaledMat(), temp, CV_BGR2GRAY );
+	cvtColor( frame, temp, CV_BGR2GRAY );
     if( !temp.isContinuous())
 		cout << " Non continuous memory " << endl;
 	
@@ -289,7 +289,7 @@ std::vector<FaceDetectionDetails> FaceDetector_Neurotech::Detect(Frame &frame, b
 		currentFaceRect.y = faces[i].Rectangle.Y ; 
 		currentFaceRect.width = faces[i].Rectangle.Width;
 		currentFaceRect.height = faces[i].Rectangle.Height;
-		Rect constrainedRect = ConstrainRect(currentFaceRect, Size(frame.getcols(), frame.getrows()));
+		Rect constrainedRect = ConstrainRect(currentFaceRect, Size(frame.cols, frame.rows));
 
 		currentFaceDeets.faceRect = constrainedRect;
 		currentFaceDeets.faceDetectionConfidence = faces[i].Confidence;
