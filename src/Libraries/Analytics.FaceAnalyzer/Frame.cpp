@@ -24,7 +24,7 @@ cv::Mat Frame::GetScaledMat()
 			return originalFrame;
 		else
 		{
-		   const int DETECTION_WIDTH = 640;
+		   const int DETECTION_WIDTH = 960;
 		// Shrink the image while keeping the same aspect ratio
 			int scaledHeight = cvRound(originalFrame.rows/Scale);
 			resize(originalFrame,scaledFrame, Size(DETECTION_WIDTH, scaledHeight));

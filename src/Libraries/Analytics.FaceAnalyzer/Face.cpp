@@ -25,7 +25,7 @@ Face::Face(const Mat frame, uint64_t frameTimestamp, Rect initialFaceRegion,Face
 	  m_isLost(false),
 	  m_wasLostIsNowFound(false),
 	  m_faceLocationHistorySize(1296000), // we theoretically store the face location history information for every frame we have tracked, in practice we have an upper bounds to prevent the size of this map going silly. Max size for video @30fps for 12 hrs ~ 40MB of RAM
-	  m_overlapThresholdForSameFace(0.5f),
+	  m_overlapThresholdForSameFace(0.34f),
 	  m_faceTrackerConfidenceThreshold(0.5f),
 	  m_thumbnailConfidenceSize(5),
 	  m_frameProcessedNumber(0),
@@ -241,7 +241,9 @@ bool Face::IsSameFace(const Rect &otherFaceLocation)
 	Rect intersectionRect = m_currentEstimatedPosition & otherFaceLocation;
 
 	// determine the percentage overlap between this face and the otherface
-	float percentageOverlap = intersectionRect.area() / (float)m_currentEstimatedPosition.area();
+	float percentageOverlap1 = intersectionRect.area() / (float)m_currentEstimatedPosition.area();
+	float percentageOverlap2 = intersectionRect.area() / (float)otherFaceLocation.area();
+	float percentageOverlap = percentageOverlap1>percentageOverlap2?percentageOverlap1:percentageOverlap2;
 
 	return percentageOverlap > m_overlapThresholdForSameFace;
 }
@@ -366,6 +368,7 @@ void Face::GetOutput(int trackno, Jzon::Object*& root)
 		root1.Add("height",iter->second.GetDetailedInformation().faceRect.height);
 		root1.Add("backgroundUniformity",iter->second.backgroundUniformity);
 		root1.Add("sharpness",iter->second.sharpness);
+		root1.Add("totalConfidence",iter->second.confidence);
 		root1.Add("grayscaleDensity",iter->second.grayscaleDensity);
 		root1.Add("hasAdditionalFaceInformation",iter->second.GetDetailedInformation().hasAdditionalFaceInformation);
 		Jzon::Array left_eye;

@@ -67,7 +67,7 @@ void FaceAnalysis::Process(const Mat &frame, uint64_t frameTimestamp)
 {
 	Mat resizedFrame;
 	Frame frameInfo(frame);
-	const int DETECTION_WIDTH = 640;
+	const int DETECTION_WIDTH = 960;
 	float scale; 
 	if(frame.cols > DETECTION_WIDTH)
 		scale = frame.cols/(float) DETECTION_WIDTH;

@@ -21,6 +21,7 @@ public:
 	~ThumbnailDetails();
 	float backgroundUniformity;
 	float sharpness;
+	float confidence;
 	float grayscaleDensity;
 	void FillThumbnailDetails(const cv::Mat &frame,  FaceDetectionDetails ThumbnailLocation);
 

@@ -230,6 +230,7 @@ bool Thumbnail::ExtractThumbnail(const cv::Rect &ThumbnailLocation, float &confi
 	thumbnail_details.backgroundUniformity = backgroundUniformity;
 	thumbnail_details.grayscaleDensity = grayscaleDensity;
 	thumbnail_details.sharpness = sharpness;
+	thumbnail_details.confidence = confidence;
 	// Now convert the token image back into an OpenCV Mat
 	//Mat tokenMat = HNImageToMat(&token);
 	
