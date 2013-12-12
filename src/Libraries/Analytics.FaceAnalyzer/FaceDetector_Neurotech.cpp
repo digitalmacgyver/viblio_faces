@@ -255,6 +255,7 @@ std::vector<FaceDetectionDetails> FaceDetector_Neurotech::Detect(const cv::Mat &
 	{
 		cout << "NImageCreateFromDataEx failed (result = " << result<< ")!" << endl;
 		NObjectFree(oimage);
+		oimage = NULL;
 		return faces_returned;
 		//PrintErrorMsg(N_T("NImageToGrayscale() failed (result = %d)!"), result);
 	
@@ -265,6 +266,7 @@ std::vector<FaceDetectionDetails> FaceDetector_Neurotech::Detect(const cv::Mat &
 	{
 		cout << "NImageToGrayscale() failed (result = " << result<< ")!" << endl;
 		NObjectFree(oimage);
+		oimage = NULL;
 		return faces_returned;
 		
 	}
@@ -275,6 +277,7 @@ std::vector<FaceDetectionDetails> FaceDetector_Neurotech::Detect(const cv::Mat &
 	{
 		cout << "NleDetectFaces() failed (result = " << result<< ")!" << endl;
 		NObjectFree(oimage);
+		oimage = NULL;
 		return faces_returned;
 		
 	}
@@ -339,7 +342,7 @@ std::vector<FaceDetectionDetails> FaceDetector_Neurotech::Detect(const cv::Mat &
 				if( currentFaceDeets.rightEyeConfidence > 0.0f && currentFaceDeets.leftEyeConfidence > 0.0f )
 				{
 					// we can only calculate the intereye distance if we have both eye locations
-					if( currentFaceDeets.leftEye.x == currentFaceDeets.rightEye.x )
+					if( currentFaceDeets.leftEye.y == currentFaceDeets.rightEye.y )
 						currentFaceDeets.intereyeDistance = float(currentFaceDeets.leftEye.x - currentFaceDeets.rightEye.x);
 					else
 						currentFaceDeets.intereyeDistance = sqrt( pow( currentFaceDeets.leftEye.x - currentFaceDeets.rightEye.x, 2 )
@@ -435,11 +438,29 @@ std::vector<FaceDetectionDetails> FaceDetector_Neurotech::Detect(const cv::Mat &
 		faces_returned.push_back(currentFaceDeets);
 	}
 
-	NObjectFree(oimage);
-	NObjectFree(grayscale);
+	if( oimage != NULL )
+	{
+		NObjectFree(oimage);
+		oimage = NULL;
+	}
+
+	if( grayscale != NULL )
+	{
+		NObjectFree(grayscale);
+		grayscale = NULL;
+	}
 	
-	NObjectFree(tmpl);
-	NFree(faces);
+	if( tmpl != NULL )
+	{
+		NObjectFree(tmpl);
+		tmpl = NULL;
+	}
+
+	if( faces != NULL )
+	{
+		NFree(faces);
+		faces = NULL;
+	}
 
 	return faces_returned;
 }
