@@ -119,6 +119,24 @@ void TrackingController::Process( uint64_t frameTimestamp, Frame &frame)
 		(*startIter)->Process( frameTimestamp,frame);
 	}
 
+	// Deleting tracks that are initialized but disappear immediately that stay active and use memory
+	auto startIterator=m_trackedFaces.begin();
+	for(  ;startIterator!=m_trackedFaces.end(); )
+	{
+
+		if((*startIterator)->get_last_thumbnail_time()==0)
+		{   
+			delete *startIterator;
+			startIterator = m_trackedFaces.erase(startIterator);
+		}
+		else
+		{
+			++startIterator;
+		}
+
+	}
+	
+
 	// Moving any discarded faces to new vector
 	auto startIter=m_trackedFaces.begin();
 	for(  ;startIter!=m_trackedFaces.end(); )
@@ -142,6 +160,8 @@ void TrackingController::Process( uint64_t frameTimestamp, Frame &frame)
 		}
 
 	}
+
+	//cout << "Total tracks yet " << m_trackedFaces.size()+discardedFacesCount <<endl;
 
 	// multithreaded
 	//for(auto &e : futures) 

@@ -68,7 +68,6 @@ private:
 	// stores a history of the frames location in recent frames (the number of frames in the past it will store is based on the face location history size parameter)
 	uint32_t m_faceLocationHistorySize;
 	uint32_t m_thumbnailConfidenceSize;
-
 	uint64_t last_thumbnail_time;
 	uint64_t lost_thumbnail;
 	std::map<uint64_t, cv::Rect> m_faceLocationHistory;
@@ -104,6 +103,7 @@ public:
 	
 	// Returns the timestamp at which this face was first created
 	uint64_t Age();
+	uint64_t get_last_thumbnail_time();
 
 	// indicates if the face was found again having being lost in previous frames
 	bool WasLostNowFound(){ return m_wasLostIsNowFound; }
