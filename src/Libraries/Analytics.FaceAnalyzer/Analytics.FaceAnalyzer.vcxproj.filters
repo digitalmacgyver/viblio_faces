@@ -60,9 +60,6 @@
     <ClCompile Include="FaceDetector_Neurotech.cpp">
       <Filter>Source Files\Detection</Filter>
     </ClCompile>
-    <ClCompile Include="..\Neurotech\Utils.c">
-      <Filter>Source Files\Detection</Filter>
-    </ClCompile>
     <ClCompile Include="FaceDetectionDetails.cpp">
       <Filter>Source Files\Detection</Filter>
     </ClCompile>

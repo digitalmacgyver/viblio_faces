@@ -33,8 +33,8 @@ Thumbnail::Thumbnail(FaceAnalyzerConfiguration *faceAnalyzerConfig) :
 	m_confidenceWeightQuality(0.4f), // all these confidence weights must add to 1
 	m_intereyeDistanceLowerBound(40.0f),
 	m_intereyeDistanceUpperBound(100.0f),
-	m_upperThumbnailRegion(1.5f),
-	m_lowerThumbnailRegion(2.7f),
+	m_upperThumbnailRegion(1.2f),
+	m_lowerThumbnailRegion(2.2f),
 	m_leftRightThumbnailRegion(1.0f)
 {  
 	tokenFaceExtractor = NULL;
@@ -48,7 +48,7 @@ Thumbnail::Thumbnail(FaceAnalyzerConfiguration *faceAnalyzerConfig) :
 	//	eye_detector_check.reset(new EyeDetector_OpenCV(faceAnalyzerConfig->eyeDetectorCascadeFile));
 	//}
 	
-	Thumbnail_enlarge_percentage = 0.75f;
+	Thumbnail_enlarge_percentage = 0.95f;
 	NBool available = false;
 
 	NResult result = N_OK;
@@ -147,8 +147,8 @@ bool Thumbnail::ExtractThumbnail(const cv::Rect &ThumbnailLocation, float &confi
 	}
 
 	// we need both eyes in order to accurately compute the thumbnail region and to undo any roll
-	GetFaceRegion(thumbnail, detailedFaceInfo.leftEye, detailedFaceInfo.rightEye, detailedFaceInfo.intereyeDistance,
-				  m_upperThumbnailRegion, m_lowerThumbnailRegion, m_leftRightThumbnailRegion);
+	//GetFaceRegion(thumbnail, detailedFaceInfo.leftEye, detailedFaceInfo.rightEye, detailedFaceInfo.intereyeDistance,
+	//			  m_upperThumbnailRegion, m_lowerThumbnailRegion, m_leftRightThumbnailRegion);
 
 	// Make use of the nose and mouth location information in our confidence estimation. Having one or both
 	// of these gives us more confidence
@@ -319,11 +319,13 @@ Mat Thumbnail::HNImageToMat(HNImage *hnImage)
     at the same horizontal level and returns the new eye coordinates. The rotated version
     of the image is stored in the member variable
 */
-bool Thumbnail::GetFaceRegion(const Mat &frame, Point leftEye, Point rightEye,
+vector<Point> Thumbnail::GetFaceRegion(const Mat &frame, Point leftEye, Point rightEye,
                               float intereyeDistance, float aboveEyeBuffer, float belowEyeBuffer, float besideEyeBuffer)
 {
+	vector<Point> thumbnailPoints;
+
     if( (frame.empty() ) )//|| (m_pRotatedTempImg == NULL) )
-        return false;
+        return thumbnailPoints;
 
 	// there is a possibility for the face to be upside down, we can account for that here, we will
 	// simply swap the eyes over and the buffers around the thumbnail region, we'll set the final rotation amount
@@ -361,7 +363,7 @@ bool Thumbnail::GetFaceRegion(const Mat &frame, Point leftEye, Point rightEye,
         if( adjacent == 0 && leftEye.x == rightEye.x )
             // this means the eyes are in the same x position, we've possibly been passed the left or right eye twice 
             // (i.e. the same eye)
-            return false;
+            return thumbnailPoints;
 
         thetaRadians = atan((float)opposite/adjacent);
 
@@ -377,7 +379,7 @@ bool Thumbnail::GetFaceRegion(const Mat &frame, Point leftEye, Point rightEye,
         adjacent = cos(thetaRadians) * float(intereyeDistance/2);
 
         // then compute the opposite
-        opposite = tan(thetaRadians) * adjacent;
+        opposite = sin(thetaRadians) * float(intereyeDistance/2);
 
         // the X & Y midpoint coordinates can now be computed
         midpointX = rightEye.x + adjacent;
@@ -436,7 +438,7 @@ bool Thumbnail::GetFaceRegion(const Mat &frame, Point leftEye, Point rightEye,
 
     if( (P1.x >= frame.cols) || (P1.y >= frame.rows) || (P1.x < 0) || (P1.y < 0) ||
         (P4.x >= frame.cols) || (P4.y >= frame.rows) || (P4.x < 0) || (P4.y < 0) )
-        return false; // if P is outside the bounds of the image stop right now!
+        return thumbnailPoints; // if P1 or P4 is outside the bounds of the image stop right now!
 
     // The other points P2, P3, P5 and P6 are now computed. These points are on the border of the rectangle
     // (please see the diagram)
@@ -469,22 +471,22 @@ bool Thumbnail::GetFaceRegion(const Mat &frame, Point leftEye, Point rightEye,
         // triangle sum to 180 degrees
         beta = 180 - abs(theta) - 90;
 
-        // this enables us to compute psi which is the angle between P and P2 where the length of the side of the right angle
+        // this enables us to compute psi which is the angle between P1 and P2 where the length of the side of the right angle
         // triangle formed by these two points together with a right angle is the length "DistanceBelowEye"
-        // We know that beta + psi = 90 (since the line from the left eye to P is normal to the edge of the rectangle), therefore
+        // We know that beta + psi = 90 (since the line from the left eye to P1 is normal to the edge of the rectangle), therefore
         // psi = 90 - beta
         if(  theta < 0 )
             psi = 90 - abs(beta);
         else
-            psi = beta;
+            psi = -(90 - abs(beta));
 
-        // now that we have psi we can compute the change in x and the change in y that takes us from P to P2 thereby finding
+        // now that we have psi we can compute the change in x and the change in y that takes us from P1 to P2 thereby finding
         // the point P2
         float deltaX = sin(psi * float(M_PI/180)) * DistanceBelowEye;
         float deltaY = cos(psi * float(M_PI/180)) * DistanceBelowEye;
 
-        if( theta >= 0 )
-            deltaX = -deltaX;
+        //if( theta >= 0 )
+        //    deltaX = -deltaX;
 
         P2.x = P1.x + deltaX;
         P2.y = P1.y + deltaY;
@@ -498,13 +500,15 @@ bool Thumbnail::GetFaceRegion(const Mat &frame, Point leftEye, Point rightEye,
         if(  theta < 0 )
             gamma = 90 - abs(theta);
         else
-            gamma = theta;
+            gamma = -(90 - abs(theta));
 
         deltaX = cos(gamma * float(M_PI/180)) * DistanceAboveEye;
         deltaY = sin(gamma * float(M_PI/180)) * DistanceAboveEye;
 
-        if( theta < 0 )
-            deltaX = -deltaX;
+        if( theta >= 0 )
+            deltaY = -deltaY;
+		else
+			deltaX = -deltaX;
 
         P3.x = P1.x + deltaX;
         P3.y = P1.y - deltaY; // its always minus
@@ -515,11 +519,11 @@ bool Thumbnail::GetFaceRegion(const Mat &frame, Point leftEye, Point rightEye,
 
     // now that we have the angle that we need in order to level the eyes we can establish whether the face actually
     // has enough space around it such that we could extract a thumbnail of the given size
-    if( (P2.x >= frame.cols) || (P2.y >= frame.rows) || (P2.x < 0) || (P2.y < 0) ||
+    /*if( (P2.x >= frame.cols) || (P2.y >= frame.rows) || (P2.x < 0) || (P2.y < 0) ||
         (P3.x >= frame.cols) || (P3.y >= frame.rows) || (P3.x < 0) || (P3.y < 0) ||
         (P5.x >= frame.cols) || (P5.y >= frame.rows) || (P5.x < 0) || (P5.y < 0) ||
         (P6.x >= frame.cols) || (P6.y >= frame.rows) || (P6.x < 0) || (P6.y < 0) )
-        return false; // if P2, P3, P5 or P6 are outside the bounds of the image stop
+        return thumbnailPoints; // if P2, P3, P5 or P6 are outside the bounds of the image stop*/
 
 	Point2f center;
     center.x = midpointX;
@@ -530,6 +534,37 @@ bool Thumbnail::GetFaceRegion(const Mat &frame, Point leftEye, Point rightEye,
 	Mat transformMatrix = getRotationMatrix2D(center, theta + rotationCorrection, 1.0);
 	cv::warpAffine(frame, rotatedImg, transformMatrix, rotatedImg.size());
     
+	Point midpoint = Point(midpointX, midpointY);
+
+	// first render the 6 points we use as the border points in addition to points for the 2 eyes and the mid point just
+	// for visualization purposes
+	//Mat frameCopy = frame.clone();
+	//circle( frameCopy, leftEye, 2, Scalar(255,0,0) ); // left eye
+	//circle( frameCopy, rightEye, 2, Scalar(255,0,0) ); // right eye
+	//circle( frameCopy, midpoint, 2, Scalar(255,0,0) ); // mid point between the eyes
+	//circle( frameCopy, P1, 2, Scalar(255,255,0) ); // point P1
+	//circle( frameCopy, P2, 2, Scalar(0,255,255) ); // point P2
+	//circle( frameCopy, P3, 2, Scalar(0,0,255) ); // point P3
+	//circle( frameCopy, P4, 2, Scalar(255,255,0) ); // point P4
+	//circle( frameCopy, P5, 2, Scalar(0,0,255) ); // point P5
+	////circle( frameCopy, P6, 2, Scalar(0,255,255) ); // point P6
+	//line( frameCopy, P5, P6, Scalar(0,255,0) ); // left hand edge line from P5 -> P6
+	//line( frameCopy, P5, P3, Scalar(0,255,0) ); // top edge line from P5 -> P3
+	//line( frameCopy, P3, P2, Scalar(0,255,0) ); // left hand edge line from P3 -> P2
+	//line( frameCopy, P2, P6, Scalar(0,255,0) ); // left hand edge line from P2 -> P6
+	// end of visualization
+
+	// pass back the thumbnail points in the following order
+	thumbnailPoints.push_back(P1);
+	thumbnailPoints.push_back(P2);
+	thumbnailPoints.push_back(P3);
+	thumbnailPoints.push_back(P4);
+	thumbnailPoints.push_back(P5);
+	thumbnailPoints.push_back(P6);
+	thumbnailPoints.push_back(leftEye);
+	thumbnailPoints.push_back(midpoint);
+	thumbnailPoints.push_back(rightEye);
+
     // after the image has been rotated about the midpoint we know where the eyes are, they will be at the same level as
     // the midpoint and will still be spaced the same distance from the midpoint
     leftEye.x = cvRound(midpointX + (intereyeDistance/2));
@@ -538,45 +573,26 @@ bool Thumbnail::GetFaceRegion(const Mat &frame, Point leftEye, Point rightEye,
     rightEye.x = cvRound(midpointX - (intereyeDistance/2));
     rightEye.y = cvRound(midpointY);
 
-	Point midpoint = Point(midpointX, midpointY);
-
-	// first render the 6 points we use as the border points in addition to points for the 2 eyes and the mid point just
-	// for visualization purposes
-	Mat frameCopy = frame.clone();
-	circle( frameCopy, leftEye, 2, Scalar(255,0,0) ); // left eye
-	circle( frameCopy, rightEye, 2, Scalar(255,0,0) ); // right eye
-	circle( frameCopy, midpoint, 2, Scalar(255,0,0) ); // mid point between the eyes
-	circle( frameCopy, P1, 2, Scalar(0,255,0) ); // point P1
-	circle( frameCopy, P2, 2, Scalar(0,255,0) ); // point P2
-	circle( frameCopy, P3, 2, Scalar(0,255,0) ); // point P3
-	circle( frameCopy, P4, 2, Scalar(0,255,0) ); // point P4
-	circle( frameCopy, P5, 2, Scalar(0,255,0) ); // point P5
-	circle( frameCopy, P6, 2, Scalar(0,255,0) ); // point P6
-	line( frameCopy, P5, P6, Scalar(0,255,0) ); // left hand edge line from P5 -> P6
-	line( frameCopy, P5, P3, Scalar(0,255,0) ); // top edge line from P5 -> P3
-	line( frameCopy, P3, P2, Scalar(0,255,0) ); // left hand edge line from P3 -> P2
-	line( frameCopy, P2, P6, Scalar(0,255,0) ); // left hand edge line from P2 -> P6
-	
-	// end of visualization
-
 	// as a final step we must compute the final cropping rectangle which will essentially
 	// be the same region as that defined by the points P1 -> P6, except those coordinates
 	// were in the unrotated image, we now want to find the same coordinates in the rotated
 	// image
-	Mat rotatedCroppedImg = rotatedImg(Rect(rightEye.x - DistanceBesideEyes, rightEye.y - DistanceAboveEye, intereyeDistance + DistanceBesideEyes*2, DistanceAboveEye + DistanceBelowEye));
+	// ADD CHECKS HERE TO ENSURE THIS CAN NEVER BE OUT OF BOUNDS
+	Rect cropRegion = Rect(rightEye.x - DistanceBesideEyes, rightEye.y - DistanceAboveEye, intereyeDistance + DistanceBesideEyes*2, DistanceAboveEye + DistanceBelowEye);
+	Mat rotatedCroppedImg = rotatedImg(ConstrainRect(cropRegion, rotatedImg.size()));
 
-	/*namedWindow("rotated_thumb_region");
-	imshow("rotated_thumb_region", frameCopy);
-	namedWindow("rotated_thumb");
-	imshow("rotated_thumb", rotatedImg);
-	namedWindow("rotated_cropped_thumb");
-	imshow("rotated_cropped_thumb", rotatedCroppedImg);
-	waitKey(0);
-	destroyWindow("rotated_thumb_region");
-	destroyWindow("rotated_cropped_thumb");
+	//namedWindow("rotated_thumb_region");
+	//imshow("rotated_thumb_region", frameCopy);
+	///*namedWindow("rotated_thumb");
+	//imshow("rotated_thumb", rotatedImg);
+	//namedWindow("rotated_cropped_thumb");
+	//imshow("rotated_cropped_thumb", rotatedCroppedImg);*/
+	//waitKey(0);
+	//destroyWindow("rotated_thumb_region");
+	/*destroyWindow("rotated_cropped_thumb");
 	destroyWindow("rotated_thumb");*/
 
-    return true;
+    return thumbnailPoints;
 }
 
 // Ensures that the rect passed in is valid based on the image size it is supposedly from. Returns

@@ -16,6 +16,8 @@ class FaceDetector_Neurotech;
 class EyeDetector_OpenCV;
 class Thumbnail
 {
+	friend class ThumbnailTests;
+
 private:
 	std::unique_ptr<FaceDetector_Neurotech> face_detector_check;
 	//std::unique_ptr<FaceDetector_Neurotech> face_detector_neuro;
@@ -46,8 +48,8 @@ private:
 	bool MatToHNImage(const cv::Mat &matImage, HNImage *hnImage);
 	cv::Mat HNImageToMat(HNImage *hnImage);
 	cv::Rect ConstrainRect(const cv::Rect &rectToConstrain, const cv::Size &imageSize);
-	bool GetFaceRegion(const cv::Mat &frame, cv::Point leftEye, cv::Point rightEye,
-                       float intereyeDistance, float aboveEyeBuffer, float belowEyeBuffer, float besideEyeBuffer);
+	std::vector<cv::Point> GetFaceRegion(const cv::Mat &frame, cv::Point leftEye, cv::Point rightEye,
+										 float intereyeDistance, float aboveEyeBuffer, float belowEyeBuffer, float besideEyeBuffer);
 
 public:
 	Thumbnail(FaceAnalyzerConfiguration *faceAnalyzerConfig);

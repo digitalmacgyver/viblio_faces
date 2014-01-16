@@ -19,7 +19,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Neurotech\Utils.c" />
     <ClCompile Include="EyeDetector_OpenCV.cpp" />
     <ClCompile Include="Face.cpp" />
     <ClCompile Include="FaceAnalyzer.cpp" />
@@ -106,14 +105,14 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;_VARIADIC_MAX=10;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..;..\..\..\libs\OpenCV-2.4.5\include;..\..\..\libs\OpenTLD\src\libopentld\tld;..\..\..\libs\boost_1_54_0\include;..\..\..\libs\gtest-1.7.0\include;..\..\..\libs\json_spirit_v4.06\json_spirit;..\..\..\libs\Neurotec_Biometric_4_5_SDK_Trial\Include;..\..\..\libs\Neurotec_Biometric_4_5_SDK_Trial\Tutorials\Common\C;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..;..\..\..\libs\OpenCV-2.4.5\include;..\..\..\libs\OpenCV-2.4.5\include\opencv;..\..\..\libs\OpenTLD\src\libopentld\tld;..\..\..\libs\boost_1_54_0\include;..\..\..\libs\gtest-1.7.0\include;..\..\..\libs\json_spirit_v4.06\json_spirit;..\..\..\libs\Neurotec_Biometric_4_5_SDK\Include;..\..\..\libs\Neurotec_Biometric_4_5_SDK_Trial\Tutorials\Common\C;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalLibraryDirectories>..\..\..\libs\Neurotec_Biometric_4_5_SDK_Trial\Lib\Win32_x86\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\..\libs\Neurotec_Biometric_4_5_SDK\Lib\Win32_x86\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>bioapi20.dll.lib;NBiometrics.dll.lib;NBiometricStandards.dll.lib;NBiometricTools.dll.lib;NCluster.dll.lib;NCore.dll.lib;NDevices.dll.lib;NdmVirtual.dll.lib;Nffv.dll.lib;NLicensing.dll.lib;NMedia.dll.lib;NMediaProc.dll.lib;sqlite3.dll.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
@@ -140,7 +139,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..;..\..\..\libs\OpenCV-2.4.3\include;..\..\..\libs\OpenTLD\src\libopentld\tld;..\..\..\libs\boost_1_53_0\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..;..\..\..\libs\OpenCV-2.4.3\include;..\..\..\libs\OpenCV-2.4.5\include\opencv;..\..\..\libs\OpenTLD\src\libopentld\tld;..\..\..\libs\boost_1_53_0\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
