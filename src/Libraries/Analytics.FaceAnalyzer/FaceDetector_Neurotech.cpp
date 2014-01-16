@@ -75,7 +75,7 @@ FaceDetector_Neurotech::FaceDetector_Neurotech(void)
 		
 	     result = NLicenseObtainComponents(N_T("/local"), N_T("5000"), components, &available);
 		 if (NFailed(result))
-			 throw 20;
+			 throw runtime_error("Failed to obtain Neurotech licenses & Image quality related components");
 	}
 	catch(int e)
 	{
@@ -92,7 +92,7 @@ FaceDetector_Neurotech::FaceDetector_Neurotech(void)
 	{
 	     result = NleCreate(&extractor);
 		 if (NFailed(result))
-			 throw 20;
+			 throw runtime_error("Failed to initialise extractor");
 	}
 	catch(int e)
 	{
@@ -106,7 +106,7 @@ FaceDetector_Neurotech::FaceDetector_Neurotech(void)
 	{
 	     result = NObjectSetParameterEx(extractor, NLEP_DETECT_ALL_FEATURE_POINTS, -1, &detectAllFeatures, sizeof(NBool));
 		 if (NFailed(result))
-			 throw 20;
+			 throw runtime_error("Failed to initialise extractor NLEP_DETECT_ALL_FEATURE_POINTS");
 	}
 	catch(int e)
 	{
@@ -120,7 +120,7 @@ FaceDetector_Neurotech::FaceDetector_Neurotech(void)
 	{
 	     result = NObjectSetParameterEx(extractor, NLEP_DETECT_BASE_FEATURE_POINTS, -1, &detectBaseFeatures, sizeof(NBool));
 		 if (NFailed(result))
-			 throw 20;
+			 throw runtime_error("Failed to initialise extractor NLEP_DETECT_BASE_FEATURE_POINTS");
 	}
 	catch(int e)
 	{
@@ -133,7 +133,7 @@ FaceDetector_Neurotech::FaceDetector_Neurotech(void)
 	{
 	    result = NObjectSetParameterEx(extractor, NLEP_DETECT_GENDER, -1, &detectGender, sizeof(NBool));
 		 if (NFailed(result))
-			 throw 20;
+			 throw runtime_error("Failed to initialise extractor NLEP_DETECT_GENDER");
 	}
 	catch(int e)
 	{
@@ -146,7 +146,7 @@ FaceDetector_Neurotech::FaceDetector_Neurotech(void)
 	{
 	    result = NObjectSetParameterEx(extractor, NLEP_DETECT_EXPRESSION, -1, &detectExpression, sizeof(NBool));
 		 if (NFailed(result))
-			 throw 20;
+			 throw runtime_error("Failed to initialise extractor  NLEP_DETECT_EXPRESSION");
 	}
 	catch(int e)
 	{
@@ -159,7 +159,7 @@ FaceDetector_Neurotech::FaceDetector_Neurotech(void)
 	{
 	   result = NObjectSetParameterEx(extractor, NLEP_DETECT_BLINK, -1, &detectBlink, sizeof(NBool));
 		 if (NFailed(result))
-			 throw 20;
+			  throw runtime_error("Failed to initialise extractor  NLEP_DETECT_BLINK");
 	}
 	catch(int e)
 	{
@@ -172,7 +172,7 @@ FaceDetector_Neurotech::FaceDetector_Neurotech(void)
 	{
 	   result = NObjectSetParameterEx(extractor, NLEP_DETECT_MOUTH_OPEN, -1, &detectMouthOpen, sizeof(NBool));
 		 if (NFailed(result))
-			 throw 20;
+			 throw runtime_error("Failed to initialise extractor NLEP_DETECT_MOUTH_OPEN");
 	}
 	catch(int e)
 	{
@@ -186,7 +186,7 @@ FaceDetector_Neurotech::FaceDetector_Neurotech(void)
 	{
 	   result = NObjectSetParameterEx(extractor, NLEP_DETECT_GLASSES, -1, &detectGlasses, sizeof(NBool));
 		 if (NFailed(result))
-			 throw 20;
+			 throw runtime_error("Failed to initialise extractor NLEP_DETECT_GLASSES");
 	}
 	catch(int e)
 	{
@@ -200,7 +200,7 @@ FaceDetector_Neurotech::FaceDetector_Neurotech(void)
 	{
 	   result = NObjectSetParameterEx(extractor, NLEP_DETECT_DARK_GLASSES, -1, &detectDarkGlasses, sizeof(NBool));
 		 if (NFailed(result))
-			 throw 20;
+			 throw runtime_error("Failed to initialise extractor NLEP_DETECT_DARK_GLASSES");
 	}
 	catch(int e)
 	{
@@ -213,7 +213,7 @@ FaceDetector_Neurotech::FaceDetector_Neurotech(void)
 	{
 	   result = NObjectSetParameterEx(extractor, NLEP_TEMPLATE_SIZE, -1, &templateSize, sizeof(NleTemplateSize));
 		 if (NFailed(result))
-			 throw 20;
+			  throw runtime_error("Failed to initialise extractor NLEP_TEMPLATE_SIZE");
 	}
 	catch(int e)
 	{
