@@ -9,6 +9,7 @@ namespace Analytics
 Frame::Frame(const cv::Mat &original)
 {
 	originalFrame = original.clone();
+	Scale = 1.0f; // initialize scale to 1 to begin with, they might change it shortly
 }
 
 

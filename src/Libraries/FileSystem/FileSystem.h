@@ -19,4 +19,14 @@ namespace FileSystem
 	bool DirectoryExists(const std::string &path);
 
 	bool CreateDirectory(const std::string &dir_name);
+
+	std::string FileSuffix(const std::string &filename);
+
+	inline bool HasSuffix(const std::string &s, const std::string &suffix)
+	{
+		size_t foundPos = s.rfind(suffix);
+		return (    suffix != "" &&
+			foundPos != std::string::npos &&
+			foundPos == (s.size() - suffix.size()));
+	}
 }

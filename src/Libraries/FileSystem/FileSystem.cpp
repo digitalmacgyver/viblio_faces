@@ -68,5 +68,17 @@ bool CreateDirectory(const string &dir_name)
 	}
 }
 
+string FileSuffix(const string &filename)
+{
+	// attempt to find the extension at the end of the filename (where the '.' is), if its any more than 6 characters
+	// from the end of the string assume its a different period in the file or path name
+	size_t suffixPos = filename.rfind(".");
+
+	if( suffixPos == string::npos || suffixPos < filename.size() - 6 )
+		return "";
+	else
+		return filename.substr(suffixPos);
+}
+
 
 } // end of filesystem
