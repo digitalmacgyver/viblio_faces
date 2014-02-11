@@ -20,6 +20,7 @@
 #include <chrono>
 #include <future>
 #include <iostream>
+#include <boost/log/trivial.hpp>
 
 using namespace std;
 using namespace cv;
@@ -34,7 +35,10 @@ namespace Analytics
 FaceAnalysis::FaceAnalysis(FaceAnalyzerConfiguration *faceAnalyzerConfig)
 {
 	if( faceAnalyzerConfig == NULL )
+	{
+		BOOST_LOG_TRIVIAL(error) << "Error: Face analyzer config was NULL, cannot continue analysis";
 		throw runtime_error("Face analyzer config was NULL");
+	}
 
 	if( !faceAnalyzerConfig->faceThumbnailOutputPath.empty() )
 	{
@@ -93,7 +97,7 @@ void FaceAnalysis::Process(const Mat &frame, uint64_t frameTimestamp)
 		}
 		catch(Exception e)
 		{
-			cout << "Exception: " << e.msg << endl;
+			BOOST_LOG_TRIVIAL(error) << "Exception caught while attempting to perform face detection: " << e.msg;
 		}
 	}
 
@@ -112,9 +116,9 @@ void FaceAnalysis::Process(const Mat &frame, uint64_t frameTimestamp)
 		{
 			detectedFaces = detectedFacesFuture.get();
 		}
-		catch(...)
+		catch(Exception e)
 		{
-			cout << "Caught exception" << endl;
+			BOOST_LOG_TRIVIAL(error) << "Exception caught while attempting to get face detection results: " << e.msg;
 		}
 	}
 

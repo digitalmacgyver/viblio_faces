@@ -2,6 +2,7 @@
 #include "FaceDetectionDetails.h"
 #include "ThumbnailDetails.h"
 #include <opencv2/opencv.hpp>
+#include <boost/log/trivial.hpp>
 
 //#include <opencv2/highgui/highgui.hpp>
 //#include <opencv/highgui.h>
@@ -79,13 +80,11 @@ FaceDetector_Neurotech::FaceDetector_Neurotech(void)
 	}
 	catch(int e)
 	{
-		cout << "Exception caught while attempting to obtain Neurotech product license. " << " Cannot continue" << endl;
+		BOOST_LOG_TRIVIAL(error) << "Exception caught while attempting to obtain Neurotech product license. Cannot continue";
 		if (!available)
-			cout << "Neurotech Licenses for " << components<< "  not available" << endl;
+			BOOST_LOG_TRIVIAL(error) << "Neurotech Licenses for " << components << "  not available";
 		throw e;
 	}
-
-
 
 	// create an extractor
 	try
@@ -96,7 +95,7 @@ FaceDetector_Neurotech::FaceDetector_Neurotech(void)
 	}
 	catch(int e)
 	{
-		cout << "NleCreate() failed (result = " << result<< ")!" << endl;
+		BOOST_LOG_TRIVIAL(error) << "NleCreate() failed (result = " << result << ")";
 		throw e;
 	}
 	
@@ -110,7 +109,7 @@ FaceDetector_Neurotech::FaceDetector_Neurotech(void)
 	}
 	catch(int e)
 	{
-		cout << "NObjectSetParameter() failed (result = " << result<< ")!" << endl;
+		BOOST_LOG_TRIVIAL(error) << "NObjectSetParameter() failed (result = " << result<< ")";
 		throw e;
 	}
 	
@@ -124,7 +123,7 @@ FaceDetector_Neurotech::FaceDetector_Neurotech(void)
 	}
 	catch(int e)
 	{
-		cout << "NObjectSetParameter() failed (result = " << result<< ")!" << endl;
+		BOOST_LOG_TRIVIAL(error) << "NObjectSetParameter() failed (result = " << result<< ")";
 		throw e;
 	}
 	
@@ -137,7 +136,7 @@ FaceDetector_Neurotech::FaceDetector_Neurotech(void)
 	}
 	catch(int e)
 	{
-		cout << "NObjectSetParameter() failed (result = " << result<< ")!" << endl;
+		BOOST_LOG_TRIVIAL(error) << "NObjectSetParameter() failed (result = " << result<< ")";
 		throw e;
 	}
 	
@@ -150,7 +149,7 @@ FaceDetector_Neurotech::FaceDetector_Neurotech(void)
 	}
 	catch(int e)
 	{
-		cout << "NObjectSetParameter() failed (result = " << result<< ")!" << endl;
+		BOOST_LOG_TRIVIAL(error) << "NObjectSetParameter() failed (result = " << result<< ")";
 		throw e;
 	}
 
@@ -163,7 +162,7 @@ FaceDetector_Neurotech::FaceDetector_Neurotech(void)
 	}
 	catch(int e)
 	{
-		cout << "NObjectSetParameter() failed (result = " << result<< ")!" << endl;
+		BOOST_LOG_TRIVIAL(error) << "NObjectSetParameter() failed (result = " << result<< ")";
 		throw e;
 	}
 
@@ -176,7 +175,7 @@ FaceDetector_Neurotech::FaceDetector_Neurotech(void)
 	}
 	catch(int e)
 	{
-		cout << "NObjectSetParameter() failed (result = " << result<< ")!" << endl;
+		BOOST_LOG_TRIVIAL(error) << "NObjectSetParameter() failed (result = " << result << ")";
 		throw e;
 	}
 
@@ -190,7 +189,7 @@ FaceDetector_Neurotech::FaceDetector_Neurotech(void)
 	}
 	catch(int e)
 	{
-		cout << "NObjectSetParameter() failed (result = " << result<< ")!" << endl;
+		BOOST_LOG_TRIVIAL(error) << "NObjectSetParameter() failed (result = " << result<< ")";
 		throw e;
 	}
 
@@ -204,7 +203,7 @@ FaceDetector_Neurotech::FaceDetector_Neurotech(void)
 	}
 	catch(int e)
 	{
-		cout << "NObjectSetParameter() failed (result = " << result<< ")!" << endl;
+		BOOST_LOG_TRIVIAL(error) << "NObjectSetParameter() failed (result = " << result << ")";
 		throw e;
 	}
 
@@ -217,7 +216,7 @@ FaceDetector_Neurotech::FaceDetector_Neurotech(void)
 	}
 	catch(int e)
 	{
-		cout << "NObjectSetParameter() failed (result = " << result<< ")!" << endl;
+		BOOST_LOG_TRIVIAL(error) << "NObjectSetParameter() failed (result = " << result << ")";
 		throw e;
 	}
 	
@@ -232,8 +231,7 @@ FaceDetector_Neurotech::~FaceDetector_Neurotech(void)
 	NResult result2 = NLicenseReleaseComponents(components);
 	if (NFailed(result2))
 	{
-		cout << "NLicenseReleaseComponents() failed (result = " << result2<< ")!" << endl;
-
+		BOOST_LOG_TRIVIAL(error) << "NLicenseReleaseComponents() failed (result = " << result2<< ")";
 	}
 
 }
@@ -244,7 +242,7 @@ std::vector<FaceDetectionDetails> FaceDetector_Neurotech::Detect(const cv::Mat &
 	Mat temp;
 	cvtColor( frame, temp, CV_BGR2GRAY );
     if( !temp.isContinuous())
-		cout << " Non continuous memory " << endl;
+		BOOST_LOG_TRIVIAL(info) << "Non continuous memory detected";
 	
 	HNImage oimage;
 
@@ -253,7 +251,7 @@ std::vector<FaceDetectionDetails> FaceDetector_Neurotech::Detect(const cv::Mat &
 	result = NImageCreateFromDataEx(npfGrayscale, temp.cols, temp.rows, 0, temp.cols , temp.data ,temp.cols*temp.rows ,0,&oimage);
 	if(NFailed(result))
 	{
-		cout << "NImageCreateFromDataEx failed (result = " << result<< ")!" << endl;
+		BOOST_LOG_TRIVIAL(error) << "NImageCreateFromDataEx failed (result = " << result<< ")";
 		NObjectFree(oimage);
 		oimage = NULL;
 		return faces_returned;
@@ -264,7 +262,7 @@ std::vector<FaceDetectionDetails> FaceDetector_Neurotech::Detect(const cv::Mat &
 	result = NImageToGrayscale(oimage, &grayscale);
 	if (NFailed(result))
 	{
-		cout << "NImageToGrayscale() failed (result = " << result<< ")!" << endl;
+		BOOST_LOG_TRIVIAL(error) << "NImageToGrayscale() failed (result = " << result << ")";
 		NObjectFree(oimage);
 		oimage = NULL;
 		return faces_returned;
@@ -275,7 +273,7 @@ std::vector<FaceDetectionDetails> FaceDetector_Neurotech::Detect(const cv::Mat &
 	result = NleDetectFaces(extractor, grayscale, &faceCount, &faces);
 	if (NFailed(result))
 	{
-		cout << "NleDetectFaces() failed (result = " << result<< ")!" << endl;
+		BOOST_LOG_TRIVIAL(error) << "NleDetectFaces() failed (result = " << result<< ")";
 		NObjectFree(oimage);
 		oimage = NULL;
 		return faces_returned;
@@ -286,7 +284,7 @@ std::vector<FaceDetectionDetails> FaceDetector_Neurotech::Detect(const cv::Mat &
 	for (i = 0; i < faceCount; ++i)
 	{
 		FaceDetectionDetails currentFaceDeets;
-		//cout << i << endl;
+		
 		Rect currentFaceRect;
 		currentFaceRect.x= faces[i].Rectangle.X ;
 		currentFaceRect.y = faces[i].Rectangle.Y ; 
@@ -303,7 +301,7 @@ std::vector<FaceDetectionDetails> FaceDetector_Neurotech::Detect(const cv::Mat &
 			result = NleDetectFacialFeatures(extractor, grayscale, &faces[i], &details);
 			if (NFailed(result))
 			{
-				cout << "NleDetectFacialFeatures() failed (result = " << result<< "), maybe feature points were not found!" << endl;
+				BOOST_LOG_TRIVIAL(error) << "NleDetectFacialFeatures() failed (result = " << result<< "), maybe feature points were not found";
 				
 				continue;
 			}
@@ -311,7 +309,7 @@ std::vector<FaceDetectionDetails> FaceDetector_Neurotech::Detect(const cv::Mat &
 			result = NleExtractUsingDetails(extractor, grayscale, &details, &status, &tmpl);
 			if(NFailed(result))
 			{
-				cout << "NleExtractUsingDetails() failed (result = " << result<< "), maybe feature points were not found!" << endl;
+				BOOST_LOG_TRIVIAL(error) << "NleExtractUsingDetails() failed (result = " << result<< "), maybe feature points were not found";
 				continue;
 			}
 

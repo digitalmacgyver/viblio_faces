@@ -21,6 +21,7 @@
 #include <opencv2/opencv.hpp>
 #include <string>
 #include <iomanip>
+#include <boost/log/trivial.hpp>
 
 using namespace std;
 using namespace cv;
@@ -29,7 +30,7 @@ VideoProcessor::VideoProcessor(const JobConfiguration &jobConfig)
 {
 	// go through all the config, ensure sane values, ensure input paths/files exist, ensure output paths exist (and are writable).
 	// If there are any problems log it and then throw an exception
-
+	
 	// setup the video source based on the type of the source specified by the job
 	try
 	{
@@ -37,11 +38,9 @@ VideoProcessor::VideoProcessor(const JobConfiguration &jobConfig)
 	}
 	catch(Exception e)
 	{
-		cout << "Exception caught while attempting to create the FileVideoSource. Message = " << e.msg << ". Cannot continue" << endl;
+		BOOST_LOG_TRIVIAL(error) << "Exception caught while attempting to create the FileVideoSource. Message = " << e.msg << ". Cannot continue";
 		throw e;
 	}
-
-	
 
 	// pull info out of the job config as to all the Analyzers they want to use in this job and then call SetupAnalyzers to actually initialize/configure each of them
 	SetupAnalyzers(jobConfig);
@@ -68,7 +67,7 @@ bool VideoProcessor::SetupAnalyzers(const JobConfiguration &jobConfig)
 	if( jobConfig.isFaceAnalyzerEnabled )
 	{
 		if( jobConfig.faceAnalyzerConfig == NULL )
-			cout << "Error - Face Analyzer is enabled but configuration information is not present" << endl;
+			BOOST_LOG_TRIVIAL(error) << "Error - Face Analyzer is enabled but configuration information is not present";
 		else
 			m_analyzers.push_back(new Analytics::FaceAnalyzer::FaceAnalysis(jobConfig.faceAnalyzerConfig));
 	}
@@ -115,9 +114,9 @@ void VideoProcessor::OutputJobSummaryStatistics()
 	using namespace chrono;
 
 	std::chrono::duration<double> elapsed_time = m_endProcessingTime - m_startProcessingTime;
-	cout << "########### SUMMARY JOB STATISTICS ###########" << endl;
+	BOOST_LOG_TRIVIAL(info) << "########### SUMMARY JOB STATISTICS ###########" << endl;
 
-	cout << "Total time to process: " << (duration <double, std::milli> (elapsed_time).count())/1000 << " seconds" << endl;
+	BOOST_LOG_TRIVIAL(info) << "Total time to process: " << (duration <double, std::milli> (elapsed_time).count())/1000 << " seconds";
 	//duration <double, std::milli> (elapsed_time).count()
 	//hours h = duration_cast<hours>(elapsed_time);
     //elapsed_time -= h;
@@ -127,9 +126,9 @@ void VideoProcessor::OutputJobSummaryStatistics()
     //elapsed_time -= s;
     //std::cout << h.count() << ':' << m.count() << ':' << s.count() << endl;
 
-	cout << "Video length: " << m_lastFrameTimestamp / 1000 << " seconds" << endl;
+	BOOST_LOG_TRIVIAL(info) << "Video length: " << m_lastFrameTimestamp / 1000 << " seconds";
 
-	cout << "Percentage of realtime: " << (duration <double, std::milli> (elapsed_time).count() / (double)m_lastFrameTimestamp) * 100 << "%" << endl;
+	BOOST_LOG_TRIVIAL(info) << "Percentage of realtime: " << (duration <double, std::milli> (elapsed_time).count() / (double)m_lastFrameTimestamp) * 100 << "%";
 }
 
 bool VideoProcessor::DumpOutput(const JobConfiguration &jobConfig)

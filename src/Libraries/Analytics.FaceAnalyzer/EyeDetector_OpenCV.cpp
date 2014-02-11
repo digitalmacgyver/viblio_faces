@@ -12,6 +12,7 @@
 #include <stdexcept>
 #include <string>
 #include "opencv2/opencv.hpp"
+#include <boost/log/trivial.hpp>
 
 using namespace std;
 using namespace cv;
@@ -28,7 +29,7 @@ EyeDetector_OpenCV::EyeDetector_OpenCV(const string &eyes_cascade_name)
 
 	if( !m_eyesCascade.load( eyes_cascade_name ) )
 	{ 
-		cout << "Error loading eye cascade with filename " << eyes_cascade_name << endl;
+		BOOST_LOG_TRIVIAL(error) << "Error loading eye cascade with filename " << eyes_cascade_name;
 		throw runtime_error("Error loading eye cascade with filename " + eyes_cascade_name);
 	}
 }

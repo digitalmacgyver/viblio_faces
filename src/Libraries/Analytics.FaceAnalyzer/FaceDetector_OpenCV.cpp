@@ -16,6 +16,7 @@
 #include <opencv/highgui.h>
 #include <stdexcept>
 #include <vector>
+#include <boost/log/trivial.hpp>
 
 using namespace std;
 using namespace cv;
@@ -32,7 +33,7 @@ FaceDetector_OpenCV::FaceDetector_OpenCV(const string &face_cascade_name, const 
 
 	if( !m_faceCascade.load( face_cascade_name ) )
 	{ 
-		cout << "Error loading face cascade with filename " << face_cascade_name << endl;
+		BOOST_LOG_TRIVIAL(error) << "Error loading face cascade with filename " << face_cascade_name;
 		throw runtime_error("Error loading face cascade with filename " + face_cascade_name);
 	}
 	

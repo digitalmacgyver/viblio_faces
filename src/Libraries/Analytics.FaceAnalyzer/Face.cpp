@@ -10,6 +10,8 @@
 #include <boost/uuid/uuid_generators.hpp>
 #include <boost/uuid/uuid_io.hpp>
 
+#include <boost/log/trivial.hpp>
+
 using namespace cv;
 using namespace std;
 
@@ -31,6 +33,10 @@ Face::Face(const Mat frame, uint64_t frameTimestamp, Rect initialFaceRegion,Face
 	  m_frameProcessedNumber(0),
 	  move_to_discarded(false)
 {
+	// not really using the FaceID attribute of the logs as it needs to be class specific, not a global one
+	//boost::log::core::get()->add_global_attribute("FaceID", boost::log::attributes::make_constant(to_string(m_faceId)));
+	
+	BOOST_LOG_TRIVIAL(info) << "Tracking person with ID " << to_string(m_faceId);
 	// in a real system we will probably take a copy of the tracker to initialize the face from as it has learned the background,
 	// however this is yet TBD
 	m_faceTracker.reset(new Tracker_OpenTLD());//m_trackerToInitializeFrom;
@@ -51,8 +57,6 @@ Face::Face(const Mat frame, uint64_t frameTimestamp, Rect initialFaceRegion,Face
 	m_currentFaceVisiblePair.second = 0;
 
 	m_visualizationColor = Scalar(0.0f, 0.0f, 0.0f, 0.0f);
-
-	std::cout << "Tracking person with ID " << to_string(m_faceId) << std::endl;
 }
 
 
@@ -64,13 +68,15 @@ Face::~Face()
 		m_currentFaceVisiblePair.second = m_mostRecentFrameTimestamp;
 		m_timesWhenFaceVisible.push_back(m_currentFaceVisiblePair);
 	}
+
+	BOOST_LOG_TRIVIAL(info) << "FaceID: " << to_string(m_faceId) << ". Being destroyed";
 }
 
 // This face and 'theOtherFace' passed in are actually the same face. Take the useful
 // information from theOtherFace and combine it into this face
 void Face::Merge(Face *theOtherFace)
 {
-	std::cout << "Merging person with ID " << to_string(theOtherFace->m_faceId) << " into person with ID " << to_string(m_faceId) << std::endl;
+	BOOST_LOG_TRIVIAL(info) << "FaceID: " << to_string(m_faceId) << ".Merging person with ID " << to_string(theOtherFace->m_faceId) << " into person with ID " << to_string(m_faceId);
 
 	// assumes that *this is the face to keep (the original) and 'theOtherFace' is the duplicate
 

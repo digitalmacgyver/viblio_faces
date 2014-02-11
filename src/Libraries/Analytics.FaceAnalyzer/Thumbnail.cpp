@@ -5,6 +5,7 @@
 #include "Jzon/Jzon.h"
 #include <numeric>
 #include "Frame.h"
+#include <boost/log/trivial.hpp>
 
 // Neurotech related libraries for token image generation
 #include <NImages.h>
@@ -62,9 +63,9 @@ Thumbnail::Thumbnail(FaceAnalyzerConfiguration *faceAnalyzerConfig) :
 	}
 	catch(Exception e)
 	{
-		cout << "Exception caught while attempting to obtain Neurotech product license. Cannot continue" << endl;
+		BOOST_LOG_TRIVIAL(error) << "Exception caught while attempting to obtain Neurotech product license. Cannot continue";
 		if (!available)
-			cout << "Neurotech Licenses for " << components << "  not available" << endl;
+			BOOST_LOG_TRIVIAL(error) << "Neurotech Licenses for " << components << "  not available";
 		throw e;
 	}
 	
@@ -76,21 +77,18 @@ Thumbnail::Thumbnail(FaceAnalyzerConfiguration *faceAnalyzerConfig) :
 	}
 	catch(Exception e)
 	{
-		cout << "Exception caught while attempting to create a Neurotech token image extractor. Cannot continue" << endl;
+		BOOST_LOG_TRIVIAL(error) << "Exception caught while attempting to create a Neurotech token image extractor. Cannot continue";
 		
 		throw e;
 	}
 
 }
 
-
 Thumbnail::~Thumbnail()
 {
 	if( tokenFaceExtractor != NULL )
 		NObjectFree(tokenFaceExtractor);
 }
-
-
 
 bool Thumbnail::ExtractThumbnail(const cv::Rect &ThumbnailLocation, float &confidence, ThumbnailDetails &thumbnail_details,Frame &origFrame)
 {   
@@ -184,7 +182,7 @@ bool Thumbnail::ExtractThumbnail(const cv::Rect &ThumbnailLocation, float &confi
 	result = NtfiCreateTokenFaceImageEx(tokenFaceExtractor, image, &first, &second, &token);
 	if (NFailed(result))
 	{
-		cout << "NtfiCreateTokenFaceImage()failed (result = " << result<< ")!" << endl;
+		BOOST_LOG_TRIVIAL(error) << "NtfiCreateTokenFaceImage()failed (result = " << result<< ")";
 		if(image)
 			NObjectFree(image);
 		if( token)
@@ -200,7 +198,7 @@ bool Thumbnail::ExtractThumbnail(const cv::Rect &ThumbnailLocation, float &confi
 	result = NtfiTestTokenFaceImage(tokenFaceExtractor, token, &ntfiAttributes, &quality);
 	if (NFailed(result))
 	{
-		cout << "NtfiCreateTokenFaceImage() quality extractor failed (result = " << result<< ")!" << endl;
+		BOOST_LOG_TRIVIAL(error) << "NtfiCreateTokenFaceImage() quality extractor failed (result = " << result<< ")";
 		if(image)
 			NObjectFree(image);
 
@@ -272,7 +270,7 @@ bool Thumbnail::MatToHNImage(const Mat &matImage, HNImage *hnImage)
 
 	if(NFailed(result))
 	{
-		cout << "NImageCreateFromDataEx failed (result = " << result<< ")!" << endl;
+		BOOST_LOG_TRIVIAL(error) << "NImageCreateFromDataEx failed (result = " << result<< ")";
 		return false;
 	}
 
@@ -303,7 +301,7 @@ Mat Thumbnail::HNImageToMat(HNImage *hnImage)
 	}
 	else
 	{
-		cout << "Unsupported number of channels when converting from HNImage to Mat" << endl;
+		BOOST_LOG_TRIVIAL(error) << "Unsupported number of channels when converting from HNImage to Mat";
 	}
 
 	return matImage;

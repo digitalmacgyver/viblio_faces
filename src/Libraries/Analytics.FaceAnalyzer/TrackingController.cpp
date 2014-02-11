@@ -12,6 +12,7 @@
 #include "Tracker_OpenTLD.h"
 #include "Face.h"
 #include "Jzon/Jzon.h"
+#include <boost/log/trivial.hpp>
 
 #include <thread>
 #include <future>
@@ -236,7 +237,7 @@ bool TrackingController::DuplicateFacesDetected(int &redetectedFaceTrackerIndex,
 
 void TrackingController::ResolveDuplicates(int duplicateFaceIndex1, int duplicateFaceIndex2)
 {
-	std::cout << "About to resolve duplicates, number faces " << m_trackedFaces.size() << std::endl;
+	BOOST_LOG_TRIVIAL(info) << "About to resolve duplicates, number faces " << m_trackedFaces.size();
 	// we have found a face which is a duplicate, lets determine which of the two faces is the older
 	uint64_t age1 = m_trackedFaces[duplicateFaceIndex1]->Age();
 	uint64_t age2 = m_trackedFaces[duplicateFaceIndex2]->Age();
@@ -251,7 +252,7 @@ void TrackingController::ResolveDuplicates(int duplicateFaceIndex1, int duplicat
 		m_trackedFaces[duplicateFaceIndex2]->Merge( m_trackedFaces[duplicateFaceIndex1] );
 		m_trackedFaces.erase(m_trackedFaces.begin()+duplicateFaceIndex1); // erase the newer one with index duplicateFaceIndex1
 	}
-	std::cout << "Finished resolving duplicates, number faces " << m_trackedFaces.size() << std::endl;
+	BOOST_LOG_TRIVIAL(info) << "Finished resolving duplicates, number faces " << m_trackedFaces.size();
 }
 
 void TrackingController::GetOutput(Jzon::Object*& root)

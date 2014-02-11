@@ -25,16 +25,78 @@
 #include "Analytics.FaceAnalyzer/FaceAnalyzerConfiguration.h"
 #include "VideoProcessor.h"
 
+#include <fstream>
+#include <boost/make_shared.hpp>
+#include <boost/log/core.hpp>
+#include <boost/log/trivial.hpp>
+#include <boost/log/expressions.hpp>
+#include <boost/log/expressions/formatters/named_scope.hpp>
+#include <boost/log/sinks/sync_frontend.hpp>
+#include <boost/log/sinks/text_file_backend.hpp>
+#include <boost/log/sinks/text_ostream_backend.hpp>
+#include <boost/log/utility/setup/file.hpp>
+#include <boost/log/utility/setup/common_attributes.hpp>
+#include <boost/log/sources/severity_logger.hpp>
+#include <boost/log/sources/record_ostream.hpp>
+#include <boost/log/sources/logger.hpp>
+#include <boost/log/utility/empty_deleter.hpp>
+#include <boost/log/support/date_time.hpp>
+#include <boost/log/attributes/named_scope.hpp>
+#include <boost/log/support/exception.hpp>
+
 #include <vld.h> // Visual Leak Detector
 
 namespace po = boost::program_options;
 using namespace std;
-using namespace cv;
+//using namespace cv;
+using namespace boost;
 
 // function prototypes
 void ExtractFaceAnalysisParameters( po::variables_map variableMap, Analytics::FaceAnalyzer::FaceAnalyzerConfiguration *faceAnalyzer);
 
 int g_verbosityLevel = 0;
+
+string g_version = "0.75";
+
+void InitLogging(string logfilePath)
+{
+	typedef log::sinks::synchronous_sink< log::sinks::text_file_backend > text_file_sink;
+    boost::shared_ptr< text_file_sink > fileSink = boost::make_shared< text_file_sink >(
+		log::keywords::time_based_rotation = log::sinks::file::rotation_at_time_point(0, 0, 0), // rotate at midnight
+		log::keywords::file_name = logfilePath + "video_analyzer_%N.log",                           // file name pattern
+		log::keywords::auto_flush = true,
+        log::keywords::rotation_size = 10 * 1024 * 1024);
+
+	fileSink->set_formatter(
+		log::expressions::stream
+			//<< log::expressions::format_named_scope("Scopes", "%n")
+			<< "Timestamp: " << log::expressions::attr< boost::posix_time::ptime >("TimeStamp")
+            << log::expressions::if_ (log::expressions::has_attr< string >("FaceID"))
+			[
+				// if "ID" is present then put it to the record
+				log::expressions::stream << log::expressions::attr< string >("FaceID")
+			]
+			.else_
+			[
+				// otherwise add nothing
+				log::expressions::stream << ""
+			]
+			<< ". Message: " << log::expressions::smessage 
+    );
+
+	// now add the console outputter
+	typedef log::sinks::synchronous_sink< log::sinks::text_ostream_backend > text_console_sink;
+    boost::shared_ptr< text_console_sink > consoleSink = boost::make_shared< text_console_sink >();
+
+	consoleSink->locked_backend()->add_stream(
+        boost::shared_ptr< std::ostream >(&std::clog, log::empty_deleter()));
+
+	consoleSink->locked_backend()->auto_flush(true);
+
+    // Register the sink in the logging core
+    log::core::get()->add_sink(fileSink);
+	log::core::get()->add_sink(consoleSink);
+}
 
 int main(int argc, char* argv[])
 {
@@ -56,6 +118,7 @@ int main(int argc, char* argv[])
 		("Thumbnail_generation_frequency", po::value<int>()->default_value(1500), "set how often a thumbnail should be generated in milliseconds, e.g. a value of 1500 means we only check every frame after 1500 milliseconds and do thumbnail processing")
 		("discarded_tracker_frequency", po::value<int>()->default_value(90000), "set how often a track should be pushed to discarded state in milliseconds, e.g. a value of 90000 means one and half minute")
 		("render_visualization", "determines whether visualizations will be rendered")
+		("log_file_path", po::value<string>(), "the path where any log files should be placed")
 		;
 
 	po::variables_map variableMap;
@@ -69,7 +132,27 @@ int main(int argc, char* argv[])
 		return 1;
 	}
 
-	cout << "OpenCV version: " << CV_VERSION << endl;
+	string logFilePath = "";
+	// determine if they provided a log file path, if so make sure it ends in a trailing slash
+	if( variableMap.count("log_file_path") )
+	{
+		logFilePath = variableMap["log_file_path"].as<string>();
+
+		if( logFilePath.back() != '\\' && logFilePath.back() != '/' )
+		{
+			cout << "Log file path provided does not contain a trailing slash, adding a backslash '\\'. If you are on linux consider adding a '/'" << endl;
+			logFilePath.append("\\");
+		}
+	}
+
+	InitLogging(logFilePath); // initialize the logging
+	
+    log::add_common_attributes();
+
+	log::core::get()->add_global_attribute("TimeStamp", log::attributes::local_clock());
+
+
+	BOOST_LOG_TRIVIAL(info) << "OpenCV version: " << CV_VERSION;
 
 	// If we want to test directory creation..............
 	//std::string folder= "RamsriGolla";
@@ -78,20 +161,18 @@ int main(int argc, char* argv[])
 	//Jzon::Object root;
 	
 
-
-
 	JobConfiguration jobConfig;
 
 	if (variableMap.count("filename")) 
 	{
-		cout << "Input filename to analyze was set to " 
-			 << variableMap["filename"].as<string>() << endl;
+		BOOST_LOG_TRIVIAL(error) << "Input filename to analyze was set to " 
+			 << variableMap["filename"].as<string>();
 
 		jobConfig.videoSourceFilename = variableMap["filename"].as<string>();
 	} 
 	else 
 	{
-		cout << "Input filename not specified, nothing to do" << endl;
+		BOOST_LOG_TRIVIAL(error) << "Input filename not specified, nothing to do";
 		return 1;
 	}
 
@@ -109,7 +190,7 @@ int main(int argc, char* argv[])
 			Analytics::AnalyzerType analyzerType = Analytics::ConvertStringToAnalyzerType(*startIter);
 			if( analyzerType == Analytics::UnknownAnalyzer )
 			{
-				cout << "Error - The specified analyzer named " << *startIter << " is not valid" << endl;
+				BOOST_LOG_TRIVIAL(error) << "Error - The specified analyzer named " << *startIter << " is not valid";
 			}
 			else
 			{
