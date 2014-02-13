@@ -58,6 +58,8 @@ private:
 //	FaceDetector_Neurotech(const FaceDetector_Neurotech&);
 //	FaceDetector_Neurotech& operator=(const FaceDetector_Neurotech&);
 //
+
+	FaceDetectionDetails::ExpressionType ConvertNlpExpression(NLExpression nlpExpression);
 public:
 	
 	FaceDetector_Neurotech(void);

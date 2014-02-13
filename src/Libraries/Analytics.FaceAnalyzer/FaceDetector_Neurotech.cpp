@@ -127,6 +127,20 @@ FaceDetector_Neurotech::FaceDetector_Neurotech(void)
 		throw e;
 	}
 	
+	// 
+	NInt maxYawAngle = 45;
+	try
+	{
+	   result = NObjectSetParameterEx(extractor, NLEP_MAX_YAW_ANGLE_DEVIATION, N_TYPE_INT, &maxYawAngle, sizeof(NInt));
+	   if (NFailed(result))
+		   throw runtime_error("Failed to initialise extractor NLEP_MAX_YAW_ANGLE_DEVIATION");
+	}
+	catch(int e)
+	{
+		BOOST_LOG_TRIVIAL(error) << "NObjectSetParameter() failed (result = " << result<< ")";
+		throw e;
+	}
+	
 	// Detect Gender
 	try
 	{
@@ -378,7 +392,9 @@ std::vector<FaceDetectionDetails> FaceDetector_Neurotech::Detect(const cv::Mat &
 			}
 
 			// see if we have expression information
-			if(details.Expression == nleUnknown || details.Expression == nleUnspecified)
+			currentFaceDeets.expression = ConvertNlpExpression(details.Expression);
+			if(details.Expression == FaceDetectionDetails::ExpressionType::Expression_Unknown || 
+			   details.Expression == FaceDetectionDetails::ExpressionType::Expression_Unspecified)
 				currentFaceDeets.expressionConfidence = 0.0f;
 			else
 			{
@@ -395,13 +411,13 @@ std::vector<FaceDetectionDetails> FaceDetector_Neurotech::Detect(const cv::Mat &
 			else
 			{
 				if((details.Properties & nlpGlasses) == nlpGlasses)
-				currentFaceDeets.wearingGlasses = true;
+					currentFaceDeets.wearingGlasses = true;
 				else
-				currentFaceDeets.wearingGlasses = false;
+					currentFaceDeets.wearingGlasses = false;
 
 				currentFaceDeets.glassesConfidence = (float)(details.GlassesConfidence/100.0f);
 			}
-
+			
 			if(details.DarkGlassesConfidence ==255)
 			{
 				currentFaceDeets.wearingDarkGlasses = false;
@@ -410,9 +426,9 @@ std::vector<FaceDetectionDetails> FaceDetector_Neurotech::Detect(const cv::Mat &
 			else
 			{
 				if((details.Properties & nlpDarkGlasses) == nlpDarkGlasses)
-				currentFaceDeets.wearingDarkGlasses = true;
+					currentFaceDeets.wearingDarkGlasses = true;
 				else
-				currentFaceDeets.wearingDarkGlasses = false;
+					currentFaceDeets.wearingDarkGlasses = false;
 
 				currentFaceDeets.wearingDarkGlassesConfidence = (float)(details.DarkGlassesConfidence/100.0f);
 			}
@@ -463,6 +479,30 @@ std::vector<FaceDetectionDetails> FaceDetector_Neurotech::Detect(const cv::Mat &
 	return faces_returned;
 }
 
+FaceDetectionDetails::ExpressionType FaceDetector_Neurotech::ConvertNlpExpression(NLExpression nlpExpression)
+{
+	switch(nlpExpression)
+	{
+	case nleUnspecified:
+		return FaceDetectionDetails::ExpressionType::Expression_Unspecified;
+	case nleNeutral:
+		return FaceDetectionDetails::ExpressionType::Expression_Neutral;
+	case nleSmile:
+		return FaceDetectionDetails::ExpressionType::Expression_Smile;
+	case nleSmileOpenedJaw:
+		return FaceDetectionDetails::ExpressionType::Expression_SmileOpenedJaw;
+	case nleRaisedBrows:
+		return FaceDetectionDetails::ExpressionType::Expression_RaisedBrows;
+	case nleEyesAway:
+		return FaceDetectionDetails::ExpressionType::Expression_EyesAway;
+	case nleSquinting:
+		return FaceDetectionDetails::ExpressionType::Expression_Squinting;
+	case nleFrowning:
+		return FaceDetectionDetails::ExpressionType::Expression_Frowning;
+	default:
+		return FaceDetectionDetails::ExpressionType::Expression_Unknown;
+	};
+}
 
 Rect FaceDetector_Neurotech::ConstrainRect(const Rect &rectToConstrain, const Size &imageSize)
 {

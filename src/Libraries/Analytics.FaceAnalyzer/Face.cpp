@@ -402,7 +402,7 @@ void Face::GetOutput(int trackno, Jzon::Object*& root)
 		root1.Add("mouthOpenConfidence",iter->second.GetDetailedInformation().mouthOpenConfidence);
 		root1.Add("isMale",iter->second.GetDetailedInformation().isMale);
 		root1.Add("genderConfidence",iter->second.GetDetailedInformation().genderConfidence);
-		root1.Add("isHappy",iter->second.GetDetailedInformation().isHappy);
+		root1.Add("expression",iter->second.GetDetailedInformation().GetExpression());
 		root1.Add("expressionConfidence",iter->second.GetDetailedInformation().expressionConfidence);
 		root1.Add("wearingGlasses",iter->second.GetDetailedInformation().wearingGlasses);
 		root1.Add("glassesConfidence",iter->second.GetDetailedInformation().glassesConfidence);

@@ -76,7 +76,7 @@ FaceDetectionDetails & FaceDetectionDetails::operator= (FaceDetectionDetails oth
 		isMale = other.isMale;
 		genderConfidence = other.genderConfidence;
 
-		isHappy = other.isHappy;
+		expression = other.expression;
 		expressionConfidence = other.expressionConfidence;
 
 		wearingDarkGlasses = other.wearingDarkGlasses;
@@ -93,6 +93,31 @@ FaceDetectionDetails & FaceDetectionDetails::operator= (FaceDetectionDetails oth
 	}
 
 	return *this;
+}
+
+string FaceDetectionDetails::GetExpression()
+{
+	switch(expression)
+	{
+	case ExpressionType::Expression_EyesAway:
+		return "EyesAway";
+	case ExpressionType::Expression_Frowning:
+		return "Frowning";
+	case ExpressionType::Expression_Neutral:
+		return "Neutral";
+	case ExpressionType::Expression_RaisedBrows:
+		return "RaisedBrows";
+	case ExpressionType::Expression_Smile:
+		return "Smile";
+	case ExpressionType::Expression_SmileOpenedJaw:
+		return "SmileOpenedJaw";
+	case ExpressionType::Expression_Squinting:
+		return "Squinting";
+	case ExpressionType::Expression_Unspecified:
+		return "Unspecified";
+	default:
+		return "Unknown";
+	}
 }
 
 //FaceDetectionDetails::FaceDetectionDetails(const FaceDetectionDetails &otherFaceDetails)

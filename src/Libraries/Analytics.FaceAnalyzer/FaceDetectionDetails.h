@@ -11,6 +11,39 @@ namespace Analytics
 class FaceDetectionDetails
 {
 public:
+	enum ExpressionType
+	{
+		Expression_Unspecified,
+		Expression_Neutral,
+		Expression_Smile,
+		Expression_SmileOpenedJaw,
+		Expression_RaisedBrows,
+		Expression_EyesAway,
+		Expression_Squinting,
+		Expression_Frowning,
+		Expression_Unknown
+	};
+
+	enum FacialPropertiesType
+	{
+		FacialProperties_NotSpecified,
+		FacialProperties_Specified,
+		FacialProperties_Glasses,
+		FacialProperties_Moustache,
+		FacialProperties_Beard,
+		FacialProperties_TeethVisible,
+		FacialProperties_Blink,
+		FacialProperties_MouthOpen,
+		FacialProperties_LeftEyePatch,
+		FacialProperties_RightEyePatch,
+		FacialProperties_BothEyePatch,
+		FacialProperties_DarkGlasses,
+		FacialProperties_DistortingCondition,
+		FacialProperties_Hat,
+		FacialProperties_Scarf,
+		FacialProperties_NoEar
+	};
+
 	cv::Rect faceRect;
 	float faceDetectionConfidence;
 
@@ -39,7 +72,7 @@ public:
 	float genderConfidence;
 
 	// expression information
-	bool isHappy; // this will change to an enum soon
+	ExpressionType expression;
 	float expressionConfidence;
 
 	// glasses information
@@ -68,6 +101,8 @@ public:
 	FaceDetectionDetails & operator=(FaceDetectionDetails other);
 
 	std::string ToJson(){};
+
+	std::string GetExpression();
 };
 
 	}
