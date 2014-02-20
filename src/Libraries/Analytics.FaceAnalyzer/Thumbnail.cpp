@@ -31,7 +31,9 @@ Thumbnail::Thumbnail(FaceAnalyzerConfiguration *faceAnalyzerConfig) :
 	m_confidenceWeightNoseDetected(0.04f),
 	m_confidenceWeightMouthDetected(0.03f),
 	m_confidenceWeightGenderDetected(0.03f),
-	m_confidenceWeightQuality(0.4f), // all these confidence weights must add to 1
+	m_confidenceWeightQuality(0.3f), // all these confidence weights must add to 1
+	m_confidenceWeightBlinkDetected(0.1f), // if we are confident the person isn't blinking it can add up to 10%, if we are sure they are blinking it can subtract confidence
+	m_blinkConfidenceThreshold(0.8f),
 	m_intereyeDistanceLowerBound(40.0f),
 	m_intereyeDistanceUpperBound(100.0f),
 	m_upperThumbnailRegion(1.2f),
@@ -152,6 +154,25 @@ bool Thumbnail::ExtractThumbnail(const cv::Rect &ThumbnailLocation, float &confi
 	// of these gives us more confidence
 	confidence += m_confidenceWeightNoseDetected * detailedFaceInfo.noseLocationConfidence;
 	confidence += m_confidenceWeightMouthDetected * detailedFaceInfo.noseLocationConfidence;
+
+	if(detailedFaceInfo.blinkingConfidence != 0 && detailedFaceInfo.blinkingConfidence >= m_blinkConfidenceThreshold)
+	{
+		// we have sufficient confidence so can adjust the confidence level
+		if(detailedFaceInfo.blinking == true)
+		{
+			// aww, what a shame they are blinking. We will subtract confidence from this one
+			confidence -= m_confidenceWeightBlinkDetected * ((detailedFaceInfo.blinkingConfidence - m_blinkConfidenceThreshold)/(1-m_blinkConfidenceThreshold));
+		}
+		else
+		{
+			// excellent they aren't blinking, we can add some confidence
+			confidence += m_confidenceWeightBlinkDetected * ((detailedFaceInfo.blinkingConfidence - m_blinkConfidenceThreshold)/(1-m_blinkConfidenceThreshold));
+		}
+	}
+	else
+	{
+		// we couldn't establish whether they are blinking or not so we can neither 
+	}
 
 	NResult result ;
 	NPoint first;

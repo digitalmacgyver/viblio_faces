@@ -44,6 +44,8 @@ private:
 	float m_confidenceWeightMouthDetected;// If mouth is detected we get a small boost
 	float m_confidenceWeightGenderDetected;// If gender is detected we get a small boost
 	float m_confidenceWeightQuality;	  // Neurotech quality metric which is a combination of grayscale density, background uniformity & sharpness
+	float m_confidenceWeightBlinkDetected; // If we confidently identify that the person is blinking then we subtract a reasonable amount
+	float m_blinkConfidenceThreshold; // the minimum required blink confidence level before the weight adjustment (either positive or negative) is allied
 
 	bool MatToHNImage(const cv::Mat &matImage, HNImage *hnImage);
 	cv::Mat HNImageToMat(HNImage *hnImage);

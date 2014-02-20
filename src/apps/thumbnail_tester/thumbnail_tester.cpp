@@ -174,7 +174,9 @@ void DumpThumbnailJsonData(const string &imageFilename, ThumbnailDetails *thumbn
 	root.Add("mouthOpenConfidence",thumbnailDetails->GetDetailedInformation().mouthOpenConfidence);
 	root.Add("isMale",thumbnailDetails->GetDetailedInformation().isMale);
 	root.Add("genderConfidence",thumbnailDetails->GetDetailedInformation().genderConfidence);
-	root.Add("isHappy",thumbnailDetails->GetDetailedInformation().isHappy);
+	root.Add("blinking",thumbnailDetails->GetDetailedInformation().blinking);
+	root.Add("blinkingConfidence",thumbnailDetails->GetDetailedInformation().blinkingConfidence);
+	root.Add("expression",thumbnailDetails->GetDetailedInformation().GetExpression());
 	root.Add("expressionConfidence",thumbnailDetails->GetDetailedInformation().expressionConfidence);
 	root.Add("wearingGlasses",thumbnailDetails->GetDetailedInformation().wearingGlasses);
 	root.Add("glassesConfidence",thumbnailDetails->GetDetailedInformation().glassesConfidence);

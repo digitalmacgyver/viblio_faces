@@ -24,26 +24,6 @@ public:
 		Expression_Unknown
 	};
 
-	enum FacialPropertiesType
-	{
-		FacialProperties_NotSpecified,
-		FacialProperties_Specified,
-		FacialProperties_Glasses,
-		FacialProperties_Moustache,
-		FacialProperties_Beard,
-		FacialProperties_TeethVisible,
-		FacialProperties_Blink,
-		FacialProperties_MouthOpen,
-		FacialProperties_LeftEyePatch,
-		FacialProperties_RightEyePatch,
-		FacialProperties_BothEyePatch,
-		FacialProperties_DarkGlasses,
-		FacialProperties_DistortingCondition,
-		FacialProperties_Hat,
-		FacialProperties_Scarf,
-		FacialProperties_NoEar
-	};
-
 	cv::Rect faceRect;
 	float faceDetectionConfidence;
 
@@ -59,6 +39,8 @@ public:
 	float leftEyeConfidence;
 	cv::Point rightEye;
 	float rightEyeConfidence;
+	bool blinking;
+	float blinkingConfidence;
 
 	// measures the distance between the eyes in pixels
 	float intereyeDistance;

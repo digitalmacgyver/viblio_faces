@@ -20,6 +20,9 @@ FaceDetectionDetails::FaceDetectionDetails()
 	rightEye = Point(0,0);
 	rightEyeConfidence = 0.0f;
 
+	blinking = false;
+	blinkingConfidence = 0.0f;
+
 	intereyeDistance = 0.0f;
 
 	// nose information
@@ -65,6 +68,9 @@ FaceDetectionDetails & FaceDetectionDetails::operator= (FaceDetectionDetails oth
 		leftEyeConfidence = other.leftEyeConfidence;
 		rightEye = other.rightEye;
 		rightEyeConfidence = other.rightEyeConfidence;
+
+		blinking = other.blinking;
+		blinkingConfidence = other.blinkingConfidence;
 
 		intereyeDistance = other.intereyeDistance;
 
