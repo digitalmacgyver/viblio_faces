@@ -25,13 +25,14 @@ namespace Analytics
 
 
 Thumbnail::Thumbnail(FaceAnalyzerConfiguration *faceAnalyzerConfig) :
-	m_confidenceWeightFaceDetected(0.2f),
-	m_confidenceWeightEyesDetected(0.15f),
-	m_confidenceWeightIntereyeDistance(0.15f),
-	m_confidenceWeightNoseDetected(0.04f),
-	m_confidenceWeightMouthDetected(0.03f),
-	m_confidenceWeightGenderDetected(0.03f),
-	m_confidenceWeightQuality(0.3f), // all these confidence weights must add to 1
+	m_confidenceWeightFaceDetected(0.25f), // if we can detect the face we get up to 25% depending on the face confidence
+	m_confidenceWeightEyesDetected(0.0f),  // disabled
+	m_confidenceWeightIntereyeDistance(0.15f), // up to 15% depending on how large the intereye distance is
+	m_confidenceWeightNoseDetected(0.0f),  // disabled
+	m_confidenceWeightMouthDetected(0.0f), // disabled
+	m_confidenceWeightGenderDetected(0.0f),// disabled
+	m_confidenceWeightQuality(0.0f),	   // disabled
+	m_confidenceWeightSharpness(0.50f),
 	m_confidenceWeightBlinkDetected(0.1f), // if we are confident the person isn't blinking it can add up to 10%, if we are sure they are blinking it can subtract confidence
 	m_blinkConfidenceThreshold(0.8f),
 	m_intereyeDistanceLowerBound(40.0f),
@@ -127,14 +128,15 @@ bool Thumbnail::ExtractThumbnail(const cv::Rect &ThumbnailLocation, float &confi
 	// if we have detected the eyes then this gives us even more confidence
 	if( detailedFaceInfo.rightEyeConfidence > 0 && detailedFaceInfo.leftEyeConfidence > 0 )
 	{
-		confidence += ((m_confidenceWeightEyesDetected/2.0f) * detailedFaceInfo.rightEyeConfidence) + 
-					  ((m_confidenceWeightEyesDetected/2.0f) * detailedFaceInfo.leftEyeConfidence);
-
+		// UPDATE: Neurotech libraries always seem to give a confidence value of 0.5 for the eyes, so not overly helpful
+	//	confidence += ((m_confidenceWeightEyesDetected/2.0f) * detailedFaceInfo.rightEyeConfidence) + 
+	//				  ((m_confidenceWeightEyesDetected/2.0f) * detailedFaceInfo.leftEyeConfidence);
+	//
 		// based on the intereye distance calculate how much additional confidence to add
 		float adjustedIntereyeDist = max(0.0f, detailedFaceInfo.intereyeDistance - m_intereyeDistanceLowerBound);
-
+	
 		float intereyeWeightAdjusted = min(1.0f, adjustedIntereyeDist / (m_intereyeDistanceUpperBound - m_intereyeDistanceLowerBound));
-
+	
 		confidence += m_confidenceWeightIntereyeDistance * intereyeWeightAdjusted;
 	}
 
@@ -145,15 +147,15 @@ bool Thumbnail::ExtractThumbnail(const cv::Rect &ThumbnailLocation, float &confi
 	{
 		return false;
 	}
-
+	
 	// we need both eyes in order to accurately compute the thumbnail region and to undo any roll
 	//GetFaceRegion(thumbnail, detailedFaceInfo.leftEye, detailedFaceInfo.rightEye, detailedFaceInfo.intereyeDistance,
 	//			  m_upperThumbnailRegion, m_lowerThumbnailRegion, m_leftRightThumbnailRegion);
 
 	// Make use of the nose and mouth location information in our confidence estimation. Having one or both
 	// of these gives us more confidence
-	confidence += m_confidenceWeightNoseDetected * detailedFaceInfo.noseLocationConfidence;
-	confidence += m_confidenceWeightMouthDetected * detailedFaceInfo.noseLocationConfidence;
+	//confidence += m_confidenceWeightNoseDetected * detailedFaceInfo.noseLocationConfidence;
+	//confidence += m_confidenceWeightMouthDetected * detailedFaceInfo.mouthLocationConfidence;
 
 	if(detailedFaceInfo.blinkingConfidence != 0 && detailedFaceInfo.blinkingConfidence >= m_blinkConfidenceThreshold)
 	{
@@ -232,7 +234,7 @@ bool Thumbnail::ExtractThumbnail(const cv::Rect &ThumbnailLocation, float &confi
 		return false;
 	}
 
-	confidence += m_confidenceWeightQuality * quality;
+	//confidence += m_confidenceWeightQuality * quality;
 
 	// Determine the background uniformity - see page 729 in the SDK documentation
 	double backgroundUniformity = 0.0f;
@@ -245,6 +247,9 @@ bool Thumbnail::ExtractThumbnail(const cv::Rect &ThumbnailLocation, float &confi
 	// lastly, determine the grayscale density
 	double grayscaleDensity = 0.0f;
 	NtfiAttributesGetGrayscaleDensity(ntfiAttributes, &grayscaleDensity);
+
+	// make use of the image sharpness to adjust our confidence
+	confidence += m_confidenceWeightSharpness * sharpness;
 	
 	thumbnail_details.backgroundUniformity = backgroundUniformity;
 	thumbnail_details.grayscaleDensity = grayscaleDensity;

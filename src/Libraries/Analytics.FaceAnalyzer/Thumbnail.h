@@ -46,6 +46,8 @@ private:
 	float m_confidenceWeightQuality;	  // Neurotech quality metric which is a combination of grayscale density, background uniformity & sharpness
 	float m_confidenceWeightBlinkDetected; // If we confidently identify that the person is blinking then we subtract a reasonable amount
 	float m_blinkConfidenceThreshold; // the minimum required blink confidence level before the weight adjustment (either positive or negative) is allied
+	float m_confidenceWeightSharpness; // the sharpness of the image provides a lot of information as to the amount of blur in the image
+
 
 	bool MatToHNImage(const cv::Mat &matImage, HNImage *hnImage);
 	cv::Mat HNImageToMat(HNImage *hnImage);
