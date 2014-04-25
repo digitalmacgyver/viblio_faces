@@ -117,6 +117,7 @@ int main(int argc, char* argv[])
 		("lost_track_process_frequency", po::value<int>()->default_value(5), "set how often a lost face should perform processing when attempting to regain the track, e.g. a value of 5 means we only check every fifth frame, lower numbers means we check more frequently but this will be slower")
 		("Thumbnail_generation_frequency", po::value<int>()->default_value(1500), "set how often a thumbnail should be generated in milliseconds, e.g. a value of 1500 means we only check every frame after 1500 milliseconds and do thumbnail processing")
 		("discarded_tracker_frequency", po::value<int>()->default_value(90000), "set how often a track should be pushed to discarded state in milliseconds, e.g. a value of 90000 means one and half minute")
+		("maximum_concurrent_trackers", po::value<int>()->default_value(15), "set how many trackers are allowed to exist at one time")
 		("render_visualization", "determines whether visualizations will be rendered")
 		("log_file_path", po::value<string>(), "the path where any log files should be placed")
 		;
@@ -130,6 +131,7 @@ int main(int argc, char* argv[])
 	{
 		cout << desc << "\n";
 		return 1;
+
 	}
 
 	string logFilePath = "";
@@ -269,6 +271,11 @@ void ExtractFaceAnalysisParameters( po::variables_map variableMap, Analytics::Fa
 	if (variableMap.count("discarded_tracker_frequency")) 
 	{
 		faceAnalyzerConfig->discarded_tracker_frequency = variableMap["discarded_tracker_frequency"].as<int>();
+	}
+
+	if (variableMap.count("maximum_concurrent_trackers")) 
+	{
+		faceAnalyzerConfig->maximumNumberActiveTrackers = variableMap["maximum_concurrent_trackers"].as<int>();
 	}
 
 	if (variableMap.count("face_image_resize")) 

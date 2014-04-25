@@ -32,7 +32,9 @@ private:
 	std::vector<Face*> m_trackedFaces;
 	//std::vector<Face*> discardedFaces;
 	Jzon::Array discardedFacesJason;
-	int discardedFacesCount;
+
+	// the number of face tracks that we have had so far
+	int m_trackCountSoFar;
 
 	// no copy constructor or assignment operator
 	TrackingController(const TrackingController&);
@@ -43,6 +45,8 @@ private:
 	// check to see if there are any face tracks that are actually of the same person
 	bool DuplicateFacesDetected(int &redetectedFaceTrackerIndex, int &duplicateFaceIndex);
 	void ResolveDuplicates(int duplicateFaceIndex1, int duplicateFaceIndex2);
+
+	void RemoveDiscardedTracks();
 public:
 	TrackingController(FaceAnalyzerConfiguration *faceAnalyzerConfiguration);
 	~TrackingController();

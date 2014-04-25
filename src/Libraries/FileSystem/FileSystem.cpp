@@ -68,6 +68,22 @@ bool CreateDirectory(const string &dir_name)
 	}
 }
 
+string FileNameMinusPath(const string &path)
+{
+	// first find the first '/' or '\' from the end of the string
+	size_t slashPos = path.rfind('/');
+	if(slashPos == string::npos)
+	{
+		// can't find any '/'s, maybe we have backslashes
+		slashPos = path.rfind('\\');
+		if(slashPos == string::npos)
+			// obviously they just gave us a filename with no path, no problem we are done
+			return path;
+	}
+
+	return path.substr(slashPos+1);
+}
+
 string FileSuffix(const string &filename)
 {
 	// attempt to find the extension at the end of the filename (where the '.' is), if its any more than 6 characters

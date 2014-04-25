@@ -77,6 +77,8 @@ FaceDetector_Neurotech::FaceDetector_Neurotech(void)
 	     result = NLicenseObtainComponents(N_T("/local"), N_T("5000"), components, &available);
 		 if (NFailed(result))
 			 throw runtime_error("Failed to obtain Neurotech licenses & Image quality related components");
+		 if(!available)
+			throw runtime_error("Neurotech licenses for the face detection related components are not available");
 	}
 	catch(int e)
 	{

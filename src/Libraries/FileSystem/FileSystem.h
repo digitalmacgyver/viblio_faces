@@ -22,6 +22,8 @@ namespace FileSystem
 
 	std::string FileSuffix(const std::string &filename);
 
+	std::string FileNameMinusPath(const std::string &path);
+
 	inline bool HasSuffix(const std::string &s, const std::string &suffix)
 	{
 		size_t foundPos = s.rfind(suffix);

@@ -98,7 +98,7 @@ int main(int argc, char* argv[])
 	{
 		std::string filename = (*startIter).first; 
 		std::transform(filename.begin(), filename.end(), filename.begin(), ::tolower);
-		if( FileSystem::HasSuffix(filename, ".png") || FileSystem::HasSuffix(filename, ".jpg") )
+		if( FileSystem::HasSuffix(filename, ".png") || FileSystem::HasSuffix(filename, ".jpg") || FileSystem::HasSuffix(filename, ".pgm") )
 		{
 			// we have found an image, lets try and extract thumbnail details from it
 			PerformThumbnailExtration(filename);
@@ -112,6 +112,10 @@ void PerformThumbnailExtration(const string &filename)
 {
 	// first we load the image in
 	Mat thumbnailImage = imread(filename);
+
+	namedWindow("Input Image");
+	imshow("Input Image", thumbnailImage);
+	waitKey(0);
 
 	// then create the Frame object that will just contain the full resolution version of the thumbnail
 	// we just read in

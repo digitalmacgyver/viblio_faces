@@ -39,7 +39,8 @@ Thumbnail::Thumbnail(FaceAnalyzerConfiguration *faceAnalyzerConfig) :
 	m_intereyeDistanceUpperBound(100.0f),
 	m_upperThumbnailRegion(1.2f),
 	m_lowerThumbnailRegion(2.2f),
-	m_leftRightThumbnailRegion(1.0f)
+	m_leftRightThumbnailRegion(1.0f),
+	m_licenseComponents(N_T("Biometrics.FaceDetection,Biometrics.FaceSegmentation,Biometrics.FaceQualityAssessment"))
 {  
 	tokenFaceExtractor = NULL;
 	has_eyecascade= false;
@@ -57,18 +58,19 @@ Thumbnail::Thumbnail(FaceAnalyzerConfiguration *faceAnalyzerConfig) :
 
 	NResult result = N_OK;
 
-	const NChar * components = N_T("Biometrics.FaceDetection,Biometrics.FaceSegmentation,Biometrics.FaceQualityAssessment");
 	try
 	{	
-		result = NLicenseObtainComponents(N_T("/local"), N_T("5000"), components, &available);
+		result = NLicenseObtainComponents(N_T("/local"), N_T("5000"), m_licenseComponents, &available);
 		if( NFailed(result) )
 			throw runtime_error("Failed to obtain Neurotech licenses for the Token & Image quality related components");
+		if(!available)
+			throw runtime_error("Neurotech licenses for the Token & Image quality related components are not available");
 	}
 	catch(Exception e)
 	{
 		BOOST_LOG_TRIVIAL(error) << "Exception caught while attempting to obtain Neurotech product license. Cannot continue";
 		if (!available)
-			BOOST_LOG_TRIVIAL(error) << "Neurotech Licenses for " << components << "  not available";
+			BOOST_LOG_TRIVIAL(error) << "Neurotech Licenses for " << m_licenseComponents << "  not available";
 		throw e;
 	}
 	
@@ -91,6 +93,12 @@ Thumbnail::~Thumbnail()
 {
 	if( tokenFaceExtractor != NULL )
 		NObjectFree(tokenFaceExtractor);
+
+	NResult result = NLicenseReleaseComponents(m_licenseComponents);
+	if (NFailed(result))
+	{
+		BOOST_LOG_TRIVIAL(error) << "NLicenseReleaseComponents() failed (result = " << result << ")";
+	}
 }
 
 bool Thumbnail::ExtractThumbnail(const cv::Rect &ThumbnailLocation, float &confidence, ThumbnailDetails &thumbnail_details,Frame &origFrame)

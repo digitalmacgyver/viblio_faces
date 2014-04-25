@@ -39,6 +39,9 @@ private:
 	// a unique identifier for this face
 	boost::uuids::uuid m_faceId;
 
+	// the track number for this face
+	int m_faceNumber;
+
 	// indicates whether the face has been lost or not, likely due to them leaving the scene or because they
 	// are simply out of view of the camera (occluded etc)
 	bool m_isLost;
@@ -69,7 +72,7 @@ private:
 	uint32_t m_faceLocationHistorySize;
 	uint32_t m_thumbnailConfidenceSize;
 	uint64_t last_thumbnail_time;
-	uint64_t lost_thumbnail;
+	uint64_t m_lostThumbnailTimestamp;
 	std::map<uint64_t, cv::Rect> m_faceLocationHistory;
 	std::map<float, ThumbnailDetails> m_thumbnailConfidence;
 
@@ -92,7 +95,7 @@ private:
 	bool move_to_discarded;
 	
 public:
-   	Face(const cv::Mat frame, uint64_t frameTimestamp, cv::Rect initialFaceRegion,FaceAnalyzerConfiguration *faceAnalyzerConfig);
+   	Face(const cv::Mat frame, uint64_t frameTimestamp, cv::Rect initialFaceRegion,FaceAnalyzerConfiguration *faceAnalyzerConfig, int trackNumber);
 	~Face();
 
 	// This face and 'theOtherFace' passed in are actually the same face. Take the useful
@@ -114,15 +117,19 @@ public:
 
 	cv::Rect GetMostRecentFacePosition(){ return m_currentEstimatedPosition; }
 
-	void GetOutput(int trackno,Jzon::Object*& root);
+	void GetOutput(Jzon::Object*& root);
 
 	void RenderVisualization(cv::Mat &frame);
 
 	boost::uuids::uuid GetFaceId(){ return m_faceId; }
 
+	bool IsLost(){ return m_isLost; }
+	int TrackLostDuration(){ return m_mostRecentFrameTimestamp - m_lostThumbnailTimestamp; }
+
 	bool DiscardStatus(){return move_to_discarded;}
 	
-	void FreeResources(){ m_faceTracker.release();Thumbnail_generator.release();}
+	void FreeResources();
+	//void FreeResources(){ m_faceTracker.release();Thumbnail_generator.release();}
 };
 
 // end of namespaces

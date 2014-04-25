@@ -56,7 +56,18 @@ public:
 	int lostFaceProcessFrequency;
 	
 	int Thumbnail_generation_frequency;
+
+	// the maximum time a tracker will be in the lost state before we discard it so we can free up its resources.
+	// Such trackers will never be able to find the face again
 	int discarded_tracker_frequency;
+
+	// the maximum number of trackers that are active at one time. Having too many trackers active at once uses up too
+	// much memory. Once we hit the maximum number of active trackers when a new face comes along we first attempt to
+	// discard any trackers that have already been lost. If there aren't any to be discarded then we attempt to remove
+	// the oldest lost track even if it may not be technically ready to be discarded. If there aren't any of these then
+	// we have no choice but to ignore the new face and not create a track for it
+	int maximumNumberActiveTrackers;
+
 	// if enabled visualizations of the detection, tracking and recognition will be displayed during processing
 	bool renderVisualization;
 };

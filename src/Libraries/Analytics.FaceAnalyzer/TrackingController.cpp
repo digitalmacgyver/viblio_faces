@@ -28,7 +28,7 @@ namespace Analytics
 TrackingController::TrackingController(FaceAnalyzerConfiguration *faceAnalyzerConfiguration)
 {
 	faceAnalyzerConfig = faceAnalyzerConfiguration;
-	discardedFacesCount = 0;
+	m_trackCountSoFar = 0;
 }
 
 TrackingController::~TrackingController()
@@ -99,7 +99,57 @@ void TrackingController::AddNewTrack(const Mat &frame, uint64_t frameTimestamp, 
 
 	//m_backgroundLearningTLD->InitialiseTrack(frame, objectLocation);
 
-	m_trackedFaces.push_back( new Face(frame, frameTimestamp, objectLocation, faceAnalyzerConfig) );
+	if(faceAnalyzerConfig != NULL && m_trackedFaces.size() >= faceAnalyzerConfig->maximumNumberActiveTrackers)
+	{
+		// we aren't supposed to add any more as we have reached the maximum number of trackers we are supposed to have active.
+		// Start by trying to remove any tracks that are already discarded
+		RemoveDiscardedTracks();
+
+		if(m_trackedFaces.size() >= faceAnalyzerConfig->maximumNumberActiveTrackers)
+		{
+			// still no space, lets remove the lost track that has been lost for the longest time
+
+			int longestLostDuration = -1;
+			auto longestLostTrackIter = m_trackedFaces.begin();
+
+			auto startIterator=m_trackedFaces.begin();
+			for(  ;startIterator!=m_trackedFaces.end(); startIterator++)
+			{
+
+				if((*startIterator)->IsLost() && (*startIterator)->TrackLostDuration() > longestLostDuration )
+				{   
+					longestLostDuration = (*startIterator)->TrackLostDuration();
+					longestLostTrackIter = startIterator;
+				}
+			}
+
+			if(longestLostDuration > -1)
+			{
+				// yay we found one to delete
+				// Before we delete it we need to save the information from this track (the JSON data and the thumbnails etc)
+				Jzon::Object *root1 = new Jzon::Object;
+				(*longestLostTrackIter)->GetOutput(root1);
+
+				if((root1->GetCount())>0)
+					discardedFacesJason.Add(*root1);
+				delete root1;
+				root1 = NULL;
+				delete *longestLostTrackIter;
+				m_trackedFaces.erase(longestLostTrackIter);
+			}
+			else
+				// we didn't find a lost track we could delete, we have no choice but to return without
+				// adding the new track, we can't exceed our maximum
+				return;
+		}
+
+		// all good, now we have some space
+	}
+
+	m_trackedFaces.push_back( new Face(frame, frameTimestamp, objectLocation, faceAnalyzerConfig, m_trackCountSoFar) );
+	m_trackCountSoFar++;
+
+	cout << "Now tracking " << m_trackedFaces.size() << " faces" << endl;
 }
 
 /*
@@ -139,30 +189,9 @@ void TrackingController::Process( uint64_t frameTimestamp, Frame &frame)
 	
 
 	// Moving any discarded faces to new vector
-	auto startIter=m_trackedFaces.begin();
-	for(  ;startIter!=m_trackedFaces.end(); )
-	{
-		if((*startIter)->DiscardStatus())
-		{   
-			Jzon::Object *root1 = new Jzon::Object;
-			(*startIter)->GetOutput(discardedFacesCount,root1);
-			
-			if((root1->GetCount())>0)
-				discardedFacesJason.Add(*root1);
-			delete root1;
-			root1 = NULL;
-			delete *startIter;
-			startIter = m_trackedFaces.erase(startIter);
-			discardedFacesCount++;
-		}
-		else
-		{
-			++startIter;
-		}
+	RemoveDiscardedTracks();
 
-	}
-
-	//cout << "Total tracks yet " << m_trackedFaces.size()+discardedFacesCount <<endl;
+	//cout << "Total tracks yet " << m_trackedFaces.size()+m_trackCountSoFar <<endl;
 
 	// multithreaded
 	//for(auto &e : futures) 
@@ -255,6 +284,30 @@ void TrackingController::ResolveDuplicates(int duplicateFaceIndex1, int duplicat
 	BOOST_LOG_TRIVIAL(info) << "Finished resolving duplicates, number faces " << m_trackedFaces.size();
 }
 
+void TrackingController::RemoveDiscardedTracks()
+{
+	auto startIter=m_trackedFaces.begin();
+	for(  ;startIter!=m_trackedFaces.end(); )
+	{
+		if((*startIter)->DiscardStatus())
+		{   
+			Jzon::Object *root1 = new Jzon::Object;
+			(*startIter)->GetOutput(root1);
+			
+			if((root1->GetCount())>0)
+				discardedFacesJason.Add(*root1);
+			delete root1;
+			root1 = NULL;
+			delete *startIter;
+			startIter = m_trackedFaces.erase(startIter);
+		}
+		else
+		{
+			++startIter;
+		}
+	}
+}
+
 void TrackingController::GetOutput(Jzon::Object*& root)
 {
 
@@ -268,16 +321,14 @@ void TrackingController::GetOutput(Jzon::Object*& root)
 	while( startIter!=m_trackedFaces.end() )
 	{
 		Jzon::Object *root = new Jzon::Object;
-		(*startIter)->GetOutput(discardedFacesCount,root);
+		(*startIter)->GetOutput(root);
 		if((root->GetCount())>0)
 			discardedFacesJason.Add(*root);
 		
 		delete root;
 		root = NULL;
-		discardedFacesCount++;
 		delete *startIter;
 		startIter = m_trackedFaces.erase(startIter);
-
 	}
 
 	// clean up

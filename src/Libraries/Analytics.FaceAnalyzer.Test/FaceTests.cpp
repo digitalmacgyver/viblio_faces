@@ -27,7 +27,7 @@ void FaceTests::TestMergeFunctionalitySimple()
 	pair<uint64_t, uint64_t> currentTimes;
 
 	// the first is the older one
-	Face tracker1(frame, 0, cv::Rect(20, 20, 40, 40), &faceAnalyzerConfig);
+	Face tracker1(frame, 0, cv::Rect(20, 20, 40, 40), &faceAnalyzerConfig, 0);
 
 	// tracker 1 tracks Person A for period [5000, 10000]
 	currentTimes.first = 5000;
@@ -38,7 +38,7 @@ void FaceTests::TestMergeFunctionalitySimple()
 	tracker1.m_currentFaceVisiblePair.second = 0;
 	tracker1.m_mostRecentFrameTimestamp = 17000;
 
-	Face tracker2(frame, 0, cv::Rect(20, 20, 40, 40), &faceAnalyzerConfig);
+	Face tracker2(frame, 0, cv::Rect(20, 20, 40, 40), &faceAnalyzerConfig, 0);
 	tracker2.m_currentFaceVisiblePair.first = 17000;
 	tracker2.m_currentFaceVisiblePair.second = 0;
 	tracker2.m_mostRecentFrameTimestamp = 17000; // at time 17 seconds tracker 1 reacquires the face, this is when we detect we have to merge
@@ -70,14 +70,14 @@ void FaceTests::TestMergeFunctionalityLessSimple()
 	pair<uint64_t, uint64_t> currentTimes;
 
 	// the first is the older one
-	Face tracker1(frame, 0, cv::Rect(20, 20, 40, 40), &faceAnalyzerConfig);
+	Face tracker1(frame, 0, cv::Rect(20, 20, 40, 40), &faceAnalyzerConfig, 0);
 
 	// tracker 1 tracks Person A for period [5000, 10000]
 	currentTimes.first = 5000;
 	currentTimes.second = 10000;
 	tracker1.m_timesWhenFaceVisible.push_back(currentTimes);
 	
-	Face tracker2(frame, 0, cv::Rect(20, 20, 40, 40), &faceAnalyzerConfig);
+	Face tracker2(frame, 0, cv::Rect(20, 20, 40, 40), &faceAnalyzerConfig, 0);
 	tracker2.m_currentFaceVisiblePair.first = 15000;
 	tracker2.m_currentFaceVisiblePair.second = 0;
 	tracker2.m_mostRecentFrameTimestamp = 17000; // at time 17 seconds tracker 1 reacquires the face, this is when we detect we have to merge
@@ -118,7 +118,7 @@ void FaceTests::TestMergeFunctionalityMultipleInterleaved()
 	pair<uint64_t, uint64_t> currentTimes;
 
 	// the first is the older one
-	Face tracker1(frame, 0, cv::Rect(20, 20, 40, 40), &faceAnalyzerConfig);
+	Face tracker1(frame, 0, cv::Rect(20, 20, 40, 40), &faceAnalyzerConfig, 0);
 
 	// tracker 1 tracks Person A for period [5000, 10000]
 	currentTimes.first = 5000;
@@ -136,7 +136,7 @@ void FaceTests::TestMergeFunctionalityMultipleInterleaved()
 	tracker1.m_timesWhenFaceVisible.push_back(currentTimes);
 	
 	// now tracker 2 joins the action
-	Face tracker2(frame, 0, cv::Rect(20, 20, 40, 40), &faceAnalyzerConfig);
+	Face tracker2(frame, 0, cv::Rect(20, 20, 40, 40), &faceAnalyzerConfig, 0);
 	currentTimes.first = 22000;
 	currentTimes.second = 25000;
 	tracker2.m_timesWhenFaceVisible.push_back(currentTimes);
@@ -196,7 +196,7 @@ void FaceTests::TestMergeFunctionalitySimplethumbnails()
 	pair<uint64_t, uint64_t> currentTimes;
 
 	// the first is the older one
-	Face tracker1(frame, 0, cv::Rect(20, 20, 40, 40), &faceAnalyzerConfig);
+	Face tracker1(frame, 0, cv::Rect(20, 20, 40, 40), &faceAnalyzerConfig, 0);
 
 	// tracker 1 tracks Person A for period [5000, 10000]
 	currentTimes.first = 5000;
@@ -214,7 +214,7 @@ void FaceTests::TestMergeFunctionalitySimplethumbnails()
 	tracker1.m_thumbnailConfidence.insert(tracker1.m_thumbnailConfidence.end(), pair<float,ThumbnailDetails>(0.65,a));
 
 
-	Face tracker2(frame, 0, cv::Rect(20, 20, 40, 40), &faceAnalyzerConfig);
+	Face tracker2(frame, 0, cv::Rect(20, 20, 40, 40), &faceAnalyzerConfig, 0);
 	tracker2.m_currentFaceVisiblePair.first = 17000;
 	tracker2.m_currentFaceVisiblePair.second = 0;
 	tracker2.m_mostRecentFrameTimestamp = 17000; // at time 17 seconds tracker 1 reacquires the face, this is when we detect we have to merge

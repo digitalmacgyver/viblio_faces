@@ -26,6 +26,8 @@ private:
     
 	HNtfi tokenFaceExtractor;
 
+	const NChar * m_licenseComponents;
+
 	float Thumbnail_enlarge_percentage;
 	bool has_eyecascade;
 

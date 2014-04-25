@@ -14,6 +14,8 @@ FaceAnalyzerConfiguration::FaceAnalyzerConfiguration()
 
 	lostFaceProcessFrequency = 5;
 
+	maximumNumberActiveTrackers = 15;
+
 	renderVisualization = false;
 }
 

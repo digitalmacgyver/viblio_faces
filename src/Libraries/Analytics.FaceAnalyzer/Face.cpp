@@ -21,7 +21,7 @@ namespace Analytics
 	{
 
 
-Face::Face(const Mat frame, uint64_t frameTimestamp, Rect initialFaceRegion,FaceAnalyzerConfiguration *faceAnalyzerConfig)
+Face::Face(const Mat frame, uint64_t frameTimestamp, Rect initialFaceRegion,FaceAnalyzerConfiguration *faceAnalyzerConfig, int trackNumber)
 	// generate a random UUID for the unique face identifier
 	: m_faceId(boost::uuids::random_generator()()),
 	  m_isLost(false),
@@ -31,7 +31,8 @@ Face::Face(const Mat frame, uint64_t frameTimestamp, Rect initialFaceRegion,Face
 	  m_faceTrackerConfidenceThreshold(0.5f),
 	  m_thumbnailConfidenceSize(5),
 	  m_frameProcessedNumber(0),
-	  move_to_discarded(false)
+	  move_to_discarded(false),
+	  m_faceNumber(trackNumber)
 {
 	// not really using the FaceID attribute of the logs as it needs to be class specific, not a global one
 	//boost::log::core::get()->add_global_attribute("FaceID", boost::log::attributes::make_constant(to_string(m_faceId)));
@@ -41,7 +42,7 @@ Face::Face(const Mat frame, uint64_t frameTimestamp, Rect initialFaceRegion,Face
 	// however this is yet TBD
 	m_faceTracker.reset(new Tracker_OpenTLD());//m_trackerToInitializeFrom;
 	last_thumbnail_time = 0;
-	lost_thumbnail = 0;
+	m_lostThumbnailTimestamp = 0;
     Thumbnail_frequency = faceAnalyzerConfig->Thumbnail_generation_frequency;
 	discard_frequency = faceAnalyzerConfig->discarded_tracker_frequency;
 	m_faceTracker->InitialiseTrack(frame, initialFaceRegion);
@@ -70,6 +71,13 @@ Face::~Face()
 	}
 
 	BOOST_LOG_TRIVIAL(info) << "FaceID: " << to_string(m_faceId) << ". Being destroyed";
+}
+
+void Face::FreeResources()
+{
+	m_faceTracker.reset();
+	
+	Thumbnail_generator.reset();
 }
 
 // This face and 'theOtherFace' passed in are actually the same face. Take the useful
@@ -134,7 +142,7 @@ bool Face::Process( uint64_t frameTimestamp, Frame &frame)
 	std::ostringstream oss;
 	std::string imagepath;
 
-	if(m_isLost && (frameTimestamp - lost_thumbnail) > discard_frequency && (lost_thumbnail!=0)) // 15 seconds
+	if(m_isLost && (frameTimestamp - m_lostThumbnailTimestamp) > discard_frequency && (m_lostThumbnailTimestamp != 0)) // 15 seconds
 	{
 		FreeResources();
 		move_to_discarded = true;
@@ -159,7 +167,7 @@ bool Face::Process( uint64_t frameTimestamp, Frame &frame)
 		// the face wasn't lost but it is now
 
 		m_isLost = true;
-		lost_thumbnail = frameTimestamp;
+		m_lostThumbnailTimestamp = frameTimestamp;
 
 		// this is the end of the time measurement pair
 		m_currentFaceVisiblePair.second = frameTimestamp;
@@ -315,7 +323,7 @@ void Face::MergeFaceVisibleTimes(vector<pair<uint64_t, uint64_t>> otherFaceTimes
 	}
 }
 
-void Face::GetOutput(int trackno, Jzon::Object*& root)
+void Face::GetOutput(Jzon::Object*& root)
 {
 	std::string result;
 
@@ -340,7 +348,7 @@ void Face::GetOutput(int trackno, Jzon::Object*& root)
 	// Store the top five thumbnails
 	string imagepath;
 	int count=0;
-	cout << " No of faces : " << m_thumbnailConfidence.size();
+	//cout << " No of faces : " << m_thumbnailConfidence.size();
 	if(m_thumbnailConfidence.size()>0)
 	{
 		std::string path =Thumbnail_path+"/"+ss.str();
@@ -358,7 +366,7 @@ void Face::GetOutput(int trackno, Jzon::Object*& root)
 		std::stringstream tracknumber;
 		//oss << frameTimestamp;
 		oss << count-1;
-		tracknumber << trackno;
+		tracknumber << m_faceNumber;
 
 		imagepath =Thumbnail_path+"/"+Filenameprefix+"_face_"+tracknumber.str()+"_"+oss.str()+".jpg";
 		string pass = Filenameprefix +"/"+ Filenameprefix+"_face_"+tracknumber.str()+"_"+oss.str()+".jpg";
@@ -421,7 +429,7 @@ void Face::GetOutput(int trackno, Jzon::Object*& root)
 
 
 	// root.Add("UUID", ss.str());
-	root->Add("track_id", trackno);
+	root->Add("track_id", m_faceNumber);
 	root->Add("faces",listOfStuff);
 
 	// Adding visibility information as an array under visibilty info attribute
