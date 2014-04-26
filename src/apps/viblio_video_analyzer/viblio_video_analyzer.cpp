@@ -44,7 +44,23 @@
 #include <boost/log/attributes/named_scope.hpp>
 #include <boost/log/support/exception.hpp>
 
+#ifdef _WIN32
 #include <vld.h> // Visual Leak Detector
+#endif 
+
+
+#ifdef _WIN32
+#include <windows.h>
+void my_sleep( unsigned milliseconds ) {
+  Sleep( milliseconds );
+}
+#else
+#include <unistd.h>
+void my_sleep( unsigned milliseconds ) {
+  usleep( milliseconds * 1000 );
+}
+#endif
+
 
 namespace po = boost::program_options;
 using namespace std;
@@ -215,16 +231,72 @@ int main(int argc, char* argv[])
 	}
 
 	// now that we have all our config data nice and neat lets start processing
-	VideoProcessor videoProcessor(jobConfig);
 
-	videoProcessor.PerformProcessing();
+	const char * components = N_T("Biometrics.FaceDetection,Biometrics.FaceExtraction,Biometrics.FaceSegmentation,Biometrics.FaceQualityAssessment");
 
-	videoProcessor.OutputJobSummaryStatistics();
+	NResult result = N_OK;
+	NBool available = NFalse;
 
-	videoProcessor.DumpOutput(jobConfig);
+	int max_license_attempts = 108;
+	int license_wait_secs = 300;
+	int license_attempt = 0;
 
-	if( jobConfig.faceAnalyzerConfig != NULL )
-		delete jobConfig.faceAnalyzerConfig;
+	while ( !available ) {
+	  try {
+	    if ( license_attempt > max_license_attempts ) {
+	      BOOST_LOG_TRIVIAL(error) << "Failed to obtain license after " << license_attempt << " attempts.";
+	      throw runtime_error( "Failed to obtain Neurotech license after exceeding max_license_attempts." );
+	    } else {
+	      license_attempt++;
+	    }	  
+
+	    BOOST_LOG_TRIVIAL( info ) << "Attempting to acquire Neurotech licenses.";
+	    result = NLicenseObtainComponents(N_T("/local"), N_T("5000"), components, &available);
+	    if ( NFailed( result ) || !available ) {
+	      BOOST_LOG_TRIVIAL( info ) << "Failed to acquire Neurotech license.";
+	      
+	      BOOST_LOG_TRIVIAL( info ) << "Waiting " << license_wait_secs << " seconds for license.";
+	      my_sleep( license_wait_secs * 1000 );
+	    } else {
+	      BOOST_LOG_TRIVIAL( info ) << "Neurotech license acquired.";
+	    }
+	  } catch ( int e ) {
+	    BOOST_LOG_TRIVIAL(error) << "Exception caught while attempting to obtain Neurotech product license. Cannot continue";
+	    if (!available)
+	      BOOST_LOG_TRIVIAL(error) << "Neurotech Licenses for " << components << "  not available";
+	    throw e;
+	  }
+	}
+
+	try {
+	  VideoProcessor videoProcessor(jobConfig);
+	  
+	  videoProcessor.PerformProcessing();
+
+	  videoProcessor.OutputJobSummaryStatistics();
+
+	  videoProcessor.DumpOutput(jobConfig);
+
+	  if( jobConfig.faceAnalyzerConfig != NULL )
+	    delete jobConfig.faceAnalyzerConfig;
+	} catch ( int e ) {
+	  BOOST_LOG_TRIVIAL( error ) << "Exception thrown in face detection.";
+	  
+	  if ( available ) {
+	    NResult result2 = NLicenseReleaseComponents(components);
+	    if (NFailed(result2)) {
+	      BOOST_LOG_TRIVIAL(error) << "NLicenseReleaseComponents() failed (result = " << result2<< ")";
+	    }
+	  }
+	  throw e;
+	}
+
+	if ( available ) {
+	  NResult result2 = NLicenseReleaseComponents(components);
+	  if (NFailed(result2)) {
+	    BOOST_LOG_TRIVIAL(error) << "NLicenseReleaseComponents() failed (result = " << result2<< ")";
+	  }
+	}
 
 	return 0;
 }

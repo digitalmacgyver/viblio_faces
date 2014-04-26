@@ -1,6 +1,6 @@
 SOURCES=FileSystem.cpp
 OBJS=$(SOURCES:.cpp=.o)
-CFLAGS=
+CFLAGS= -DBOOST_LOG_DYN_LINK
 LIBNAME=libFileSystem.a
 
 %.o : %.cpp

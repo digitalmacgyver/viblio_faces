@@ -71,6 +71,7 @@ FaceDetector_Neurotech::FaceDetector_Neurotech(void)
 
 	// Check the Licenses
 	
+  /*
 	try
 	{
 		
@@ -87,7 +88,7 @@ FaceDetector_Neurotech::FaceDetector_Neurotech(void)
 			BOOST_LOG_TRIVIAL(error) << "Neurotech Licenses for " << components << "  not available";
 		throw e;
 	}
-
+  */
 	// create an extractor
 	try
 	{
@@ -244,11 +245,13 @@ FaceDetector_Neurotech::~FaceDetector_Neurotech(void)
 	if( extractor )
 		NObjectFree(extractor);
 
+	/*
 	NResult result2 = NLicenseReleaseComponents(components);
 	if (NFailed(result2))
 	{
 		BOOST_LOG_TRIVIAL(error) << "NLicenseReleaseComponents() failed (result = " << result2<< ")";
 	}
+	*/
 
 }
 

@@ -58,6 +58,7 @@ Thumbnail::Thumbnail(FaceAnalyzerConfiguration *faceAnalyzerConfig) :
 
 	NResult result = N_OK;
 
+	  /*
 	try
 	{	
 		result = NLicenseObtainComponents(N_T("/local"), N_T("5000"), m_licenseComponents, &available);
@@ -73,6 +74,7 @@ Thumbnail::Thumbnail(FaceAnalyzerConfiguration *faceAnalyzerConfig) :
 			BOOST_LOG_TRIVIAL(error) << "Neurotech Licenses for " << m_licenseComponents << "  not available";
 		throw e;
 	}
+	  */
 	
 	try
 	{	
@@ -94,11 +96,13 @@ Thumbnail::~Thumbnail()
 	if( tokenFaceExtractor != NULL )
 		NObjectFree(tokenFaceExtractor);
 
+	  /*
 	NResult result = NLicenseReleaseComponents(m_licenseComponents);
 	if (NFailed(result))
 	{
 		BOOST_LOG_TRIVIAL(error) << "NLicenseReleaseComponents() failed (result = " << result << ")";
 	}
+	  */
 }
 
 bool Thumbnail::ExtractThumbnail(const cv::Rect &ThumbnailLocation, float &confidence, ThumbnailDetails &thumbnail_details,Frame &origFrame)

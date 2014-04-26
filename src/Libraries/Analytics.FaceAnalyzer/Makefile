@@ -14,7 +14,7 @@ ThumbnailDetails.cpp\
 Thumbnail.cpp
 
 OBJS=$(SOURCES:.cpp=.o)
-CFLAGS=-std=c++0x -I../ -I../../../OpenTLD/src/libopentld/tld/ -I$(NEUROTEC)/Include/ -L$(NEUROTEC)/Lib/$(NEUROTEC_ARCH)
+CFLAGS=-std=c++0x -I../ -I../../../OpenTLD/src/libopentld/tld/ -I$(NEUROTEC)/Include/ -L$(NEUROTEC)/Lib/$(NEUROTEC_ARCH) -DBOOST_LOG_DYN_LINK
 LIBNAME=libFaceAnalyzer.a
 
 %.o : %.cpp
