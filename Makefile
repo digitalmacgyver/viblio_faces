@@ -50,6 +50,10 @@ clean :
 	$(RM) -rf _package
 	$(RM) -f package.tar.gz
 
+install_linux_deps:
+	apt-get -y install libopencv-dev
+	/usr/local/bin/check-and-install-software.pl -db staging -app Neurotec_SDK
+
 package:
 	$(RM) -rf _package
 	mkdir -p _package/bin
@@ -60,8 +64,8 @@ package:
 	cp -r $(NEUROTEC)/Lib/$(NEUROTEC_ARCH)/* _package/lib
 	cp $(NEUROTEC)/Bin/$(NEUROTEC_ARCH)/Activation/* _package/license
 
-	( cd _package; tar zcf ../package.tar.gz . )
-	@echo
-	@echo "To deploy, copy package.tar.gz to /tmp on the target machine, then"
-	@echo "cd $(DEPLOY); tar zxvf /tmp/package.tar.gz"
-	@echo
+	( cd _package; tar zcf ../packaging/package.tar.gz . )
+	( cd packaging; tar zcf ../package.tar.gz . ; rm package.tar.gz )
+
+bump:
+	upgrade.pl -db staging -app vatools -f package.tar.gz
