@@ -9,8 +9,7 @@ cd faces
  
 2. If you haven't already, remove the Ubuntu packaged Boost (1.46 or
 1.48 on Ubuntu 12.04), and replace it with Boost 1.55.  You can find
-your boost version by looking in
-```/usr/local/include/boost/version.hpp```.
+your boost version by looking in ```/usr/local/include/boost/version.hpp```.
 
 ```
 wget -O boost_1_55_0.tar.gz http://sourceforge.net/projects/boost/files/boost/1.55.0/boost_1_55_0.tar.gz/download
