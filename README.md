@@ -66,6 +66,26 @@
     make
     ```
 
+5. To test your code versus a baseline established on May 19 2014 you
+may run:
+
+   ```
+   make test
+   ```
+
+   or
+ 
+   ```
+   make testfast
+   ```
+
+   Each will run some videos through the detector, and will produce
+   output image and track data in ```test/output``` and HTML files in
+   the root directory starting with ```test-```.  These HTML files
+   have on the left baseline track information for the sample videos
+   in ```test/test_videos``` and on the right the output of the
+   currently built tracker.
+
 5. To deploy the build on a local development machine:
 
     ```
