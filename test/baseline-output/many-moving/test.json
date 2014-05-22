@@ -1,6 +1,232 @@
 {
 	"tracks": [
 		{
+			"track_id": 0,
+			"faces": [
+				{
+					"face_id": 0,
+					"s3_bucket": "s3_bucket",
+					"s3_key": "test\/test_face_0_0.jpg",
+					"md5sum": "md5sum",
+					"face_confidence": 50.8471,
+					"face_rotation_pitch": 0,
+					"face_rotation_roll": 15,
+					"face_rotation_yaw": 0,
+					"width": 80,
+					"height": 80,
+					"backgroundUniformity": 0.473104,
+					"sharpness": 0.34902,
+					"totalConfidence": 0.309563,
+					"grayscaleDensity": 0.356863,
+					"hasAdditionalFaceInformation": true,
+					"leftEyeCenter": [
+						147,
+						147
+					],
+					"leftEyeConfidence": 0.5,
+					"rightEyeCenter": [
+						105,
+						99
+					],
+					"rightEyeConfidence": 0.5,
+					"interEyeDistance": 43.1741,
+					"blinking": false,
+					"blinkingConfidence": 0,
+					"noseLocation": [
+						117,
+						121
+					],
+					"noseLocationConfidence": 0.5,
+					"mouthLocation": [
+						114,
+						147
+					],
+					"mouthLocationConfidence": 0.5,
+					"mouthOpen": false,
+					"mouthOpenConfidence": 0.26,
+					"isMale": true,
+					"genderConfidence": 0.19,
+					"expression": "Unknown",
+					"expressionConfidence": 0.31,
+					"wearingGlasses": false,
+					"glassesConfidence": 0.37,
+					"wearingDarkGlasses": false,
+					"wearingDarkGlassesConfidence": 0.19
+				},
+				{
+					"face_id": 1,
+					"s3_bucket": "s3_bucket",
+					"s3_key": "test\/test_face_0_1.jpg",
+					"md5sum": "md5sum",
+					"face_confidence": 58.3454,
+					"face_rotation_pitch": 0,
+					"face_rotation_roll": -1,
+					"face_rotation_yaw": 14,
+					"width": 80,
+					"height": 80,
+					"backgroundUniformity": 0.513511,
+					"sharpness": 0.380392,
+					"totalConfidence": 0.343589,
+					"grayscaleDensity": 0.501961,
+					"hasAdditionalFaceInformation": true,
+					"leftEyeCenter": [
+						135,
+						135
+					],
+					"leftEyeConfidence": 0.5,
+					"rightEyeCenter": [
+						92,
+						114
+					],
+					"rightEyeConfidence": 0.5,
+					"interEyeDistance": 43.0116,
+					"blinking": false,
+					"blinkingConfidence": 0,
+					"noseLocation": [
+						109,
+						125
+					],
+					"noseLocationConfidence": 0.5,
+					"mouthLocation": [
+						112,
+						153
+					],
+					"mouthLocationConfidence": 0.5,
+					"mouthOpen": true,
+					"mouthOpenConfidence": 0.07,
+					"isMale": true,
+					"genderConfidence": 0,
+					"expression": "Unknown",
+					"expressionConfidence": 0.65,
+					"wearingGlasses": false,
+					"glassesConfidence": 0.39,
+					"wearingDarkGlasses": false,
+					"wearingDarkGlassesConfidence": 0.2
+				},
+				{
+					"face_id": 2,
+					"s3_bucket": "s3_bucket",
+					"s3_key": "test\/test_face_0_2.jpg",
+					"md5sum": "md5sum",
+					"face_confidence": 54.2494,
+					"face_rotation_pitch": 0,
+					"face_rotation_roll": 6,
+					"face_rotation_yaw": 45,
+					"width": 128,
+					"height": 128,
+					"backgroundUniformity": 0.371417,
+					"sharpness": 0.490196,
+					"totalConfidence": 0.42856,
+					"grayscaleDensity": 0.6,
+					"hasAdditionalFaceInformation": true,
+					"leftEyeCenter": [
+						197,
+						197
+					],
+					"leftEyeConfidence": 0.5,
+					"rightEyeCenter": [
+						138,
+						138
+					],
+					"rightEyeConfidence": 0.5,
+					"interEyeDistance": 59.1354,
+					"blinking": false,
+					"blinkingConfidence": 0.21,
+					"noseLocation": [
+						143,
+						172
+					],
+					"noseLocationConfidence": 0.5,
+					"mouthLocation": [
+						147,
+						208
+					],
+					"mouthLocationConfidence": 0.5,
+					"mouthOpen": true,
+					"mouthOpenConfidence": 0.23,
+					"isMale": true,
+					"genderConfidence": 0.55,
+					"expression": "Smile",
+					"expressionConfidence": 0.06,
+					"wearingGlasses": false,
+					"glassesConfidence": 0.28,
+					"wearingDarkGlasses": false,
+					"wearingDarkGlassesConfidence": 0
+				}
+			],
+			"visiblity_info": [
+				{
+					"start_frame": 26359,
+					"end_frame": 37037
+				},
+				{
+					"start_frame": 37203,
+					"end_frame": 38772
+				}
+			]
+		},
+		{
+			"track_id": 4,
+			"faces": [
+				{
+					"face_id": 0,
+					"s3_bucket": "s3_bucket",
+					"s3_key": "test\/test_face_4_0.jpg",
+					"md5sum": "md5sum",
+					"face_confidence": 57.2804,
+					"face_rotation_pitch": 0,
+					"face_rotation_roll": 0,
+					"face_rotation_yaw": 0,
+					"width": 64,
+					"height": 64,
+					"backgroundUniformity": 0.713612,
+					"sharpness": 0.247059,
+					"totalConfidence": 0.26673,
+					"grayscaleDensity": 0.752941,
+					"hasAdditionalFaceInformation": true,
+					"leftEyeCenter": [
+						107,
+						107
+					],
+					"leftEyeConfidence": 0.5,
+					"rightEyeCenter": [
+						79,
+						81
+					],
+					"rightEyeConfidence": 0.5,
+					"interEyeDistance": 28,
+					"blinking": false,
+					"blinkingConfidence": 0.21,
+					"noseLocation": [
+						94,
+						93
+					],
+					"noseLocationConfidence": 0.5,
+					"mouthLocation": [
+						96,
+						109
+					],
+					"mouthLocationConfidence": 0.5,
+					"mouthOpen": false,
+					"mouthOpenConfidence": 0.47,
+					"isMale": true,
+					"genderConfidence": 0.11,
+					"expression": "Unknown",
+					"expressionConfidence": 0.64,
+					"wearingGlasses": false,
+					"glassesConfidence": 0.52,
+					"wearingDarkGlasses": false,
+					"wearingDarkGlassesConfidence": 0
+				}
+			],
+			"visiblity_info": [
+				{
+					"start_frame": 168001,
+					"end_frame": 168134
+				}
+			]
+		},
+		{
 			"track_id": 1,
 			"faces": [
 				{
@@ -8,235 +234,66 @@
 					"s3_bucket": "s3_bucket",
 					"s3_key": "test\/test_face_1_0.jpg",
 					"md5sum": "md5sum",
-					"face_confidence": 53.3593,
+					"face_confidence": 64.2783,
 					"face_rotation_pitch": 0,
-					"face_rotation_roll": -3,
-					"face_rotation_yaw": 22,
-					"width": 72,
-					"height": 72,
-					"backgroundUniformity": 0.46253,
-					"sharpness": 0.403922,
-					"totalConfidence": 0.335359,
-					"grayscaleDensity": 0.482353,
+					"face_rotation_roll": -5,
+					"face_rotation_yaw": 0,
+					"width": 64,
+					"height": 64,
+					"backgroundUniformity": 0.710889,
+					"sharpness": 0.266667,
+					"totalConfidence": 0.294029,
+					"grayscaleDensity": 0.698039,
 					"hasAdditionalFaceInformation": true,
 					"leftEyeCenter": [
-						108,
-						108
+						63,
+						63
 					],
 					"leftEyeConfidence": 0.5,
 					"rightEyeCenter": [
-						73,
-						87
+						27,
+						74
 					],
 					"rightEyeConfidence": 0.5,
-					"interEyeDistance": 35.0143,
-					"blinking": true,
-					"blinkingConfidence": 0.14,
+					"interEyeDistance": 36.1248,
+					"blinking": false,
+					"blinkingConfidence": 0.23,
 					"noseLocation": [
-						85,
-						101
+						53,
+						93
 					],
 					"noseLocationConfidence": 0.5,
 					"mouthLocation": [
-						90,
-						125
+						54,
+						110
 					],
 					"mouthLocationConfidence": 0.5,
 					"mouthOpen": false,
-					"mouthOpenConfidence": 0,
-					"isMale": false,
-					"genderConfidence": 0.09,
+					"mouthOpenConfidence": 0.51,
+					"isMale": true,
+					"genderConfidence": 0,
 					"expression": "Unknown",
-					"expressionConfidence": 0.27,
+					"expressionConfidence": 0.67,
 					"wearingGlasses": false,
-					"glassesConfidence": 0.1,
+					"glassesConfidence": 0.6,
 					"wearingDarkGlasses": false,
-					"wearingDarkGlassesConfidence": 0.19
+					"wearingDarkGlassesConfidence": 0.2
 				},
 				{
 					"face_id": 1,
 					"s3_bucket": "s3_bucket",
 					"s3_key": "test\/test_face_1_1.jpg",
 					"md5sum": "md5sum",
-					"face_confidence": 52.7185,
+					"face_confidence": 50.9219,
 					"face_rotation_pitch": 0,
-					"face_rotation_roll": 15,
-					"face_rotation_yaw": 24,
-					"width": 91,
-					"height": 91,
-					"backgroundUniformity": 0.472695,
-					"sharpness": 0.419608,
-					"totalConfidence": 0.356328,
-					"grayscaleDensity": 0.454902,
-					"hasAdditionalFaceInformation": true,
-					"leftEyeCenter": [
-						129,
-						129
-					],
-					"leftEyeConfidence": 0.5,
-					"rightEyeCenter": [
-						84,
-						94
-					],
-					"rightEyeConfidence": 0.5,
-					"interEyeDistance": 45.8912,
-					"blinking": false,
-					"blinkingConfidence": 0,
-					"noseLocation": [
-						97,
-						119
-					],
-					"noseLocationConfidence": 0.5,
-					"mouthLocation": [
-						95,
-						149
-					],
-					"mouthLocationConfidence": 0.5,
-					"mouthOpen": true,
-					"mouthOpenConfidence": 0.2,
-					"isMale": true,
-					"genderConfidence": 0,
-					"expression": "Unknown",
-					"expressionConfidence": 0.08,
-					"wearingGlasses": false,
-					"glassesConfidence": 0.41,
-					"wearingDarkGlasses": false,
-					"wearingDarkGlassesConfidence": 0.35
-				},
-				{
-					"face_id": 2,
-					"s3_bucket": "s3_bucket",
-					"s3_key": "test\/test_face_1_2.jpg",
-					"md5sum": "md5sum",
-					"face_confidence": 54.0939,
-					"face_rotation_pitch": 0,
-					"face_rotation_roll": 14,
+					"face_rotation_roll": -3,
 					"face_rotation_yaw": 0,
 					"width": 64,
 					"height": 64,
-					"backgroundUniformity": 0.481798,
-					"sharpness": 0.466667,
-					"totalConfidence": 0.368568,
-					"grayscaleDensity": 0.552941,
-					"hasAdditionalFaceInformation": true,
-					"leftEyeCenter": [
-						86,
-						86
-					],
-					"leftEyeConfidence": 0.5,
-					"rightEyeCenter": [
-						61,
-						53
-					],
-					"rightEyeConfidence": 0.5,
-					"interEyeDistance": 25.7099,
-					"blinking": false,
-					"blinkingConfidence": 0.1,
-					"noseLocation": [
-						73,
-						64
-					],
-					"noseLocationConfidence": 0.5,
-					"mouthLocation": [
-						70,
-						81
-					],
-					"mouthLocationConfidence": 0.5,
-					"mouthOpen": false,
-					"mouthOpenConfidence": 0.44,
-					"isMale": false,
-					"genderConfidence": 0.12,
-					"expression": "Smile",
-					"expressionConfidence": 0.21,
-					"wearingGlasses": false,
-					"glassesConfidence": 0.72,
-					"wearingDarkGlasses": false,
-					"wearingDarkGlassesConfidence": 0.26
-				},
-				{
-					"face_id": 3,
-					"s3_bucket": "s3_bucket",
-					"s3_key": "test\/test_face_1_3.jpg",
-					"md5sum": "md5sum",
-					"face_confidence": 55.1386,
-					"face_rotation_pitch": 0,
-					"face_rotation_roll": 6,
-					"face_rotation_yaw": 0,
-					"width": 64,
-					"height": 64,
-					"backgroundUniformity": 0.665507,
-					"sharpness": 0.517647,
-					"totalConfidence": 0.39667,
-					"grayscaleDensity": 0.482353,
-					"hasAdditionalFaceInformation": true,
-					"leftEyeCenter": [
-						95,
-						95
-					],
-					"leftEyeConfidence": 0.5,
-					"rightEyeCenter": [
-						67,
-						59
-					],
-					"rightEyeConfidence": 0.5,
-					"interEyeDistance": 28.2843,
-					"blinking": true,
-					"blinkingConfidence": 0.18,
-					"noseLocation": [
-						78,
-						72
-					],
-					"noseLocationConfidence": 0.5,
-					"mouthLocation": [
-						78,
-						87
-					],
-					"mouthLocationConfidence": 0.5,
-					"mouthOpen": false,
-					"mouthOpenConfidence": 0.2,
-					"isMale": true,
-					"genderConfidence": 0.08,
-					"expression": "Unknown",
-					"expressionConfidence": 2.55,
-					"wearingGlasses": false,
-					"glassesConfidence": 0.55,
-					"wearingDarkGlasses": false,
-					"wearingDarkGlassesConfidence": 0.17
-				}
-			],
-			"visiblity_info": [
-				{
-					"start_frame": 206373,
-					"end_frame": 207240
-				},
-				{
-					"start_frame": 207607,
-					"end_frame": 216883
-				},
-				{
-					"start_frame": 217083,
-					"end_frame": 218651
-				}
-			]
-		},
-		{
-			"track_id": 5,
-			"faces": [
-				{
-					"face_id": 0,
-					"s3_bucket": "s3_bucket",
-					"s3_key": "test\/test_face_5_0.jpg",
-					"md5sum": "md5sum",
-					"face_confidence": 55.8912,
-					"face_rotation_pitch": 0,
-					"face_rotation_roll": -1,
-					"face_rotation_yaw": 0,
-					"width": 64,
-					"height": 64,
-					"backgroundUniformity": 0.635962,
-					"sharpness": 0.337255,
-					"totalConfidence": 0.308356,
-					"grayscaleDensity": 0.701961,
+					"backgroundUniformity": 0.605394,
+					"sharpness": 0.380392,
+					"totalConfidence": 0.317501,
+					"grayscaleDensity": 0.8,
 					"hasAdditionalFaceInformation": true,
 					"leftEyeCenter": [
 						110,
@@ -244,39 +301,105 @@
 					],
 					"leftEyeConfidence": 0.5,
 					"rightEyeCenter": [
-						85,
-						82
+						82,
+						95
 					],
 					"rightEyeConfidence": 0.5,
-					"interEyeDistance": 25,
-					"blinking": false,
-					"blinkingConfidence": 0.07,
+					"interEyeDistance": 28.0179,
+					"blinking": true,
+					"blinkingConfidence": 0.2,
 					"noseLocation": [
 						100,
-						94
+						113
 					],
 					"noseLocationConfidence": 0.5,
 					"mouthLocation": [
 						100,
-						108
+						125
 					],
 					"mouthLocationConfidence": 0.5,
 					"mouthOpen": false,
-					"mouthOpenConfidence": 0.1,
+					"mouthOpenConfidence": 0.12,
 					"isMale": true,
-					"genderConfidence": 0.29,
+					"genderConfidence": 0.53,
+					"expression": "Unknown",
+					"expressionConfidence": 0.26,
+					"wearingGlasses": false,
+					"glassesConfidence": 0.73,
+					"wearingDarkGlasses": false,
+					"wearingDarkGlassesConfidence": 0.23
+				},
+				{
+					"face_id": 2,
+					"s3_bucket": "s3_bucket",
+					"s3_key": "test\/test_face_1_2.jpg",
+					"md5sum": "md5sum",
+					"face_confidence": 70.3915,
+					"face_rotation_pitch": 0,
+					"face_rotation_roll": -4,
+					"face_rotation_yaw": 15,
+					"width": 65,
+					"height": 65,
+					"backgroundUniformity": 0.577247,
+					"sharpness": 0.309804,
+					"totalConfidence": 0.330881,
+					"grayscaleDensity": 0.847059,
+					"hasAdditionalFaceInformation": true,
+					"leftEyeCenter": [
+						100,
+						100
+					],
+					"leftEyeConfidence": 0.5,
+					"rightEyeCenter": [
+						65,
+						137
+					],
+					"rightEyeConfidence": 0.5,
+					"interEyeDistance": 35.1283,
+					"blinking": false,
+					"blinkingConfidence": 0.52,
+					"noseLocation": [
+						87,
+						157
+					],
+					"noseLocationConfidence": 0.5,
+					"mouthLocation": [
+						88,
+						174
+					],
+					"mouthLocationConfidence": 0.5,
+					"mouthOpen": true,
+					"mouthOpenConfidence": 0.11,
+					"isMale": false,
+					"genderConfidence": 0.16,
 					"expression": "Unknown",
 					"expressionConfidence": 0.58,
 					"wearingGlasses": false,
-					"glassesConfidence": 0.52,
+					"glassesConfidence": 0.77,
 					"wearingDarkGlasses": false,
-					"wearingDarkGlassesConfidence": 0.06
+					"wearingDarkGlassesConfidence": 0.36
 				}
 			],
 			"visiblity_info": [
 				{
-					"start_frame": 347814,
-					"end_frame": 348014
+					"start_frame": 141074,
+					"end_frame": 155522
+				},
+				{
+					"start_frame": 158191,
+					"end_frame": 162495
+				},
+				{
+					"start_frame": 162929,
+					"end_frame": 165865
+				},
+				{
+					"start_frame": 167767,
+					"end_frame": 173373
+				},
+				{
+					"start_frame": 175275,
+					"end_frame": 180613
 				}
 			]
 		},
@@ -288,276 +411,268 @@
 					"s3_bucket": "s3_bucket",
 					"s3_key": "test\/test_face_3_0.jpg",
 					"md5sum": "md5sum",
-					"face_confidence": 57.1337,
+					"face_confidence": 62.3322,
 					"face_rotation_pitch": 0,
-					"face_rotation_roll": -5,
+					"face_rotation_roll": -4,
 					"face_rotation_yaw": 0,
 					"width": 64,
 					"height": 64,
-					"backgroundUniformity": 0.403362,
-					"sharpness": 0.478431,
-					"totalConfidence": 0.38205,
-					"grayscaleDensity": 0.968627,
+					"backgroundUniformity": 0.810305,
+					"sharpness": 0.384314,
+					"totalConfidence": 0.347987,
+					"grayscaleDensity": 0.917647,
 					"hasAdditionalFaceInformation": true,
 					"leftEyeCenter": [
-						100,
-						100
+						78,
+						78
 					],
 					"leftEyeConfidence": 0.5,
 					"rightEyeCenter": [
-						73,
-						83
+						48,
+						49
 					],
 					"rightEyeConfidence": 0.5,
-					"interEyeDistance": 27.074,
+					"interEyeDistance": 30.0666,
 					"blinking": false,
-					"blinkingConfidence": 0.19,
+					"blinkingConfidence": 0.42,
 					"noseLocation": [
-						87,
-						99
+						65,
+						63
 					],
 					"noseLocationConfidence": 0.5,
 					"mouthLocation": [
-						90,
-						112
+						66,
+						78
 					],
 					"mouthLocationConfidence": 0.5,
 					"mouthOpen": false,
-					"mouthOpenConfidence": 0.08,
+					"mouthOpenConfidence": 0.27,
 					"isMale": true,
-					"genderConfidence": 0.33,
+					"genderConfidence": 0.48,
 					"expression": "Unknown",
-					"expressionConfidence": 0.55,
+					"expressionConfidence": 0.46,
 					"wearingGlasses": false,
-					"glassesConfidence": 0.32,
+					"glassesConfidence": 0.54,
 					"wearingDarkGlasses": false,
-					"wearingDarkGlassesConfidence": 0.11
+					"wearingDarkGlassesConfidence": 0.17
 				},
 				{
 					"face_id": 1,
 					"s3_bucket": "s3_bucket",
 					"s3_key": "test\/test_face_3_1.jpg",
 					"md5sum": "md5sum",
-					"face_confidence": 58.3645,
+					"face_confidence": 59.7436,
 					"face_rotation_pitch": 0,
-					"face_rotation_roll": -1,
-					"face_rotation_yaw": 0,
-					"width": 64,
-					"height": 64,
-					"backgroundUniformity": 0.399455,
-					"sharpness": 0.482353,
-					"totalConfidence": 0.387088,
-					"grayscaleDensity": 0.988235,
+					"face_rotation_roll": 0,
+					"face_rotation_yaw": -20,
+					"width": 73,
+					"height": 73,
+					"backgroundUniformity": 0.416204,
+					"sharpness": 0.388235,
+					"totalConfidence": 0.348477,
+					"grayscaleDensity": 0.909804,
 					"hasAdditionalFaceInformation": true,
 					"leftEyeCenter": [
-						104,
-						104
+						134,
+						134
 					],
 					"leftEyeConfidence": 0.5,
 					"rightEyeCenter": [
-						77,
-						91
+						92,
+						64
 					],
 					"rightEyeConfidence": 0.5,
-					"interEyeDistance": 27.0185,
+					"interEyeDistance": 42,
 					"blinking": false,
-					"blinkingConfidence": 0,
+					"blinkingConfidence": 0.43,
 					"noseLocation": [
-						92,
-						105
+						116,
+						87
 					],
 					"noseLocationConfidence": 0.5,
 					"mouthLocation": [
-						93,
-						120
+						116,
+						107
 					],
 					"mouthLocationConfidence": 0.5,
-					"mouthOpen": false,
-					"mouthOpenConfidence": 0.61,
+					"mouthOpen": true,
+					"mouthOpenConfidence": 0.19,
 					"isMale": true,
-					"genderConfidence": 0.66,
-					"expression": "Unknown",
-					"expressionConfidence": 0.34,
+					"genderConfidence": 0.33,
+					"expression": "Smile",
+					"expressionConfidence": 0.25,
 					"wearingGlasses": false,
-					"glassesConfidence": 0.53,
+					"glassesConfidence": 0.9,
 					"wearingDarkGlasses": false,
-					"wearingDarkGlassesConfidence": 0.13
+					"wearingDarkGlassesConfidence": 0.55
 				},
 				{
 					"face_id": 2,
 					"s3_bucket": "s3_bucket",
 					"s3_key": "test\/test_face_3_2.jpg",
 					"md5sum": "md5sum",
-					"face_confidence": 65.8164,
+					"face_confidence": 64.7029,
 					"face_rotation_pitch": 0,
-					"face_rotation_roll": -2,
-					"face_rotation_yaw": 3,
-					"width": 79,
-					"height": 79,
-					"backgroundUniformity": 0.586051,
-					"sharpness": 0.439216,
-					"totalConfidence": 0.391678,
-					"grayscaleDensity": 0.886275,
+					"face_rotation_roll": 2,
+					"face_rotation_yaw": 0,
+					"width": 64,
+					"height": 64,
+					"backgroundUniformity": 0.520852,
+					"sharpness": 0.415686,
+					"totalConfidence": 0.3696,
+					"grayscaleDensity": 0.94902,
 					"hasAdditionalFaceInformation": true,
 					"leftEyeCenter": [
-						137,
-						137
+						80,
+						80
 					],
 					"leftEyeConfidence": 0.5,
 					"rightEyeCenter": [
-						94,
-						75
+						52,
+						54
 					],
 					"rightEyeConfidence": 0.5,
-					"interEyeDistance": 43.0116,
+					"interEyeDistance": 28.0179,
 					"blinking": false,
-					"blinkingConfidence": 0.28,
+					"blinkingConfidence": 0.16,
 					"noseLocation": [
-						120,
-						98
+						67,
+						70
 					],
 					"noseLocationConfidence": 0.5,
 					"mouthLocation": [
-						122,
-						119
+						67,
+						83
 					],
 					"mouthLocationConfidence": 0.5,
-					"mouthOpen": true,
-					"mouthOpenConfidence": 0.54,
+					"mouthOpen": false,
+					"mouthOpenConfidence": 0.23,
 					"isMale": true,
-					"genderConfidence": 0.08,
-					"expression": "Smile",
-					"expressionConfidence": 0.33,
+					"genderConfidence": 0.26,
+					"expression": "Unknown",
+					"expressionConfidence": 0.83,
 					"wearingGlasses": false,
-					"glassesConfidence": 0.64,
+					"glassesConfidence": 0.31,
 					"wearingDarkGlasses": false,
-					"wearingDarkGlassesConfidence": 0.25
+					"wearingDarkGlassesConfidence": 0.08
 				},
 				{
 					"face_id": 3,
 					"s3_bucket": "s3_bucket",
 					"s3_key": "test\/test_face_3_3.jpg",
 					"md5sum": "md5sum",
-					"face_confidence": 53.3,
+					"face_confidence": 56.2601,
 					"face_rotation_pitch": 0,
-					"face_rotation_roll": 1,
+					"face_rotation_roll": -6,
 					"face_rotation_yaw": 0,
 					"width": 64,
 					"height": 64,
-					"backgroundUniformity": 0.440882,
-					"sharpness": 0.521569,
-					"totalConfidence": 0.394034,
-					"grayscaleDensity": 0.972549,
+					"backgroundUniformity": 0.437795,
+					"sharpness": 0.470588,
+					"totalConfidence": 0.375944,
+					"grayscaleDensity": 0.976471,
 					"hasAdditionalFaceInformation": true,
 					"leftEyeCenter": [
-						109,
-						109
+						80,
+						80
 					],
 					"leftEyeConfidence": 0.5,
 					"rightEyeCenter": [
-						82,
-						79
+						54,
+						54
 					],
 					"rightEyeConfidence": 0.5,
-					"interEyeDistance": 27.0185,
+					"interEyeDistance": 26.1725,
 					"blinking": false,
-					"blinkingConfidence": 0.18,
+					"blinkingConfidence": 0.29,
 					"noseLocation": [
-						99,
-						94
+						70,
+						66
 					],
 					"noseLocationConfidence": 0.5,
 					"mouthLocation": [
-						99,
-						109
+						73,
+						81
 					],
 					"mouthLocationConfidence": 0.5,
-					"mouthOpen": true,
-					"mouthOpenConfidence": 0.32,
+					"mouthOpen": false,
+					"mouthOpenConfidence": 0.51,
 					"isMale": true,
-					"genderConfidence": 0.4,
+					"genderConfidence": 0.37,
 					"expression": "Unknown",
-					"expressionConfidence": 0.25,
-					"wearingGlasses": false,
-					"glassesConfidence": 0.4,
-					"wearingDarkGlasses": false,
-					"wearingDarkGlassesConfidence": 0.35
+					"expressionConfidence": 0.55,
+					"wearingGlasses": true,
+					"glassesConfidence": 0.13,
+					"wearingDarkGlasses": true,
+					"wearingDarkGlassesConfidence": 0.13
 				},
 				{
 					"face_id": 4,
 					"s3_bucket": "s3_bucket",
 					"s3_key": "test\/test_face_3_4.jpg",
 					"md5sum": "md5sum",
-					"face_confidence": 57.1505,
+					"face_confidence": 67.8829,
 					"face_rotation_pitch": 0,
 					"face_rotation_roll": -2,
-					"face_rotation_yaw": 0,
-					"width": 64,
-					"height": 64,
-					"backgroundUniformity": 0.404454,
-					"sharpness": 0.537255,
-					"totalConfidence": 0.411504,
-					"grayscaleDensity": 0.980392,
+					"face_rotation_yaw": 17,
+					"width": 78,
+					"height": 78,
+					"backgroundUniformity": 0.589323,
+					"sharpness": 0.447059,
+					"totalConfidence": 0.460767,
+					"grayscaleDensity": 0.862745,
 					"hasAdditionalFaceInformation": true,
 					"leftEyeCenter": [
-						101,
-						101
+						133,
+						133
 					],
 					"leftEyeConfidence": 0.5,
 					"rightEyeCenter": [
-						74,
-						87
+						92,
+						65
 					],
 					"rightEyeConfidence": 0.5,
-					"interEyeDistance": 27.0185,
+					"interEyeDistance": 41.0122,
 					"blinking": false,
-					"blinkingConfidence": 0,
+					"blinkingConfidence": 0.93,
 					"noseLocation": [
-						90,
-						102
+						113,
+						90
 					],
 					"noseLocationConfidence": 0.5,
 					"mouthLocation": [
-						92,
-						116
+						116,
+						110
 					],
 					"mouthLocationConfidence": 0.5,
 					"mouthOpen": true,
-					"mouthOpenConfidence": 0.18,
+					"mouthOpenConfidence": 0.14,
 					"isMale": true,
-					"genderConfidence": 0.43,
-					"expression": "Unknown",
-					"expressionConfidence": 0.43,
+					"genderConfidence": 0,
+					"expression": "Smile",
+					"expressionConfidence": 0.18,
 					"wearingGlasses": false,
-					"glassesConfidence": 0.24,
+					"glassesConfidence": 0.62,
 					"wearingDarkGlasses": false,
-					"wearingDarkGlassesConfidence": 0.18
+					"wearingDarkGlassesConfidence": 0.35
 				}
 			],
 			"visiblity_info": [
 				{
-					"start_frame": 338071,
-					"end_frame": 342375
+					"start_frame": 162796,
+					"end_frame": 168034
 				},
 				{
-					"start_frame": 342676,
-					"end_frame": 348181
+					"start_frame": 168301,
+					"end_frame": 169369
 				},
 				{
-					"start_frame": 350283,
-					"end_frame": 376509
+					"start_frame": 170403,
+					"end_frame": 184718
 				},
 				{
-					"start_frame": 376843,
-					"end_frame": 379979
-				},
-				{
-					"start_frame": 380313,
-					"end_frame": 381915
-				},
-				{
-					"start_frame": 382048,
-					"end_frame": 388922
+					"start_frame": 184984,
+					"end_frame": 190123
 				}
 			]
 		},
@@ -569,599 +684,646 @@
 					"s3_bucket": "s3_bucket",
 					"s3_key": "test\/test_face_6_0.jpg",
 					"md5sum": "md5sum",
-					"face_confidence": 52.6956,
+					"face_confidence": 61.194,
 					"face_rotation_pitch": 0,
-					"face_rotation_roll": 2,
-					"face_rotation_yaw": 0,
+					"face_rotation_roll": 1,
+					"face_rotation_yaw": 45,
 					"width": 64,
 					"height": 64,
-					"backgroundUniformity": 0.568737,
-					"sharpness": 0.427451,
-					"totalConfidence": 0.345464,
-					"grayscaleDensity": 0.827451,
+					"backgroundUniformity": 0.324393,
+					"sharpness": 0.321569,
+					"totalConfidence": 0.313769,
+					"grayscaleDensity": 0.321569,
 					"hasAdditionalFaceInformation": true,
 					"leftEyeCenter": [
-						62,
-						62
+						38,
+						38
 					],
 					"leftEyeConfidence": 0.5,
 					"rightEyeCenter": [
-						35,
-						57
+						13,
+						80
 					],
 					"rightEyeConfidence": 0.5,
-					"interEyeDistance": 27.0185,
-					"blinking": true,
-					"blinkingConfidence": 0.36,
+					"interEyeDistance": 26.2488,
+					"blinking": false,
+					"blinkingConfidence": 0.35,
 					"noseLocation": [
-						49,
-						69
+						16,
+						101
 					],
 					"noseLocationConfidence": 0.5,
 					"mouthLocation": [
-						48,
-						83
+						15,
+						118
 					],
 					"mouthLocationConfidence": 0.5,
 					"mouthOpen": false,
-					"mouthOpenConfidence": 0.25,
-					"isMale": true,
-					"genderConfidence": 0,
+					"mouthOpenConfidence": 0.56,
+					"isMale": false,
+					"genderConfidence": 0.06,
 					"expression": "Unknown",
-					"expressionConfidence": 0.42,
+					"expressionConfidence": 0.36,
 					"wearingGlasses": false,
-					"glassesConfidence": 0.53,
+					"glassesConfidence": 0.5,
 					"wearingDarkGlasses": false,
-					"wearingDarkGlassesConfidence": 0.15
+					"wearingDarkGlassesConfidence": 0.26
 				},
 				{
 					"face_id": 1,
 					"s3_bucket": "s3_bucket",
 					"s3_key": "test\/test_face_6_1.jpg",
 					"md5sum": "md5sum",
-					"face_confidence": 53.1486,
+					"face_confidence": 63.5955,
 					"face_rotation_pitch": 0,
-					"face_rotation_roll": 0,
-					"face_rotation_yaw": 0,
-					"width": 64,
-					"height": 64,
-					"backgroundUniformity": 0.552907,
-					"sharpness": 0.431373,
-					"totalConfidence": 0.348558,
-					"grayscaleDensity": 0.827451,
+					"face_rotation_roll": 4,
+					"face_rotation_yaw": 19,
+					"width": 79,
+					"height": 79,
+					"backgroundUniformity": 0.427926,
+					"sharpness": 0.321569,
+					"totalConfidence": 0.319898,
+					"grayscaleDensity": 0.870588,
 					"hasAdditionalFaceInformation": true,
 					"leftEyeCenter": [
-						57,
-						57
+						71,
+						71
 					],
 					"leftEyeConfidence": 0.5,
 					"rightEyeCenter": [
 						31,
-						50
+						91
 					],
 					"rightEyeConfidence": 0.5,
-					"interEyeDistance": 26,
+					"interEyeDistance": 40.05,
 					"blinking": false,
-					"blinkingConfidence": 0,
+					"blinkingConfidence": 0.47,
 					"noseLocation": [
-						45,
-						62
+						50,
+						115
 					],
 					"noseLocationConfidence": 0.5,
 					"mouthLocation": [
-						44,
-						75
+						51,
+						133
 					],
 					"mouthLocationConfidence": 0.5,
-					"mouthOpen": false,
-					"mouthOpenConfidence": 0.45,
-					"isMale": true,
-					"genderConfidence": 0.13,
+					"mouthOpen": true,
+					"mouthOpenConfidence": 0.06,
+					"isMale": false,
+					"genderConfidence": 0.07,
 					"expression": "Unknown",
-					"expressionConfidence": 0.23,
+					"expressionConfidence": 0.32,
 					"wearingGlasses": false,
-					"glassesConfidence": 0.53,
+					"glassesConfidence": 0.51,
 					"wearingDarkGlasses": false,
-					"wearingDarkGlassesConfidence": 0.14
+					"wearingDarkGlassesConfidence": 0.19
 				},
 				{
 					"face_id": 2,
 					"s3_bucket": "s3_bucket",
 					"s3_key": "test\/test_face_6_2.jpg",
 					"md5sum": "md5sum",
-					"face_confidence": 67.6891,
+					"face_confidence": 63.8528,
 					"face_rotation_pitch": 0,
-					"face_rotation_roll": 2,
-					"face_rotation_yaw": 16,
-					"width": 76,
-					"height": 76,
-					"backgroundUniformity": 0.545156,
-					"sharpness": 0.368627,
-					"totalConfidence": 0.356158,
-					"grayscaleDensity": 0.905882,
+					"face_rotation_roll": 0,
+					"face_rotation_yaw": 19,
+					"width": 73,
+					"height": 73,
+					"backgroundUniformity": 0.437208,
+					"sharpness": 0.341176,
+					"totalConfidence": 0.33272,
+					"grayscaleDensity": 0.909804,
 					"hasAdditionalFaceInformation": true,
 					"leftEyeCenter": [
-						59,
-						59
+						63,
+						63
 					],
 					"leftEyeConfidence": 0.5,
 					"rightEyeCenter": [
-						18,
-						76
+						22,
+						88
 					],
 					"rightEyeConfidence": 0.5,
-					"interEyeDistance": 41.0488,
+					"interEyeDistance": 41,
 					"blinking": false,
-					"blinkingConfidence": 0.71,
+					"blinkingConfidence": 0.58,
 					"noseLocation": [
-						35,
-						98
+						42,
+						111
 					],
 					"noseLocationConfidence": 0.5,
 					"mouthLocation": [
-						36,
-						117
+						43,
+						129
 					],
 					"mouthLocationConfidence": 0.5,
 					"mouthOpen": false,
-					"mouthOpenConfidence": 0.19,
-					"isMale": false,
-					"genderConfidence": 0.18,
+					"mouthOpenConfidence": 0.17,
+					"isMale": true,
+					"genderConfidence": 0,
 					"expression": "Unknown",
-					"expressionConfidence": 0.47,
+					"expressionConfidence": 0.67,
 					"wearingGlasses": false,
-					"glassesConfidence": 0.65,
+					"glassesConfidence": 0.51,
 					"wearingDarkGlasses": false,
-					"wearingDarkGlassesConfidence": 0.3
+					"wearingDarkGlassesConfidence": 0.26
 				},
 				{
 					"face_id": 3,
 					"s3_bucket": "s3_bucket",
 					"s3_key": "test\/test_face_6_3.jpg",
 					"md5sum": "md5sum",
-					"face_confidence": 65.9252,
+					"face_confidence": 50.0782,
 					"face_rotation_pitch": 0,
 					"face_rotation_roll": 0,
-					"face_rotation_yaw": 15,
-					"width": 79,
-					"height": 79,
-					"backgroundUniformity": 0.400295,
-					"sharpness": 0.298039,
-					"totalConfidence": 0.373832,
-					"grayscaleDensity": 0.854902,
+					"face_rotation_yaw": 0,
+					"width": 64,
+					"height": 64,
+					"backgroundUniformity": 0.540204,
+					"sharpness": 0.419608,
+					"totalConfidence": 0.334999,
+					"grayscaleDensity": 0.886275,
 					"hasAdditionalFaceInformation": true,
 					"leftEyeCenter": [
-						65,
-						65
+						55,
+						55
 					],
 					"leftEyeConfidence": 0.5,
 					"rightEyeCenter": [
-						26,
-						78
+						28,
+						36
 					],
 					"rightEyeConfidence": 0.5,
-					"interEyeDistance": 39.0128,
+					"interEyeDistance": 27,
 					"blinking": false,
-					"blinkingConfidence": 0.92,
+					"blinkingConfidence": 0.05,
 					"noseLocation": [
-						46,
-						99
+						44,
+						47
 					],
 					"noseLocationConfidence": 0.5,
 					"mouthLocation": [
-						47,
-						116
+						44,
+						62
 					],
 					"mouthLocationConfidence": 0.5,
 					"mouthOpen": true,
-					"mouthOpenConfidence": 0.39,
+					"mouthOpenConfidence": 0.06,
 					"isMale": false,
-					"genderConfidence": 0.12,
+					"genderConfidence": 0.16,
 					"expression": "Unknown",
-					"expressionConfidence": 2.55,
+					"expressionConfidence": 0.11,
 					"wearingGlasses": false,
-					"glassesConfidence": 0.51,
+					"glassesConfidence": 0.73,
 					"wearingDarkGlasses": false,
-					"wearingDarkGlassesConfidence": 0.34
+					"wearingDarkGlassesConfidence": 0.41
 				},
 				{
 					"face_id": 4,
 					"s3_bucket": "s3_bucket",
 					"s3_key": "test\/test_face_6_4.jpg",
 					"md5sum": "md5sum",
-					"face_confidence": 56.0102,
+					"face_confidence": 64.2854,
 					"face_rotation_pitch": 0,
-					"face_rotation_roll": 0,
-					"face_rotation_yaw": 0,
-					"width": 64,
-					"height": 64,
-					"backgroundUniformity": 0.555167,
-					"sharpness": 0.486275,
-					"totalConfidence": 0.383163,
-					"grayscaleDensity": 0.94902,
+					"face_rotation_roll": 3,
+					"face_rotation_yaw": 17,
+					"width": 77,
+					"height": 77,
+					"backgroundUniformity": 0.504296,
+					"sharpness": 0.356863,
+					"totalConfidence": 0.33927,
+					"grayscaleDensity": 0.882353,
 					"hasAdditionalFaceInformation": true,
 					"leftEyeCenter": [
-						57,
-						57
+						58,
+						58
 					],
 					"leftEyeConfidence": 0.5,
 					"rightEyeCenter": [
-						30,
-						45
+						18,
+						89
 					],
 					"rightEyeConfidence": 0.5,
-					"interEyeDistance": 27,
+					"interEyeDistance": 40.05,
 					"blinking": false,
-					"blinkingConfidence": 0.42,
+					"blinkingConfidence": 0.72,
 					"noseLocation": [
-						43,
-						58
+						36,
+						112
 					],
 					"noseLocationConfidence": 0.5,
 					"mouthLocation": [
-						43,
-						72
+						37,
+						131
 					],
 					"mouthLocationConfidence": 0.5,
-					"mouthOpen": false,
-					"mouthOpenConfidence": 0.09,
-					"isMale": true,
-					"genderConfidence": 0.13,
+					"mouthOpen": true,
+					"mouthOpenConfidence": 0.25,
+					"isMale": false,
+					"genderConfidence": 0.11,
 					"expression": "Unknown",
-					"expressionConfidence": 0.34,
+					"expressionConfidence": 0.39,
 					"wearingGlasses": false,
-					"glassesConfidence": 0.62,
+					"glassesConfidence": 0.81,
 					"wearingDarkGlasses": false,
-					"wearingDarkGlassesConfidence": 0.42
+					"wearingDarkGlassesConfidence": 0.38
 				}
 			],
 			"visiblity_info": [
 				{
-					"start_frame": 348248,
-					"end_frame": 362962
+					"start_frame": 168401,
+					"end_frame": 176409
 				},
 				{
-					"start_frame": 364330,
-					"end_frame": 365832
+					"start_frame": 176409,
+					"end_frame": 183049
 				},
 				{
-					"start_frame": 366132,
-					"end_frame": 375775
+					"start_frame": 184584,
+					"end_frame": 185952
 				},
 				{
-					"start_frame": 377043,
-					"end_frame": 378712
+					"start_frame": 186252,
+					"end_frame": 195862
 				},
 				{
-					"start_frame": 380447,
-					"end_frame": 382015
+					"start_frame": 196429,
+					"end_frame": 198832
 				},
 				{
-					"start_frame": 382949,
-					"end_frame": 388855
+					"start_frame": 200266,
+					"end_frame": 202168
+				},
+				{
+					"start_frame": 202602,
+					"end_frame": 202769
+				},
+				{
+					"start_frame": 202936,
+					"end_frame": 208942
 				}
 			]
 		},
 		{
-			"track_id": 13,
+			"track_id": 8,
 			"faces": [
 				{
 					"face_id": 0,
 					"s3_bucket": "s3_bucket",
-					"s3_key": "test\/test_face_13_0.jpg",
+					"s3_key": "test\/test_face_8_0.jpg",
 					"md5sum": "md5sum",
-					"face_confidence": 54.6946,
+					"face_confidence": 53.6469,
 					"face_rotation_pitch": 0,
-					"face_rotation_roll": 1,
-					"face_rotation_yaw": 45,
-					"width": 64,
-					"height": 64,
-					"backgroundUniformity": 0.515688,
-					"sharpness": 0.345098,
-					"totalConfidence": 0.309286,
-					"grayscaleDensity": 0.662745,
+					"face_rotation_roll": 2,
+					"face_rotation_yaw": 0,
+					"width": 80,
+					"height": 80,
+					"backgroundUniformity": 0.510386,
+					"sharpness": 0.52549,
+					"totalConfidence": 0.396862,
+					"grayscaleDensity": 0.752941,
 					"hasAdditionalFaceInformation": true,
 					"leftEyeCenter": [
-						89,
-						89
+						75,
+						75
 					],
 					"leftEyeConfidence": 0.5,
 					"rightEyeCenter": [
-						55,
-						65
+						36,
+						112
 					],
 					"rightEyeConfidence": 0.5,
-					"interEyeDistance": 34.0147,
-					"blinking": true,
-					"blinkingConfidence": 0.39,
+					"interEyeDistance": 39.0512,
+					"blinking": false,
+					"blinkingConfidence": 0.35,
 					"noseLocation": [
-						62,
-						82
+						56,
+						131
 					],
 					"noseLocationConfidence": 0.5,
 					"mouthLocation": [
-						67,
-						106
+						56,
+						153
 					],
 					"mouthLocationConfidence": 0.5,
 					"mouthOpen": false,
-					"mouthOpenConfidence": 0.35,
+					"mouthOpenConfidence": 0.49,
 					"isMale": true,
-					"genderConfidence": 0.08,
+					"genderConfidence": 0.12,
 					"expression": "Unknown",
-					"expressionConfidence": 0.19,
+					"expressionConfidence": 0.57,
+					"wearingGlasses": true,
+					"glassesConfidence": 0.09,
+					"wearingDarkGlasses": true,
+					"wearingDarkGlassesConfidence": 0.09
+				}
+			],
+			"visiblity_info": [
+				{
+					"start_frame": 173006,
+					"end_frame": 176242
+				},
+				{
+					"start_frame": 176509,
+					"end_frame": 183016
+				},
+				{
+					"start_frame": 184517,
+					"end_frame": 185485
+				},
+				{
+					"start_frame": 188521,
+					"end_frame": 194227
+				},
+				{
+					"start_frame": 194527,
+					"end_frame": 194594
+				},
+				{
+					"start_frame": 194694,
+					"end_frame": 195662
+				},
+				{
+					"start_frame": 195862,
+					"end_frame": 196396
+				},
+				{
+					"start_frame": 196529,
+					"end_frame": 197464
+				},
+				{
+					"start_frame": 200867,
+					"end_frame": 202235
+				},
+				{
+					"start_frame": 203370,
+					"end_frame": 209142
+				}
+			]
+		},
+		{
+			"track_id": 10,
+			"faces": [
+				{
+					"face_id": 0,
+					"s3_bucket": "s3_bucket",
+					"s3_key": "test\/test_face_10_0.jpg",
+					"md5sum": "md5sum",
+					"face_confidence": 54.2304,
+					"face_rotation_pitch": 0,
+					"face_rotation_roll": -6,
+					"face_rotation_yaw": 0,
+					"width": 64,
+					"height": 64,
+					"backgroundUniformity": 0.390383,
+					"sharpness": 0.403922,
+					"totalConfidence": 0.337537,
+					"grayscaleDensity": 0.968627,
+					"hasAdditionalFaceInformation": true,
+					"leftEyeCenter": [
+						103,
+						103
+					],
+					"leftEyeConfidence": 0.5,
+					"rightEyeCenter": [
+						76,
+						75
+					],
+					"rightEyeConfidence": 0.5,
+					"interEyeDistance": 27.1662,
+					"blinking": false,
+					"blinkingConfidence": 0.21,
+					"noseLocation": [
+						95,
+						87
+					],
+					"noseLocationConfidence": 0.5,
+					"mouthLocation": [
+						96,
+						102
+					],
+					"mouthLocationConfidence": 0.5,
+					"mouthOpen": false,
+					"mouthOpenConfidence": 0.46,
+					"isMale": true,
+					"genderConfidence": 0.11,
+					"expression": "Unknown",
+					"expressionConfidence": 0.56,
 					"wearingGlasses": false,
-					"glassesConfidence": 0.55,
+					"glassesConfidence": 0.45,
 					"wearingDarkGlasses": false,
-					"wearingDarkGlassesConfidence": 0.06
+					"wearingDarkGlassesConfidence": 0.1
 				},
 				{
 					"face_id": 1,
 					"s3_bucket": "s3_bucket",
-					"s3_key": "test\/test_face_13_1.jpg",
+					"s3_key": "test\/test_face_10_1.jpg",
 					"md5sum": "md5sum",
-					"face_confidence": 54.8091,
+					"face_confidence": 55.6442,
 					"face_rotation_pitch": 0,
-					"face_rotation_roll": 14,
-					"face_rotation_yaw": 45,
+					"face_rotation_roll": -3,
+					"face_rotation_yaw": 0,
 					"width": 64,
 					"height": 64,
-					"backgroundUniformity": 0.380488,
-					"sharpness": 0.411765,
-					"totalConfidence": 0.342905,
-					"grayscaleDensity": 0.654902,
+					"backgroundUniformity": 0.406249,
+					"sharpness": 0.447059,
+					"totalConfidence": 0.36264,
+					"grayscaleDensity": 0.984314,
 					"hasAdditionalFaceInformation": true,
 					"leftEyeCenter": [
-						95,
-						95
+						107,
+						107
 					],
 					"leftEyeConfidence": 0.5,
 					"rightEyeCenter": [
-						62,
-						76
+						81,
+						70
 					],
 					"rightEyeConfidence": 0.5,
-					"interEyeDistance": 33.7343,
-					"blinking": true,
-					"blinkingConfidence": 0.27,
+					"interEyeDistance": 26.0768,
+					"blinking": false,
+					"blinkingConfidence": 0.14,
 					"noseLocation": [
-						67,
-						95
+						94,
+						83
 					],
 					"noseLocationConfidence": 0.5,
 					"mouthLocation": [
-						67,
-						113
+						97,
+						98
 					],
 					"mouthLocationConfidence": 0.5,
-					"mouthOpen": true,
-					"mouthOpenConfidence": 0.83,
+					"mouthOpen": false,
+					"mouthOpenConfidence": 0.14,
 					"isMale": true,
-					"genderConfidence": 0,
+					"genderConfidence": 0.26,
 					"expression": "Unknown",
-					"expressionConfidence": 0.18,
+					"expressionConfidence": 0.63,
 					"wearingGlasses": false,
-					"glassesConfidence": 0.44,
+					"glassesConfidence": 0.4,
 					"wearingDarkGlasses": false,
-					"wearingDarkGlassesConfidence": 0.23
+					"wearingDarkGlassesConfidence": 0.18
 				},
 				{
 					"face_id": 2,
 					"s3_bucket": "s3_bucket",
-					"s3_key": "test\/test_face_13_2.jpg",
+					"s3_key": "test\/test_face_10_2.jpg",
 					"md5sum": "md5sum",
-					"face_confidence": 54.1553,
+					"face_confidence": 61.9282,
 					"face_rotation_pitch": 0,
-					"face_rotation_roll": 13,
-					"face_rotation_yaw": 45,
+					"face_rotation_roll": -8,
+					"face_rotation_yaw": 0,
 					"width": 64,
 					"height": 64,
-					"backgroundUniformity": 0.286721,
-					"sharpness": 0.537255,
-					"totalConfidence": 0.404016,
-					"grayscaleDensity": 0.760784,
+					"backgroundUniformity": 0.521228,
+					"sharpness": 0.415686,
+					"totalConfidence": 0.362664,
+					"grayscaleDensity": 0.972549,
 					"hasAdditionalFaceInformation": true,
 					"leftEyeCenter": [
-						92,
-						92
+						117,
+						117
 					],
 					"leftEyeConfidence": 0.5,
 					"rightEyeCenter": [
-						59,
-						73
+						90,
+						90
 					],
 					"rightEyeConfidence": 0.5,
-					"interEyeDistance": 33.3766,
-					"blinking": true,
-					"blinkingConfidence": 0.21,
-					"noseLocation": [
-						64,
-						95
-					],
-					"noseLocationConfidence": 0.5,
-					"mouthLocation": [
-						65,
-						113
-					],
-					"mouthLocationConfidence": 0.5,
-					"mouthOpen": false,
-					"mouthOpenConfidence": 0.31,
-					"isMale": true,
-					"genderConfidence": 0.17,
-					"expression": "Unknown",
-					"expressionConfidence": 0.3,
-					"wearingGlasses": false,
-					"glassesConfidence": 0.3,
-					"wearingDarkGlasses": false,
-					"wearingDarkGlassesConfidence": 0.35
-				}
-			],
-			"visiblity_info": [
-				{
-					"start_frame": 402836,
-					"end_frame": 410510
-				},
-				{
-					"start_frame": 410543,
-					"end_frame": 410777
-				}
-			]
-		},
-		{
-			"track_id": 15,
-			"faces": [
-				{
-					"face_id": 0,
-					"s3_bucket": "s3_bucket",
-					"s3_key": "test\/test_face_15_0.jpg",
-					"md5sum": "md5sum",
-					"face_confidence": 59.1826,
-					"face_rotation_pitch": 0,
-					"face_rotation_roll": 16,
-					"face_rotation_yaw": -45,
-					"width": 64,
-					"height": 64,
-					"backgroundUniformity": 0.416389,
-					"sharpness": 0.403922,
-					"totalConfidence": 0.349917,
-					"grayscaleDensity": 0.882353,
-					"hasAdditionalFaceInformation": true,
-					"leftEyeCenter": [
-						121,
-						121
-					],
-					"leftEyeConfidence": 0.5,
-					"rightEyeCenter": [
-						86,
-						83
-					],
-					"rightEyeConfidence": 0.5,
-					"interEyeDistance": 35.9026,
+					"interEyeDistance": 27.2947,
 					"blinking": false,
-					"blinkingConfidence": 0.13,
+					"blinkingConfidence": 0.35,
 					"noseLocation": [
-						107,
-						107
+						111,
+						102
 					],
 					"noseLocationConfidence": 0.5,
 					"mouthLocation": [
-						101,
-						125
+						112,
+						117
 					],
 					"mouthLocationConfidence": 0.5,
 					"mouthOpen": true,
-					"mouthOpenConfidence": 0.58,
-					"isMale": false,
-					"genderConfidence": 0.22,
+					"mouthOpenConfidence": 0.34,
+					"isMale": true,
+					"genderConfidence": 0.33,
 					"expression": "Smile",
-					"expressionConfidence": 0.25,
+					"expressionConfidence": 0.14,
 					"wearingGlasses": false,
-					"glassesConfidence": 0.4,
+					"glassesConfidence": 0.44,
 					"wearingDarkGlasses": false,
-					"wearingDarkGlassesConfidence": 0.34
-				}
-			],
-			"visiblity_info": [
+					"wearingDarkGlassesConfidence": 0
+				},
 				{
-					"start_frame": 410877,
-					"end_frame": 413213
-				}
-			]
-		},
-		{
-			"track_id": 14,
-			"faces": [
-				{
-					"face_id": 0,
+					"face_id": 3,
 					"s3_bucket": "s3_bucket",
-					"s3_key": "test\/test_face_14_0.jpg",
+					"s3_key": "test\/test_face_10_3.jpg",
 					"md5sum": "md5sum",
-					"face_confidence": 53.4919,
+					"face_confidence": 56.151,
 					"face_rotation_pitch": 0,
-					"face_rotation_roll": 20,
-					"face_rotation_yaw": 45,
+					"face_rotation_roll": -2,
+					"face_rotation_yaw": 0,
 					"width": 64,
 					"height": 64,
-					"backgroundUniformity": 0.662296,
+					"backgroundUniformity": 0.430921,
 					"sharpness": 0.47451,
-					"totalConfidence": 0.370985,
-					"grayscaleDensity": 0.345098,
+					"totalConfidence": 0.377632,
+					"grayscaleDensity": 0.984314,
 					"hasAdditionalFaceInformation": true,
 					"leftEyeCenter": [
-						101,
-						101
+						115,
+						115
 					],
 					"leftEyeConfidence": 0.5,
 					"rightEyeCenter": [
-						74,
-						71
+						88,
+						89
 					],
 					"rightEyeConfidence": 0.5,
 					"interEyeDistance": 27.074,
 					"blinking": false,
-					"blinkingConfidence": 0.2,
+					"blinkingConfidence": 0.09,
 					"noseLocation": [
-						73,
-						80
+						104,
+						103
 					],
 					"noseLocationConfidence": 0.5,
 					"mouthLocation": [
-						72,
-						104
+						106,
+						118
+					],
+					"mouthLocationConfidence": 0.5,
+					"mouthOpen": false,
+					"mouthOpenConfidence": 0.16,
+					"isMale": true,
+					"genderConfidence": 0.22,
+					"expression": "Unknown",
+					"expressionConfidence": 0.31,
+					"wearingGlasses": false,
+					"glassesConfidence": 0.42,
+					"wearingDarkGlasses": false,
+					"wearingDarkGlassesConfidence": 0.3
+				},
+				{
+					"face_id": 4,
+					"s3_bucket": "s3_bucket",
+					"s3_key": "test\/test_face_10_4.jpg",
+					"md5sum": "md5sum",
+					"face_confidence": 54.9571,
+					"face_rotation_pitch": 0,
+					"face_rotation_roll": 3,
+					"face_rotation_yaw": 0,
+					"width": 64,
+					"height": 64,
+					"backgroundUniformity": 0.480989,
+					"sharpness": 0.494118,
+					"totalConfidence": 0.384452,
+					"grayscaleDensity": 0.996078,
+					"hasAdditionalFaceInformation": true,
+					"leftEyeCenter": [
+						114,
+						114
+					],
+					"leftEyeConfidence": 0.5,
+					"rightEyeCenter": [
+						86,
+						73
+					],
+					"rightEyeConfidence": 0.5,
+					"interEyeDistance": 28,
+					"blinking": false,
+					"blinkingConfidence": 0.31,
+					"noseLocation": [
+						102,
+						89
+					],
+					"noseLocationConfidence": 0.5,
+					"mouthLocation": [
+						102,
+						103
 					],
 					"mouthLocationConfidence": 0.5,
 					"mouthOpen": true,
-					"mouthOpenConfidence": 0.44,
+					"mouthOpenConfidence": 0.34,
 					"isMale": true,
-					"genderConfidence": 0.51,
-					"expression": "Smile",
-					"expressionConfidence": 0.22,
+					"genderConfidence": 0.3,
+					"expression": "Unknown",
+					"expressionConfidence": 0.28,
 					"wearingGlasses": false,
-					"glassesConfidence": 0.09,
+					"glassesConfidence": 0.43,
 					"wearingDarkGlasses": false,
-					"wearingDarkGlassesConfidence": 0.15
+					"wearingDarkGlassesConfidence": 0.08
 				}
 			],
 			"visiblity_info": [
 				{
-					"start_frame": 405005,
-					"end_frame": 408942
+					"start_frame": 195328,
+					"end_frame": 201935
 				},
 				{
-					"start_frame": 410543,
-					"end_frame": 410577
-				},
-				{
-					"start_frame": 412512,
-					"end_frame": 412579
-				},
-				{
-					"start_frame": 412679,
-					"end_frame": 412779
-				},
-				{
-					"start_frame": 416983,
-					"end_frame": 420520
-				},
-				{
-					"start_frame": 421087,
-					"end_frame": 421121
-				},
-				{
-					"start_frame": 421254,
-					"end_frame": 421621
-				},
-				{
-					"start_frame": 423590,
-					"end_frame": 423723
-				},
-				{
-					"start_frame": 424491,
-					"end_frame": 426826
-				},
-				{
-					"start_frame": 427861,
-					"end_frame": 429462
+					"start_frame": 202168,
+					"end_frame": 215415
 				}
 			]
 		},
@@ -1173,116 +1335,16 @@
 					"s3_bucket": "s3_bucket",
 					"s3_key": "test\/test_face_12_0.jpg",
 					"md5sum": "md5sum",
-					"face_confidence": 59.5433,
+					"face_confidence": 56.447,
 					"face_rotation_pitch": 0,
-					"face_rotation_roll": 4,
-					"face_rotation_yaw": 0,
+					"face_rotation_roll": -2,
+					"face_rotation_yaw": -45,
 					"width": 64,
 					"height": 64,
-					"backgroundUniformity": 0.737056,
-					"sharpness": 0.376471,
-					"totalConfidence": 0.337094,
-					"grayscaleDensity": 0.721569,
-					"hasAdditionalFaceInformation": true,
-					"leftEyeCenter": [
-						110,
-						110
-					],
-					"leftEyeConfidence": 0.5,
-					"rightEyeCenter": [
-						84,
-						80
-					],
-					"rightEyeConfidence": 0.5,
-					"interEyeDistance": 26.0768,
-					"blinking": true,
-					"blinkingConfidence": 0.19,
-					"noseLocation": [
-						96,
-						89
-					],
-					"noseLocationConfidence": 0.5,
-					"mouthLocation": [
-						96,
-						109
-					],
-					"mouthLocationConfidence": 0.5,
-					"mouthOpen": true,
-					"mouthOpenConfidence": 0.43,
-					"isMale": false,
-					"genderConfidence": 0.07,
-					"expression": "Unknown",
-					"expressionConfidence": 0.45,
-					"wearingGlasses": false,
-					"glassesConfidence": 0.27,
-					"wearingDarkGlasses": false,
-					"wearingDarkGlassesConfidence": 0.13
-				},
-				{
-					"face_id": 1,
-					"s3_bucket": "s3_bucket",
-					"s3_key": "test\/test_face_12_1.jpg",
-					"md5sum": "md5sum",
-					"face_confidence": 56.7246,
-					"face_rotation_pitch": 0,
-					"face_rotation_roll": -4,
-					"face_rotation_yaw": -24,
-					"width": 64,
-					"height": 64,
-					"backgroundUniformity": 0.843048,
-					"sharpness": 0.403922,
-					"totalConfidence": 0.343772,
-					"grayscaleDensity": 0.878431,
-					"hasAdditionalFaceInformation": true,
-					"leftEyeCenter": [
-						133,
-						133
-					],
-					"leftEyeConfidence": 0.5,
-					"rightEyeCenter": [
-						101,
-						103
-					],
-					"rightEyeConfidence": 0.5,
-					"interEyeDistance": 32.0624,
-					"blinking": true,
-					"blinkingConfidence": 0.14,
-					"noseLocation": [
-						121,
-						115
-					],
-					"noseLocationConfidence": 0.5,
-					"mouthLocation": [
-						122,
-						134
-					],
-					"mouthLocationConfidence": 0.5,
-					"mouthOpen": true,
-					"mouthOpenConfidence": 0.36,
-					"isMale": true,
-					"genderConfidence": 0,
-					"expression": "Unknown",
-					"expressionConfidence": 0.24,
-					"wearingGlasses": false,
-					"glassesConfidence": 0.26,
-					"wearingDarkGlasses": false,
-					"wearingDarkGlassesConfidence": 0.12
-				},
-				{
-					"face_id": 2,
-					"s3_bucket": "s3_bucket",
-					"s3_key": "test\/test_face_12_2.jpg",
-					"md5sum": "md5sum",
-					"face_confidence": 60.2936,
-					"face_rotation_pitch": 0,
-					"face_rotation_roll": -3,
-					"face_rotation_yaw": 19,
-					"width": 64,
-					"height": 64,
-					"backgroundUniformity": 0.588379,
-					"sharpness": 0.462745,
-					"totalConfidence": 0.382107,
-					"grayscaleDensity": 0.784314,
+					"backgroundUniformity": 0.768502,
+					"sharpness": 0.368627,
+					"totalConfidence": 0.325431,
+					"grayscaleDensity": 0.796078,
 					"hasAdditionalFaceInformation": true,
 					"leftEyeCenter": [
 						130,
@@ -1290,49 +1352,99 @@
 					],
 					"leftEyeConfidence": 0.5,
 					"rightEyeCenter": [
-						100,
-						103
+						95,
+						86
 					],
 					"rightEyeConfidence": 0.5,
-					"interEyeDistance": 30.0167,
+					"interEyeDistance": 35,
 					"blinking": false,
-					"blinkingConfidence": 0,
+					"blinkingConfidence": 0.16,
 					"noseLocation": [
-						115,
-						115
+						119,
+						110
 					],
 					"noseLocationConfidence": 0.5,
 					"mouthLocation": [
-						115,
-						137
+						116,
+						127
+					],
+					"mouthLocationConfidence": 0.5,
+					"mouthOpen": false,
+					"mouthOpenConfidence": 0.44,
+					"isMale": true,
+					"genderConfidence": 0.11,
+					"expression": "Unknown",
+					"expressionConfidence": 0.36,
+					"wearingGlasses": false,
+					"glassesConfidence": 0.55,
+					"wearingDarkGlasses": false,
+					"wearingDarkGlassesConfidence": 0.11
+				},
+				{
+					"face_id": 1,
+					"s3_bucket": "s3_bucket",
+					"s3_key": "test\/test_face_12_1.jpg",
+					"md5sum": "md5sum",
+					"face_confidence": 63.0528,
+					"face_rotation_pitch": 0,
+					"face_rotation_roll": 4,
+					"face_rotation_yaw": 0,
+					"width": 64,
+					"height": 64,
+					"backgroundUniformity": 0.723529,
+					"sharpness": 0.4,
+					"totalConfidence": 0.357632,
+					"grayscaleDensity": 0.709804,
+					"hasAdditionalFaceInformation": true,
+					"leftEyeCenter": [
+						109,
+						109
+					],
+					"leftEyeConfidence": 0.5,
+					"rightEyeCenter": [
+						81,
+						80
+					],
+					"rightEyeConfidence": 0.5,
+					"interEyeDistance": 28.1603,
+					"blinking": true,
+					"blinkingConfidence": 0.22,
+					"noseLocation": [
+						94,
+						90
+					],
+					"noseLocationConfidence": 0.5,
+					"mouthLocation": [
+						93,
+						109
 					],
 					"mouthLocationConfidence": 0.5,
 					"mouthOpen": true,
-					"mouthOpenConfidence": 0.63,
+					"mouthOpenConfidence": 0.36,
 					"isMale": false,
-					"genderConfidence": 0.33,
+					"genderConfidence": 0.11,
 					"expression": "Unknown",
-					"expressionConfidence": 0.22,
+					"expressionConfidence": 0.55,
 					"wearingGlasses": false,
-					"glassesConfidence": 0.45,
+					"glassesConfidence": 0.13,
 					"wearingDarkGlasses": false,
-					"wearingDarkGlassesConfidence": 0.19
+					"wearingDarkGlassesConfidence": 0.08
 				},
 				{
-					"face_id": 3,
+					"face_id": 2,
 					"s3_bucket": "s3_bucket",
-					"s3_key": "test\/test_face_12_3.jpg",
+					"s3_key": "test\/test_face_12_2.jpg",
 					"md5sum": "md5sum",
-					"face_confidence": 53.8605,
+					"face_confidence": 61.7676,
 					"face_rotation_pitch": 0,
-					"face_rotation_roll": -3,
-					"face_rotation_yaw": 45,
-					"width": 64,
-					"height": 64,
-					"backgroundUniformity": 0.400233,
-					"sharpness": 0.552941,
-					"totalConfidence": 0.411122,
-					"grayscaleDensity": 0.85098,
+					"face_rotation_roll": 5,
+					"face_rotation_yaw": 16,
+					"width": 65,
+					"height": 65,
+					"backgroundUniformity": 0.674806,
+					"sharpness": 0.411765,
+					"totalConfidence": 0.360301,
+					"grayscaleDensity": 0.831373,
 					"hasAdditionalFaceInformation": true,
 					"leftEyeCenter": [
 						134,
@@ -1340,39 +1452,335 @@
 					],
 					"leftEyeConfidence": 0.5,
 					"rightEyeCenter": [
-						98,
-						102
+						96,
+						94
 					],
 					"rightEyeConfidence": 0.5,
-					"interEyeDistance": 36.1248,
-					"blinking": true,
-					"blinkingConfidence": 0.19,
+					"interEyeDistance": 38.1182,
+					"blinking": false,
+					"blinkingConfidence": 0,
 					"noseLocation": [
-						105,
-						114
+						109,
+						112
 					],
 					"noseLocationConfidence": 0.5,
 					"mouthLocation": [
-						112,
-						141
+						110,
+						133
 					],
 					"mouthLocationConfidence": 0.5,
 					"mouthOpen": true,
-					"mouthOpenConfidence": 1,
+					"mouthOpenConfidence": 0.16,
 					"isMale": false,
-					"genderConfidence": 0.52,
+					"genderConfidence": 0.24,
 					"expression": "Unknown",
-					"expressionConfidence": 0.06,
+					"expressionConfidence": 0.47,
 					"wearingGlasses": false,
-					"glassesConfidence": 0.67,
+					"glassesConfidence": 0.51,
 					"wearingDarkGlasses": false,
-					"wearingDarkGlassesConfidence": 0.1
+					"wearingDarkGlassesConfidence": 0.09
+				},
+				{
+					"face_id": 3,
+					"s3_bucket": "s3_bucket",
+					"s3_key": "test\/test_face_12_3.jpg",
+					"md5sum": "md5sum",
+					"face_confidence": 56.5913,
+					"face_rotation_pitch": 0,
+					"face_rotation_roll": -2,
+					"face_rotation_yaw": 45,
+					"width": 64,
+					"height": 64,
+					"backgroundUniformity": 0.513486,
+					"sharpness": 0.521569,
+					"totalConfidence": 0.402263,
+					"grayscaleDensity": 0.396078,
+					"hasAdditionalFaceInformation": true,
+					"leftEyeCenter": [
+						122,
+						122
+					],
+					"leftEyeConfidence": 0.5,
+					"rightEyeCenter": [
+						92,
+						93
+					],
+					"rightEyeConfidence": 0.5,
+					"interEyeDistance": 30.0167,
+					"blinking": false,
+					"blinkingConfidence": 0.24,
+					"noseLocation": [
+						98,
+						109
+					],
+					"noseLocationConfidence": 0.5,
+					"mouthLocation": [
+						100,
+						131
+					],
+					"mouthLocationConfidence": 0.5,
+					"mouthOpen": true,
+					"mouthOpenConfidence": 0.48,
+					"isMale": false,
+					"genderConfidence": 0.36,
+					"expression": "Unknown",
+					"expressionConfidence": 0.32,
+					"wearingGlasses": false,
+					"glassesConfidence": 0.25,
+					"wearingDarkGlasses": false,
+					"wearingDarkGlassesConfidence": 0
 				}
 			],
 			"visiblity_info": [
 				{
-					"start_frame": 402002,
-					"end_frame": 429362
+					"start_frame": 222155,
+					"end_frame": 223189
+				},
+				{
+					"start_frame": 225825,
+					"end_frame": 227227
+				},
+				{
+					"start_frame": 227494,
+					"end_frame": 229396
+				},
+				{
+					"start_frame": 229496,
+					"end_frame": 229596
+				},
+				{
+					"start_frame": 229829,
+					"end_frame": 229929
+				},
+				{
+					"start_frame": 230163,
+					"end_frame": 230563
+				}
+			]
+		},
+		{
+			"track_id": 14,
+			"faces": [
+				{
+					"face_id": 0,
+					"s3_bucket": "s3_bucket",
+					"s3_key": "test\/test_face_14_0.jpg",
+					"md5sum": "md5sum",
+					"face_confidence": 59.9034,
+					"face_rotation_pitch": 0,
+					"face_rotation_roll": 15,
+					"face_rotation_yaw": 0,
+					"width": 67,
+					"height": 67,
+					"backgroundUniformity": 0.227264,
+					"sharpness": 0.333333,
+					"totalConfidence": 0.316425,
+					"grayscaleDensity": 0.815686,
+					"hasAdditionalFaceInformation": true,
+					"leftEyeCenter": [
+						122,
+						122
+					],
+					"leftEyeConfidence": 0.5,
+					"rightEyeCenter": [
+						91,
+						84
+					],
+					"rightEyeConfidence": 0.5,
+					"interEyeDistance": 31.7805,
+					"blinking": true,
+					"blinkingConfidence": 0.26,
+					"noseLocation": [
+						101,
+						106
+					],
+					"noseLocationConfidence": 0.5,
+					"mouthLocation": [
+						98,
+						124
+					],
+					"mouthLocationConfidence": 0.5,
+					"mouthOpen": true,
+					"mouthOpenConfidence": 0.29,
+					"isMale": true,
+					"genderConfidence": 0.05,
+					"expression": "Smile",
+					"expressionConfidence": 0.05,
+					"wearingGlasses": false,
+					"glassesConfidence": 0.24,
+					"wearingDarkGlasses": false,
+					"wearingDarkGlassesConfidence": 0.34
+				}
+			],
+			"visiblity_info": [
+				{
+					"start_frame": 230864,
+					"end_frame": 230930
+				}
+			]
+		},
+		{
+			"track_id": 13,
+			"faces": [
+				{
+					"face_id": 0,
+					"s3_bucket": "s3_bucket",
+					"s3_key": "test\/test_face_13_0.jpg",
+					"md5sum": "md5sum",
+					"face_confidence": 51.9878,
+					"face_rotation_pitch": 0,
+					"face_rotation_roll": -4,
+					"face_rotation_yaw": 45,
+					"width": 64,
+					"height": 64,
+					"backgroundUniformity": 0.390175,
+					"sharpness": 0.411765,
+					"totalConfidence": 0.335852,
+					"grayscaleDensity": 0.705882,
+					"hasAdditionalFaceInformation": true,
+					"leftEyeCenter": [
+						100,
+						100
+					],
+					"leftEyeConfidence": 0.5,
+					"rightEyeCenter": [
+						66,
+						80
+					],
+					"rightEyeConfidence": 0.5,
+					"interEyeDistance": 34.0588,
+					"blinking": true,
+					"blinkingConfidence": 0.14,
+					"noseLocation": [
+						70,
+						98
+					],
+					"noseLocationConfidence": 0.5,
+					"mouthLocation": [
+						74,
+						123
+					],
+					"mouthLocationConfidence": 0.5,
+					"mouthOpen": true,
+					"mouthOpenConfidence": 0.27,
+					"isMale": true,
+					"genderConfidence": 0.11,
+					"expression": "Unknown",
+					"expressionConfidence": 0.06,
+					"wearingGlasses": false,
+					"glassesConfidence": 0.7,
+					"wearingDarkGlasses": false,
+					"wearingDarkGlassesConfidence": 0.22
+				},
+				{
+					"face_id": 1,
+					"s3_bucket": "s3_bucket",
+					"s3_key": "test\/test_face_13_1.jpg",
+					"md5sum": "md5sum",
+					"face_confidence": 61.31,
+					"face_rotation_pitch": 0,
+					"face_rotation_roll": 15,
+					"face_rotation_yaw": -45,
+					"width": 64,
+					"height": 64,
+					"backgroundUniformity": 0.290657,
+					"sharpness": 0.415686,
+					"totalConfidence": 0.361118,
+					"grayscaleDensity": 0.898039,
+					"hasAdditionalFaceInformation": true,
+					"leftEyeCenter": [
+						122,
+						122
+					],
+					"leftEyeConfidence": 0.5,
+					"rightEyeCenter": [
+						89,
+						80
+					],
+					"rightEyeConfidence": 0.5,
+					"interEyeDistance": 33.9559,
+					"blinking": false,
+					"blinkingConfidence": 0.14,
+					"noseLocation": [
+						114,
+						96
+					],
+					"noseLocationConfidence": 0.5,
+					"mouthLocation": [
+						105,
+						119
+					],
+					"mouthLocationConfidence": 0.5,
+					"mouthOpen": true,
+					"mouthOpenConfidence": 0.53,
+					"isMale": false,
+					"genderConfidence": 0.21,
+					"expression": "Smile",
+					"expressionConfidence": 0.11,
+					"wearingGlasses": false,
+					"glassesConfidence": 0.38,
+					"wearingDarkGlasses": false,
+					"wearingDarkGlassesConfidence": 0.27
+				},
+				{
+					"face_id": 2,
+					"s3_bucket": "s3_bucket",
+					"s3_key": "test\/test_face_13_2.jpg",
+					"md5sum": "md5sum",
+					"face_confidence": 57.5761,
+					"face_rotation_pitch": 0,
+					"face_rotation_roll": 15,
+					"face_rotation_yaw": 45,
+					"width": 64,
+					"height": 64,
+					"backgroundUniformity": 0.323325,
+					"sharpness": 0.462745,
+					"totalConfidence": 0.375313,
+					"grayscaleDensity": 0.764706,
+					"hasAdditionalFaceInformation": true,
+					"leftEyeCenter": [
+						111,
+						111
+					],
+					"leftEyeConfidence": 0.5,
+					"rightEyeCenter": [
+						80,
+						79
+					],
+					"rightEyeConfidence": 0.5,
+					"interEyeDistance": 32.8938,
+					"blinking": true,
+					"blinkingConfidence": 0.25,
+					"noseLocation": [
+						79,
+						103
+					],
+					"noseLocationConfidence": 0.5,
+					"mouthLocation": [
+						76,
+						123
+					],
+					"mouthLocationConfidence": 0.5,
+					"mouthOpen": false,
+					"mouthOpenConfidence": 0.18,
+					"isMale": true,
+					"genderConfidence": 0.29,
+					"expression": "Unknown",
+					"expressionConfidence": 0.2,
+					"wearingGlasses": false,
+					"glassesConfidence": 0.25,
+					"wearingDarkGlasses": false,
+					"wearingDarkGlassesConfidence": 0.13
+				}
+			],
+			"visiblity_info": [
+				{
+					"start_frame": 222956,
+					"end_frame": 230530
+				},
+				{
+					"start_frame": 231064,
+					"end_frame": 235735
 				}
 			]
 		},
@@ -1384,16 +1792,16 @@
 					"s3_bucket": "s3_bucket",
 					"s3_key": "test\/test_face_16_0.jpg",
 					"md5sum": "md5sum",
-					"face_confidence": 54.076,
+					"face_confidence": 62.0181,
 					"face_rotation_pitch": 0,
-					"face_rotation_roll": 3,
-					"face_rotation_yaw": 22,
-					"width": 69,
-					"height": 69,
-					"backgroundUniformity": 0.576779,
-					"sharpness": 0.290196,
-					"totalConfidence": 0.280288,
-					"grayscaleDensity": 0.776471,
+					"face_rotation_roll": -3,
+					"face_rotation_yaw": -17,
+					"width": 64,
+					"height": 64,
+					"backgroundUniformity": 0.866433,
+					"sharpness": 0.431373,
+					"totalConfidence": 0.370732,
+					"grayscaleDensity": 0.827451,
 					"hasAdditionalFaceInformation": true,
 					"leftEyeCenter": [
 						113,
@@ -1401,210 +1809,186 @@
 					],
 					"leftEyeConfidence": 0.5,
 					"rightEyeCenter": [
-						77,
-						84
+						79,
+						80
 					],
 					"rightEyeConfidence": 0.5,
-					"interEyeDistance": 36.0555,
-					"blinking": false,
+					"interEyeDistance": 34.0588,
+					"blinking": true,
 					"blinkingConfidence": 0.08,
 					"noseLocation": [
-						93,
-						97
+						100,
+						92
 					],
 					"noseLocationConfidence": 0.5,
 					"mouthLocation": [
-						92,
-						120
+						99,
+						110
 					],
 					"mouthLocationConfidence": 0.5,
 					"mouthOpen": true,
-					"mouthOpenConfidence": 0.25,
+					"mouthOpenConfidence": 0.28,
 					"isMale": false,
-					"genderConfidence": 0.12,
+					"genderConfidence": 0.14,
 					"expression": "Unknown",
-					"expressionConfidence": 0.62,
+					"expressionConfidence": 0.15,
 					"wearingGlasses": false,
-					"glassesConfidence": 0.34,
+					"glassesConfidence": 0.21,
 					"wearingDarkGlasses": false,
-					"wearingDarkGlassesConfidence": 0.14
-				},
-				{
-					"face_id": 1,
-					"s3_bucket": "s3_bucket",
-					"s3_key": "test\/test_face_16_1.jpg",
-					"md5sum": "md5sum",
-					"face_confidence": 59.5473,
-					"face_rotation_pitch": 0,
-					"face_rotation_roll": -3,
-					"face_rotation_yaw": -21,
-					"width": 64,
-					"height": 64,
-					"backgroundUniformity": 0.805333,
-					"sharpness": 0.356863,
-					"totalConfidence": 0.3273,
-					"grayscaleDensity": 0.807843,
-					"hasAdditionalFaceInformation": true,
-					"leftEyeCenter": [
-						121,
-						121
-					],
-					"leftEyeConfidence": 0.5,
-					"rightEyeCenter": [
-						85,
-						85
-					],
-					"rightEyeConfidence": 0.5,
-					"interEyeDistance": 36,
-					"blinking": false,
-					"blinkingConfidence": 0.18,
-					"noseLocation": [
-						106,
-						94
-					],
-					"noseLocationConfidence": 0.5,
-					"mouthLocation": [
-						107,
-						122
-					],
-					"mouthLocationConfidence": 0.5,
-					"mouthOpen": false,
-					"mouthOpenConfidence": 0.18,
-					"isMale": false,
-					"genderConfidence": 0.12,
-					"expression": "Unknown",
-					"expressionConfidence": 0.69,
-					"wearingGlasses": false,
-					"glassesConfidence": 0.43,
-					"wearingDarkGlasses": false,
-					"wearingDarkGlassesConfidence": 0.27
+					"wearingDarkGlassesConfidence": 0.13
 				}
 			],
 			"visiblity_info": [
 				{
-					"start_frame": 432999,
-					"end_frame": 466900
+					"start_frame": 231164,
+					"end_frame": 249516
 				}
 			]
 		},
 		{
-			"track_id": 17,
+			"track_id": 19,
 			"faces": [
 				{
 					"face_id": 0,
 					"s3_bucket": "s3_bucket",
-					"s3_key": "test\/test_face_17_0.jpg",
+					"s3_key": "test\/test_face_19_0.jpg",
 					"md5sum": "md5sum",
-					"face_confidence": 52.7389,
+					"face_confidence": 51.8041,
 					"face_rotation_pitch": 0,
-					"face_rotation_roll": 0,
+					"face_rotation_roll": 11,
 					"face_rotation_yaw": 0,
-					"width": 64,
-					"height": 64,
-					"backgroundUniformity": 0.657558,
-					"sharpness": 0.596078,
-					"totalConfidence": 0.429886,
-					"grayscaleDensity": 0.780392,
+					"width": 73,
+					"height": 73,
+					"backgroundUniformity": 0.534219,
+					"sharpness": 0.435294,
+					"totalConfidence": 0.347157,
+					"grayscaleDensity": 0.537255,
 					"hasAdditionalFaceInformation": true,
 					"leftEyeCenter": [
-						110,
-						110
+						135,
+						135
 					],
 					"leftEyeConfidence": 0.5,
 					"rightEyeCenter": [
-						77,
-						74
+						100,
+						93
 					],
 					"rightEyeConfidence": 0.5,
-					"interEyeDistance": 33.0151,
+					"interEyeDistance": 35.5106,
 					"blinking": false,
-					"blinkingConfidence": 0.18,
+					"blinkingConfidence": 0.33,
 					"noseLocation": [
-						92,
-						94
+						113,
+						113
 					],
 					"noseLocationConfidence": 0.5,
 					"mouthLocation": [
-						92,
-						112
+						111,
+						136
 					],
 					"mouthLocationConfidence": 0.5,
-					"mouthOpen": false,
-					"mouthOpenConfidence": 0.23,
+					"mouthOpen": true,
+					"mouthOpenConfidence": 0.29,
 					"isMale": false,
-					"genderConfidence": 0.35,
+					"genderConfidence": 0.08,
 					"expression": "Unknown",
-					"expressionConfidence": 0.25,
+					"expressionConfidence": 0.47,
 					"wearingGlasses": false,
-					"glassesConfidence": 0.79,
+					"glassesConfidence": 0.51,
 					"wearingDarkGlasses": false,
-					"wearingDarkGlassesConfidence": 0.26
-				},
+					"wearingDarkGlassesConfidence": 0.46
+				}
+			],
+			"visiblity_info": [
 				{
-					"face_id": 1,
+					"start_frame": 270704,
+					"end_frame": 271705
+				}
+			]
+		},
+		{
+			"track_id": 18,
+			"faces": [
+				{
+					"face_id": 0,
 					"s3_bucket": "s3_bucket",
-					"s3_key": "test\/test_face_17_1.jpg",
+					"s3_key": "test\/test_face_18_0.jpg",
 					"md5sum": "md5sum",
-					"face_confidence": 52.7112,
+					"face_confidence": 57.9093,
 					"face_rotation_pitch": 0,
-					"face_rotation_roll": 0,
+					"face_rotation_roll": 4,
 					"face_rotation_yaw": 0,
-					"width": 64,
-					"height": 64,
-					"backgroundUniformity": 0.778543,
-					"sharpness": 0.603922,
-					"totalConfidence": 0.433739,
-					"grayscaleDensity": 0.831373,
+					"width": 73,
+					"height": 73,
+					"backgroundUniformity": 0.568319,
+					"sharpness": 0.262745,
+					"totalConfidence": 0.276146,
+					"grayscaleDensity": 0.898039,
 					"hasAdditionalFaceInformation": true,
 					"leftEyeCenter": [
-						118,
-						118
-					],
-					"leftEyeConfidence": 0.5,
-					"rightEyeCenter": [
-						84,
-						85
-					],
-					"rightEyeConfidence": 0.5,
-					"interEyeDistance": 34.0147,
-					"blinking": false,
-					"blinkingConfidence": 0.08,
-					"noseLocation": [
-						100,
-						106
-					],
-					"noseLocationConfidence": 0.5,
-					"mouthLocation": [
-						100,
+						124,
 						124
 					],
+					"leftEyeConfidence": 0.5,
+					"rightEyeCenter": [
+						88,
+						87
+					],
+					"rightEyeConfidence": 0.5,
+					"interEyeDistance": 36.1248,
+					"blinking": false,
+					"blinkingConfidence": 0.15,
+					"noseLocation": [
+						105,
+						101
+					],
+					"noseLocationConfidence": 0.5,
+					"mouthLocation": [
+						103,
+						122
+					],
 					"mouthLocationConfidence": 0.5,
-					"mouthOpen": false,
-					"mouthOpenConfidence": 0.08,
+					"mouthOpen": true,
+					"mouthOpenConfidence": 0.07,
 					"isMale": false,
-					"genderConfidence": 0.09,
+					"genderConfidence": 0.22,
 					"expression": "Unknown",
-					"expressionConfidence": 0.51,
+					"expressionConfidence": 0.09,
 					"wearingGlasses": false,
-					"glassesConfidence": 0.6,
+					"glassesConfidence": 0.19,
 					"wearingDarkGlasses": false,
-					"wearingDarkGlassesConfidence": 0.19
+					"wearingDarkGlassesConfidence": 0.17
+				}
+			],
+			"visiblity_info": [
+				{
+					"start_frame": 253186,
+					"end_frame": 270470
 				},
 				{
-					"face_id": 2,
+					"start_frame": 272205,
+					"end_frame": 287020
+				}
+			]
+		},
+		{
+			"track_id": 20,
+			"faces": [
+				{
+					"face_id": 0,
 					"s3_bucket": "s3_bucket",
-					"s3_key": "test\/test_face_17_2.jpg",
+					"s3_key": "test\/test_face_20_0.jpg",
 					"md5sum": "md5sum",
-					"face_confidence": 53.3231,
+					"face_confidence": 55.3669,
 					"face_rotation_pitch": 0,
-					"face_rotation_roll": 0,
+					"face_rotation_roll": 3,
 					"face_rotation_yaw": 0,
 					"width": 64,
 					"height": 64,
-					"backgroundUniformity": 0.655656,
-					"sharpness": 0.639216,
-					"totalConfidence": 0.452916,
-					"grayscaleDensity": 0.933333,
+					"backgroundUniformity": 0.772099,
+					"sharpness": 0.568627,
+					"totalConfidence": 0.422731,
+					"grayscaleDensity": 0.823529,
 					"hasAdditionalFaceInformation": true,
 					"leftEyeCenter": [
 						127,
@@ -1612,97 +1996,89 @@
 					],
 					"leftEyeConfidence": 0.5,
 					"rightEyeCenter": [
-						94,
-						93
+						91,
+						90
 					],
 					"rightEyeConfidence": 0.5,
-					"interEyeDistance": 33.0606,
+					"interEyeDistance": 36.0139,
 					"blinking": false,
-					"blinkingConfidence": 0.07,
+					"blinkingConfidence": 0.09,
 					"noseLocation": [
-						109,
-						111
+						105,
+						108
 					],
 					"noseLocationConfidence": 0.5,
 					"mouthLocation": [
-						110,
-						131
+						107,
+						126
 					],
 					"mouthLocationConfidence": 0.5,
-					"mouthOpen": true,
-					"mouthOpenConfidence": 0.71,
+					"mouthOpen": false,
+					"mouthOpenConfidence": 0.07,
 					"isMale": false,
-					"genderConfidence": 0.17,
+					"genderConfidence": 0.12,
 					"expression": "Unknown",
-					"expressionConfidence": 2.55,
+					"expressionConfidence": 0.14,
 					"wearingGlasses": false,
-					"glassesConfidence": 0.8,
+					"glassesConfidence": 0.64,
 					"wearingDarkGlasses": false,
-					"wearingDarkGlassesConfidence": 0.21
+					"wearingDarkGlassesConfidence": 0.14
 				},
 				{
-					"face_id": 3,
+					"face_id": 1,
 					"s3_bucket": "s3_bucket",
-					"s3_key": "test\/test_face_17_3.jpg",
+					"s3_key": "test\/test_face_20_1.jpg",
 					"md5sum": "md5sum",
-					"face_confidence": 51.7341,
+					"face_confidence": 52.9793,
 					"face_rotation_pitch": 0,
-					"face_rotation_roll": 3,
+					"face_rotation_roll": 0,
 					"face_rotation_yaw": 0,
 					"width": 64,
 					"height": 64,
-					"backgroundUniformity": 0.830353,
-					"sharpness": 0.670588,
-					"totalConfidence": 0.464629,
-					"grayscaleDensity": 0.921569,
+					"backgroundUniformity": 0.80649,
+					"sharpness": 0.67451,
+					"totalConfidence": 0.469703,
+					"grayscaleDensity": 0.937255,
 					"hasAdditionalFaceInformation": true,
 					"leftEyeCenter": [
-						146,
-						146
+						164,
+						164
 					],
 					"leftEyeConfidence": 0.5,
 					"rightEyeCenter": [
-						110,
-						102
+						127,
+						111
 					],
 					"rightEyeConfidence": 0.5,
-					"interEyeDistance": 36.3456,
+					"interEyeDistance": 37.054,
 					"blinking": false,
-					"blinkingConfidence": 0.18,
+					"blinkingConfidence": 0.24,
 					"noseLocation": [
-						130,
-						121
+						149,
+						133
 					],
 					"noseLocationConfidence": 0.5,
 					"mouthLocation": [
-						127,
-						140
+						148,
+						150
 					],
 					"mouthLocationConfidence": 0.5,
 					"mouthOpen": true,
-					"mouthOpenConfidence": 0.15,
+					"mouthOpenConfidence": 0.37,
 					"isMale": false,
-					"genderConfidence": 0.19,
+					"genderConfidence": 0.12,
 					"expression": "Smile",
-					"expressionConfidence": 0.44,
+					"expressionConfidence": 0.32,
 					"wearingGlasses": false,
-					"glassesConfidence": 0.69,
+					"glassesConfidence": 0.74,
 					"wearingDarkGlasses": false,
-					"wearingDarkGlassesConfidence": 0.23
+					"wearingDarkGlassesConfidence": 0.25
 				}
 			],
 			"visiblity_info": [
 				{
-					"start_frame": 474074,
-					"end_frame": 496029
-				},
-				{
-					"start_frame": 500333,
-					"end_frame": 515382
-				},
-				{
-					"start_frame": 515548,
-					"end_frame": 528762
+					"start_frame": 287020,
+					"end_frame": 316049
 				}
 			]
 		}

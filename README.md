@@ -86,7 +86,12 @@ may run:
    in ```test/test_videos``` and on the right the output of the
    currently built tracker.
 
-5. To deploy the build on a local development machine:
+   NOTE: The operation of the face detector is not deterministic, so
+   when comparing the results with the baseline result you will not
+   see identical output even if nothing changed.  Look for major
+   changes in the quantity and quality of faces detected.
+
+6. To deploy the build on a local development machine:
 
     ```
     mkdir foo
@@ -96,7 +101,7 @@ may run:
     sudo make install
     ```
 
-6. To push the code to staging:
+7. To push the code to staging:
 
     ```
     make clean
