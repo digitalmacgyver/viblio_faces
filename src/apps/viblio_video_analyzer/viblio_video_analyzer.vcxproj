@@ -33,8 +33,14 @@
     <ProjectReference Include="..\..\Libraries\FileSystem\FileSystem.vcxproj">
       <Project>{a4732737-7ae6-43a2-9f49-81fee1afd0d3}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\jpeg-compressor\jpeg-compressor.vcxproj">
+      <Project>{46d7fc06-8243-476a-a676-2a5db48e70fc}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\..\Libraries\Jzon\Jzon.vcxproj">
       <Project>{090c3291-036c-44c2-a566-3d7c5b1a5fb6}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\RekognitionApi\RekognitionApi.vcxproj">
+      <Project>{82c92b92-f9d2-4a51-83d9-0f37ddf6ab42}</Project>
     </ProjectReference>
     <ProjectReference Include="..\..\Libraries\VideoSource\VideoSource.vcxproj">
       <Project>{794d716d-a220-4f45-bac3-7db66afe652c}</Project>
@@ -114,7 +120,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Program Files (x86)\Visual Leak Detector\lib\Win32;..\..\..\libs\OpenTLD\bin\lib\Debug;..\..\..\libs\OpenCV-2.4.5\lib\Debug;..\..\..\libs\boost_1_54_0\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\..\libs\OpenTLD\bin\lib\Debug;..\..\..\libs\OpenCV-2.4.5\lib\Debug;..\..\..\libs\boost_1_54_0\lib</AdditionalLibraryDirectories>
       <AdditionalDependencies>opencv_core245d.lib;opencv_features2d245d.lib;opencv_legacy245d.lib;opencv_highgui245d.lib;opencv_imgproc245d.lib;opencv_nonfree245d.lib;opencv_calib3d245d.lib;opencv_objdetect245d.lib;opencv_contrib245d.lib;opencv_video245d.lib;opentld.lib;cvblobs.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>

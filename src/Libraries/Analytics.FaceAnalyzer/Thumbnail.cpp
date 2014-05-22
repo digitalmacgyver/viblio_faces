@@ -44,7 +44,7 @@ Thumbnail::Thumbnail(FaceAnalyzerConfiguration *faceAnalyzerConfig) :
 {  
 	tokenFaceExtractor = NULL;
 	has_eyecascade= false;
-	face_detector_check.reset( new FaceDetector_Neurotech() );
+	face_detector_check.reset( new FaceDetector_Neurotech(faceAnalyzerConfig) );
 //	thumbnail_details.reset(new ThumbnailDetails());
 	//face_detector_check.reset( new FaceDetector_Neurotech(faceAnalyzerConfig->faceDetectorCascadeFile));
 	//face_detector_neuro.reset(new FaceDetector_Neurotech());

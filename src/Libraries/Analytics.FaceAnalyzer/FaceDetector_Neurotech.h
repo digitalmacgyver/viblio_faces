@@ -4,6 +4,8 @@
 #define __FACEDETECTOR_NEUROTECH__
 #include "FaceDetectionDetails.h"
 
+#include "FaceDetector.h"
+
 #include <memory>
 #include <opencv2/objdetect/objdetect.hpp>
 #include <string>
@@ -20,7 +22,7 @@ namespace Analytics
 {
 	namespace FaceAnalyzer
 	{
-class FaceDetector_Neurotech
+class FaceDetector_Neurotech : public FaceDetector
 {
 
 private:
@@ -49,7 +51,6 @@ private:
 	NBool detectGlasses ;
 	NBool detectDarkGlasses ;
 	NleTemplateSize templateSize ;
-	cv::Rect ConstrainRect(const cv::Rect &rectToConstrain, const cv::Size &imageSize);
 //
 //
 //
@@ -62,11 +63,9 @@ private:
 	FaceDetectionDetails::ExpressionType ConvertNlpExpression(NLExpression nlpExpression);
 public:
 	
-	FaceDetector_Neurotech(void);
-	~FaceDetector_Neurotech(void);
+	FaceDetector_Neurotech(FaceAnalyzerConfiguration *faceAnalyzerConfiguration);
+	~FaceDetector_Neurotech();
 	std::vector<FaceDetectionDetails> Detect(const cv::Mat &frame, bool getDetailedInformation=false);
-	
-	void RenderVisualization(cv::Mat &frame, const std::vector<FaceDetectionDetails> &detectedFaces);
 };
 
 	}

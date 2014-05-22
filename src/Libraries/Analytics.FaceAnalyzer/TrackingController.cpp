@@ -12,6 +12,9 @@
 #include "Tracker_OpenTLD.h"
 #include "Face.h"
 #include "Jzon/Jzon.h"
+#include <boost/uuid/uuid.hpp>
+#include <boost/uuid/uuid_generators.hpp>
+#include <boost/uuid/uuid_io.hpp>
 #include <boost/log/trivial.hpp>
 
 #include <thread>
@@ -175,8 +178,9 @@ void TrackingController::Process( uint64_t frameTimestamp, Frame &frame)
 	for(  ;startIterator!=m_trackedFaces.end(); )
 	{
 
-		if((*startIterator)->get_last_thumbnail_time()==0)
+		if(!(*startIterator)->FirstFrameTrackingSucess())
 		{   
+			BOOST_LOG_TRIVIAL(error) << "Tracker with ID " << to_string((*startIterator)->GetFaceId()) << " failed to track on the first frame, deleting this track";
 			delete *startIterator;
 			startIterator = m_trackedFaces.erase(startIterator);
 		}

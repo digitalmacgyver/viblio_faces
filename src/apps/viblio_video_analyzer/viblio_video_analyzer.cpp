@@ -21,6 +21,7 @@
 #include "FileSystem/FileSystem.h"
 #include "VideoSource/FileVideoSource.h"
 #include "Analytics.FaceAnalyzer/AnalyzerTypes.h"
+#include "Analytics.FaceAnalyzer/FaceDetector.h"
 #include "JobConfiguration.h"
 #include "Analytics.FaceAnalyzer/FaceAnalyzerConfiguration.h"
 #include "VideoProcessor.h"
@@ -45,7 +46,7 @@
 #include <boost/log/support/exception.hpp>
 
 #ifdef _WIN32
-#include <vld.h> // Visual Leak Detector
+//#include <vld.h> // Visual Leak Detector
 #endif 
 
 
@@ -128,7 +129,7 @@ int main(int argc, char* argv[])
 		("eye_detector_cascade_file", po::value<string>(), "the path to the cascade file to use for eye detection")
 		("face_thumbnail_path,p", po::value<string>(), "the location to put output facial thumbnails generated")
 		("filename_prefix", po::value<string>(), "the filename prefix that need to be appended")
-		("face_detection_frequency", po::value<int>()->default_value(3), "set how often we should perform face detection, e.g. a value of 3 means we only check every third frame, lower numbers means we check more frequently but this will be slower")
+		("face_detection_frequency", po::value<int>()->default_value(15), "set how often we should perform face detection, e.g. a value of 3 means we only check every third frame, lower numbers means we check more frequently but this will be slower")
 		("face_image_resize", po::value<float>()->default_value(1.0f), "specifies rescale factor for frames prior to performing face processing")
 		("lost_track_process_frequency", po::value<int>()->default_value(5), "set how often a lost face should perform processing when attempting to regain the track, e.g. a value of 5 means we only check every fifth frame, lower numbers means we check more frequently but this will be slower")
 		("Thumbnail_generation_frequency", po::value<int>()->default_value(1500), "set how often a thumbnail should be generated in milliseconds, e.g. a value of 1500 means we only check every frame after 1500 milliseconds and do thumbnail processing")
@@ -136,6 +137,11 @@ int main(int argc, char* argv[])
 		("maximum_concurrent_trackers", po::value<int>()->default_value(15), "set how many trackers are allowed to exist at one time")
 		("render_visualization", "determines whether visualizations will be rendered")
 		("log_file_path", po::value<string>(), "the path where any log files should be placed")
+		("face_detector", po::value<string>()->default_value("neurotech"), "specifies which detector to use. Options include \"Neurotech\", \"Orbeus\", or \"OpenCV\"")
+		("orbeus_api_key", po::value<string>(), "If the \"face_detector\", is set to \"Orbeus\" then this option must be provided. It specifies the API key to use in queries to the Orbeus API")
+		("orbeus_secret_key", po::value<string>(), "If the \"face_detector\", is set to \"Orbeus\" then this option must be provided. It specifies the secret key to use in queries to the Orbeus API")
+		("orbeus_namespace", po::value<string>(), "If the \"face_detector\", is set to \"Orbeus\" then this option is optional. It specifies the namespace to use in queries to the Orbeus API")
+		("orbeus_user_id", po::value<string>(), "If the \"face_detector\", is set to \"Orbeus\" then this option is optional. It specifies the user_id parameter to use in queries to the Orbeus API")
 		;
 
 	po::variables_map variableMap;
@@ -232,7 +238,7 @@ int main(int argc, char* argv[])
 
 	// now that we have all our config data nice and neat lets start processing
 
-	const char * components = N_T("Biometrics.FaceDetection,Biometrics.FaceExtraction,Biometrics.FaceSegmentation,Biometrics.FaceQualityAssessment");
+	const NChar * components = N_T("Biometrics.FaceDetection,Biometrics.FaceExtraction,Biometrics.FaceSegmentation,Biometrics.FaceQualityAssessment");
 
 	NResult result = N_OK;
 	NBool available = NFalse;
@@ -279,7 +285,7 @@ int main(int argc, char* argv[])
 
 	  if( jobConfig.faceAnalyzerConfig != NULL )
 	    delete jobConfig.faceAnalyzerConfig;
-	} catch ( int e ) {
+	} catch ( Exception e ) {
 	  BOOST_LOG_TRIVIAL( error ) << "Exception thrown in face detection.";
 	  
 	  if ( available ) {
@@ -328,6 +334,31 @@ void ExtractFaceAnalysisParameters( po::variables_map variableMap, Analytics::Fa
 	if (variableMap.count("face_detection_frequency")) 
 	{
 		faceAnalyzerConfig->faceDetectionFrequency = variableMap["face_detection_frequency"].as<int>();
+	}
+
+	if(variableMap.count("face_detector"))
+	{
+		faceAnalyzerConfig->faceDetectorType = Analytics::FaceAnalyzer::FaceDetector::ConvertStringToDetectorType(variableMap["face_detector"].as<string>());
+	}
+
+	if(variableMap.count("orbeus_user_id"))
+	{
+		faceAnalyzerConfig->orbeusUserId = variableMap["orbeus_user_id"].as<string>();
+	}
+
+	if(variableMap.count("orbeus_api_key"))
+	{
+		faceAnalyzerConfig->orbeusApiKey = variableMap["orbeus_api_key"].as<string>();
+	}
+
+	if(variableMap.count("orbeus_secret_key"))
+	{
+		faceAnalyzerConfig->orbeusSecretKey = variableMap["orbeus_secret_key"].as<string>();
+	}
+
+	if(variableMap.count("orbeus_namespace"))
+	{
+		faceAnalyzerConfig->orbeusNamespace = variableMap["orbeus_namespace"].as<string>();
 	}
 
 	if (variableMap.count("lost_track_process_frequency")) 

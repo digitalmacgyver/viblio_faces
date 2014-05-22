@@ -22,7 +22,7 @@ class FaceAnalysis : public Analyzer
 {
 private:
 	// The face detector we will use to identify faces in a given frame
-	std::unique_ptr<FaceDetector_Neurotech> m_faceDetector;
+	std::unique_ptr<FaceDetector> m_faceDetector;
 
 	std::unique_ptr<TrackingController> m_trackingController;
 

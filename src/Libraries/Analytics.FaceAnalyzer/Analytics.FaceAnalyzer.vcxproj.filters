@@ -69,6 +69,12 @@
     <ClCompile Include="Frame.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="FaceDetector.cpp">
+      <Filter>Source Files\Detection</Filter>
+    </ClCompile>
+    <ClCompile Include="FaceDetector_Orbeus.cpp">
+      <Filter>Source Files\Detection</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FaceAnalyzer.h">
@@ -115,6 +121,12 @@
     </ClInclude>
     <ClInclude Include="Frame.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FaceDetector.h">
+      <Filter>Header Files\Detection</Filter>
+    </ClInclude>
+    <ClInclude Include="FaceDetector_Orbeus.h">
+      <Filter>Header Files\Detection</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

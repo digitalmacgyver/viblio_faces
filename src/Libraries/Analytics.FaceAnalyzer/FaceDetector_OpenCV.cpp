@@ -10,6 +10,7 @@
 
 #include "FaceDetector_OpenCV.h"
 #include "EyeDetector_OpenCV.h"
+#include "FaceAnalyzerConfiguration.h"
 
 #include <opencv2/opencv.hpp>
 #include <opencv2/highgui/highgui.hpp>
@@ -26,22 +27,30 @@ namespace Analytics
 	namespace FaceAnalyzer
 	{
 
-FaceDetector_OpenCV::FaceDetector_OpenCV(const string &face_cascade_name, const string &eyes_cascade_name)
+FaceDetector_OpenCV::FaceDetector_OpenCV(FaceAnalyzerConfiguration *faceAnalyzerConfiguration)
+	:
+	FaceDetector(faceAnalyzerConfiguration)
 {
-	if( face_cascade_name.empty() )
+	if( faceAnalyzerConfiguration == NULL )
+	{
+		BOOST_LOG_TRIVIAL(error) << "Face Analyzer configuration provided is NULL. Cannot construct OpenCV face detector";
+		throw runtime_error("Face Analyzer configuration is NULL");
+	}
+
+	if( faceAnalyzerConfiguration->faceDetectorCascadeFile.empty() )
 		return;
 
-	if( !m_faceCascade.load( face_cascade_name ) )
+	if( !m_faceCascade.load( faceAnalyzerConfiguration->faceDetectorCascadeFile ) )
 	{ 
-		BOOST_LOG_TRIVIAL(error) << "Error loading face cascade with filename " << face_cascade_name;
-		throw runtime_error("Error loading face cascade with filename " + face_cascade_name);
+		BOOST_LOG_TRIVIAL(error) << "Error loading face cascade with filename " << faceAnalyzerConfiguration->faceDetectorCascadeFile;
+		throw runtime_error("Error loading face cascade with filename " + faceAnalyzerConfiguration->faceDetectorCascadeFile);
 	}
 	
-	if( !eyes_cascade_name.empty() )
+	if( !faceAnalyzerConfiguration->eyeDetectorCascadeFile.empty() )
 	{
 		try
 		{
-			m_eyeDetector.reset( new EyeDetector_OpenCV(eyes_cascade_name) );
+			m_eyeDetector.reset( new EyeDetector_OpenCV(faceAnalyzerConfiguration->eyeDetectorCascadeFile) );
 		}
 		catch(Exception e)
 		{
@@ -62,9 +71,9 @@ FaceDetector_OpenCV::~FaceDetector_OpenCV()
 {
 }
 
-vector<Rect> FaceDetector_OpenCV::Detect(const Mat &frame)
+vector<FaceDetectionDetails> FaceDetector_OpenCV::Detect(const Mat &frame, bool getDetailedInformation)
 {
-	vector<Rect> faces;
+	vector<FaceDetectionDetails> faceDetails;
 	Mat frame_gray;
 
 	// this copy of the frame is only needed for debug purposes, can be deleted
@@ -76,15 +85,19 @@ vector<Rect> FaceDetector_OpenCV::Detect(const Mat &frame)
 
 	//-- Detect faces
 	// If you end up using a HAAR cascade here then you should use face_cascade.detectMultiScale( frame_gray, faces, 1.1, 2, 0|CV_HAAR_SCALE_IMAGE, Size(30, 30) );
+	vector<Rect> faces;
 	m_faceCascade.detectMultiScale( frame_gray, faces, 1.1, 3, 0 );//, Size(50, 50) );
 
 	if( m_filterFacesByEyeDetections )
 	{
-		vector<Rect> filteredFaces;
-
 		for( unsigned int i = 0; i < faces.size(); i++ )
 		{
+			FaceDetectionDetails currentFaceDeets;
+
 			Rect constrainedRect = ConstrainRect(faces[i], Size(frame_gray.cols, frame_gray.rows));
+		
+			currentFaceDeets.faceRect = constrainedRect;
+			currentFaceDeets.faceDetectionConfidence = 75; // we don't have a confidence measure from OpenCV. Arbitrarily set to 75%
 
 			Mat faceROI = frame_gray( constrainedRect );
 
@@ -93,11 +106,11 @@ vector<Rect> FaceDetector_OpenCV::Detect(const Mat &frame)
 			
 			if( eyes.size() == 2) // means we found the two eyes
 			{
-				filteredFaces.push_back(constrainedRect);
+				faceDetails.push_back(currentFaceDeets);
 			}
 		}
 
-		return filteredFaces;
+		return faceDetails;
 	}
 	else
 	{
@@ -109,58 +122,19 @@ vector<Rect> FaceDetector_OpenCV::Detect(const Mat &frame)
 		}
 		
 		// no filtering so just return the found faces
-		return faces;
-	}
-}
+		for( unsigned int i = 0; i < faces.size(); i++ )
+		{
+			FaceDetectionDetails currentFaceDeets;
 
-// Ensures that the rect passed in is valid based on the image size it is supposedly from. Returns
-// a rect that is sure to be inside the bounds of the image
-Rect FaceDetector_OpenCV::ConstrainRect(const Rect &rectToConstrain, const Size &imageSize)
-{
-	Rect constrainedRect = rectToConstrain;
+			Rect constrainedRect = ConstrainRect(faces[i], Size(frame_gray.cols, frame_gray.rows));
+		
+			currentFaceDeets.faceRect = constrainedRect;
+			currentFaceDeets.faceDetectionConfidence = 75; // we don't have a confidence measure from OpenCV. Arbitrarily set to 75%
 
-	if( rectToConstrain.x < 0 )
-	{
-		// the left edge of the rect is beyond the left edge of the image
-		constrainedRect.width += rectToConstrain.x; // will basically subtract this amount from the width to ensure the right edge of the rect stays in the same place
-		constrainedRect.x = 0; // because we are going to add it here
-	}
+			faceDetails.push_back(currentFaceDeets);
+		}
 
-	if( rectToConstrain.y < 0 )
-	{
-		// the top edge of the rect is beyond the top edge of the image
-		constrainedRect.height += rectToConstrain.y; // will basically subtract this amount from the height to ensure the bottom edge of the rect stays in the same place
-		constrainedRect.y = 0; // because we are going to add it here
-	}
-
-	if( (rectToConstrain.x + rectToConstrain.width) > imageSize.width )
-	{
-		// the right hand edge of the rect goes beyond the edge of the image... crop the right edge so it falls on the edge of the image instead
-		int rightEdgeDifference = (rectToConstrain.x + rectToConstrain.width) - imageSize.width;
-		constrainedRect.width -= rightEdgeDifference;
-	}
-
-	if( (rectToConstrain.y + rectToConstrain.height) > imageSize.height )
-	{
-		// the bottom hand edge of the rect goes beyond the bottom edge of the image... crop the bottom edge so it falls on the edge of the image instead
-		int bottomEdgeDifference = (rectToConstrain.y + rectToConstrain.height) - imageSize.height;
-		constrainedRect.height -= bottomEdgeDifference;
-	}
-
-	return constrainedRect;
-}
-
-void FaceDetector_OpenCV::RenderVisualization(Mat &frame, const vector<Rect> &detectedFaces)
-{
-	// iterate over each of the faces
-	auto faceIter = detectedFaces.begin();
-	auto faceIterEnd = detectedFaces.end();
-
-	for(; faceIter != faceIterEnd; faceIter++)
-	{
-		// Draw the face
-		Point center( (*faceIter).x + int((*faceIter).width*0.5f), (*faceIter).y + int((*faceIter).height*0.5f) );
-		ellipse( frame, center, Size( int((*faceIter).width*0.5f), int((*faceIter).height*0.5f)), 0, 0, 360, Scalar( 255, 0, 0 ), 2, 8, 0 );
+		return faceDetails;
 	}
 }
 

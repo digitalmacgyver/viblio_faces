@@ -12,6 +12,7 @@
 #define ___FACEANALYZER_CONFIG_H__
 
 #include "AnalyzerConfig.h"
+#include "FaceDetector.h"
 
 namespace Analytics
 {
@@ -42,9 +43,23 @@ public:
 	std::string faceThumbnailOutputPath;
 	std::string filenameprefix;
 
+	// the user id used when making API calls to the Orbeus API
+	std::string orbeusUserId;
+
+	// the API key used when making API calls to the Orbeus API
+	std::string orbeusApiKey;
+
+	// the secret key used when making API calls to the Orbeus API
+	std::string orbeusSecretKey;
+
+	// the namespace used when making API calls to the Orbeus API
+	std::string orbeusNamespace;
+
 	// how often we apply face detection. Essentially how many frames are skipped before reapplying recognition.
 	// Higher values will mean faster processing of the video but with a higher chance of missing detection of a face
 	int faceDetectionFrequency;
+
+	FaceDetector::DetectorType faceDetectorType;
 
 	// specifies the rescale factor to be applied to the images prior to face processing. Values lower
 	// than 1 indicate a downscale.

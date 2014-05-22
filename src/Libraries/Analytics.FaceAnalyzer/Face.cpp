@@ -41,6 +41,7 @@ Face::Face(const Mat frame, uint64_t frameTimestamp, Rect initialFaceRegion,Face
 	// in a real system we will probably take a copy of the tracker to initialize the face from as it has learned the background,
 	// however this is yet TBD
 	m_faceTracker.reset(new Tracker_OpenTLD());//m_trackerToInitializeFrom;
+	m_firstFrameTrackingSuccess = false; // we start off with this false, as long as the tracker succeeds in tracking the face at least in the 1st frame then this will be set to true
 	last_thumbnail_time = 0;
 	m_lostThumbnailTimestamp = 0;
     Thumbnail_frequency = faceAnalyzerConfig->Thumbnail_generation_frequency;
@@ -233,6 +234,12 @@ bool Face::Process( uint64_t frameTimestamp, Frame &frame)
 
 	m_mostRecentFrameTimestamp = frameTimestamp;
 
+	if( !m_isLost )
+		// assuming the face isn't lost on the very first frame we try and track the face this will be set to true. Its important
+		// to know situations when we detect a face, attempt to track it and then the tracker fails to even track it in the very first
+		// frame (maybe slightly off the edge of the image), it means it won't be a good frame to track
+		m_firstFrameTrackingSuccess = true; // if we reach here then obviously
+
 	return true;
 }
 
@@ -243,11 +250,6 @@ uint64_t Face::Age()
 		return m_currentFaceVisiblePair.first; // this means the current face has been tracked and has never been lost (so not in the times visible map)
 
 	return (*m_timesWhenFaceVisible.begin()).first;
-}
-
-uint64_t Face::get_last_thumbnail_time()
-{
-	return last_thumbnail_time;
 }
 
 /*

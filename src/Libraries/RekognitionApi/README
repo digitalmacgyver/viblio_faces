@@ -1,0 +1,11 @@
+C++ RESTful client for rekogntion.com
+
+external dependency: curl
+
+Need to link curl lib when compile.
+
+tested in Ubuntu 12.04
+
+info@orbe.us
+
+Orbeus@2013
