@@ -60,6 +60,7 @@ clean :
 
 install_linux_deps:
 	apt-get -y install libopencv-dev
+	apt-get -y install libcurl4-openssl-dev
 	/usr/local/bin/check-and-install-software.pl -db staging -app Neurotec_SDK
 
 package:
