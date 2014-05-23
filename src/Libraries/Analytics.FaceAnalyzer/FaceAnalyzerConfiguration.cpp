@@ -17,6 +17,8 @@ FaceAnalyzerConfiguration::FaceAnalyzerConfiguration()
 	maximumNumberActiveTrackers = 15;
 
 	renderVisualization = false;
+
+	faceDetectorType = FaceDetector::FaceDetector_Neurotech; // default is the Neurotech detector
 }
 
 

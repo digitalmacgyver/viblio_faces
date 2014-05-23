@@ -13,6 +13,7 @@
 #include "FaceAnalyzerConfiguration.h"
 #include "TrackingController.h"
 #include "FaceDetectionDetails.h"
+#include "FaceDetector_Orbeus.h"
 #include "FileSystem/FileSystem.h"
 #include <boost/any.hpp>
 #include <stdexcept>
@@ -50,7 +51,14 @@ FaceAnalysis::FaceAnalysis(FaceAnalyzerConfiguration *faceAnalyzerConfig)
 	}
 
 	//m_faceDetector.reset( new FaceDetector_OpenCV(faceAnalyzerConfig->faceDetectorCascadeFile, faceAnalyzerConfig->eyeDetectorCascadeFile) );
-	m_faceDetector.reset( new FaceDetector_Neurotech( ));
+	if( faceAnalyzerConfig->faceDetectorType == FaceDetector::FaceDetector_Neurotech )
+		m_faceDetector.reset( new FaceDetector_Neurotech(faceAnalyzerConfig));
+	else if( faceAnalyzerConfig->faceDetectorType == FaceDetector::FaceDetector_Orbeus )
+		m_faceDetector.reset( new FaceDetector_Orbeus(faceAnalyzerConfig));
+	else if( faceAnalyzerConfig->faceDetectorType == FaceDetector::FaceDetector_OpenCV )
+		m_faceDetector.reset( new FaceDetector_OpenCV(faceAnalyzerConfig));
+	else
+		throw runtime_error("Unknown face detector type");
 	m_trackingController.reset( new TrackingController(faceAnalyzerConfig) );
 
 	m_faceDetectionFrequency = faceAnalyzerConfig->faceDetectionFrequency;
@@ -93,7 +101,7 @@ void FaceAnalysis::Process(const Mat &frame, uint64_t frameTimestamp)
 		{
 			// its a pity but we have to make use of the underlying Face Detector that is managed by the unique_ptr, but
 			// std::async doesn't seem to like it any other way
-			detectedFacesFuture = std::async(std::launch::async, &Analytics::FaceAnalyzer::FaceDetector_Neurotech::Detect, m_faceDetector.get(), resizedFrame,false);
+			detectedFacesFuture = std::async(std::launch::async, &Analytics::FaceAnalyzer::FaceDetector::Detect, m_faceDetector.get(), resizedFrame,false);
 		}
 		catch(Exception e)
 		{

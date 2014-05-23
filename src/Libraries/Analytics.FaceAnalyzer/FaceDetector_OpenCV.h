@@ -12,7 +12,7 @@
 #include <memory>
 #include <opencv2/objdetect/objdetect.hpp>
 #include <string>
-//#include "EyeDetector_OpenCV.h"
+#include "FaceDetector.h"
 
 namespace Analytics
 {
@@ -21,34 +21,28 @@ namespace Analytics
 
 // forward prototypes of used classes
 class EyeDetector_OpenCV;
+class FaceAnalyzerConfiguration;
 
-class FaceDetector_OpenCV
+class FaceDetector_OpenCV : public FaceDetector
 {
 private:
 	cv::CascadeClassifier m_faceCascade;
 
 	bool m_filterFacesByEyeDetections;
 	std::unique_ptr<EyeDetector_OpenCV> m_eyeDetector;
-	
-	cv::Rect ConstrainRect(const cv::Rect &rectToConstrain, const cv::Size &imageSize);
 
 	// no copy constructor or assignment operator
 	FaceDetector_OpenCV(const FaceDetector_OpenCV&);
 	FaceDetector_OpenCV& operator=(const FaceDetector_OpenCV&);
 
 public:
-	FaceDetector_OpenCV(const std::string &face_cascade_name, const std::string &eyes_cascade_name="");
+	FaceDetector_OpenCV(FaceAnalyzerConfiguration *faceAnalyzerConfiguration);
 	~FaceDetector_OpenCV();
 
 	/*
-		Performs detection on the opencv frame passed in. Returns a vector of rects with the locations of any faces detected (empty if no faces detected)
+		Performs detection on the opencv frame passed in. Returns a vector of face detection detail structures with the locations of any faces detected (empty if no faces detected)
 	*/
-	std::vector<cv::Rect> Detect(const cv::Mat &frame);
-
-	/*
-		Renders a visualization of where the faces were detected (assuming they were)
-	*/
-	void RenderVisualization(cv::Mat &frame, const std::vector<cv::Rect> &detectedFaces);
+	std::vector<FaceDetectionDetails> Detect(const cv::Mat &frame, bool getDetailedInformation=false);
 };
 
 // end of namespaces

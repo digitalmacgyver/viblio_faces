@@ -16,7 +16,7 @@ MAKEARGS="NEUROTEC=$(NEUROTEC)" \
 	"NEUROTEC_ARCH=$(NEUROTEC_ARCH)" \
 	"DEPLOY=$(DEPLOY)"
 
-all : cvblobs tld mftracker analytics FileSystem VideoSource viblio package
+all : cvblobs tld mftracker analytics FileSystem VideoSource jpeg-compressor RekognitionApi viblio package
 
 cvblobs : 
 	( cd OpenTLD/src/3rdparty/cvblobs ; make )
@@ -36,6 +36,12 @@ FileSystem :
 VideoSource :
 	( cd src/Libraries/VideoSource ; make )
 
+jpeg-compressor :
+	( cd src/Libraries/jpeg-compressor ; make )
+
+RekognitionApi :
+	( cd src/Libraries/RekognitionApi ; make )
+
 viblio : 
 	( cd src/apps/viblio_video_analyzer; make $(MAKEARGS) )
 
@@ -46,6 +52,8 @@ clean :
 	( cd src/Libraries/Analytics.FaceAnalyzer ; make clean )
 	( cd src/Libraries/FileSystem ; make clean )
 	( cd src/Libraries/VideoSource ; make clean )
+	( cd src/Libraries/RekognitionApi ; make clean )
+	( cd src/Libraries/jpeg-compressor ; make clean )
 	( cd src/apps/viblio_video_analyzer; make clean )
 	$(RM) -rf _package
 	$(RM) -f package.tar.gz
@@ -75,6 +83,7 @@ testfast: all .FORCE
 
 install_linux_deps:
 	apt-get -y install libopencv-dev
+	apt-get -y install libcurl4-openssl-dev
 	/usr/local/bin/check-and-install-software.pl -db staging -app Neurotec_SDK
 
 package:

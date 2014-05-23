@@ -24,8 +24,10 @@
     <ClCompile Include="FaceAnalyzer.cpp" />
     <ClCompile Include="FaceAnalyzerConfiguration.cpp" />
     <ClCompile Include="FaceDetectionDetails.cpp" />
+    <ClCompile Include="FaceDetector.cpp" />
     <ClCompile Include="FaceDetector_Neurotech.cpp" />
     <ClCompile Include="FaceDetector_OpenCV.cpp" />
+    <ClCompile Include="FaceDetector_Orbeus.cpp" />
     <ClCompile Include="Frame.cpp" />
     <ClCompile Include="Thumbnail.cpp" />
     <ClCompile Include="ThumbnailDetails.cpp" />
@@ -41,8 +43,10 @@
     <ClInclude Include="FaceAnalyzer.h" />
     <ClInclude Include="FaceAnalyzerConfiguration.h" />
     <ClInclude Include="FaceDetectionDetails.h" />
+    <ClInclude Include="FaceDetector.h" />
     <ClInclude Include="FaceDetector_Neurotech.h" />
     <ClInclude Include="FaceDetector_OpenCV.h" />
+    <ClInclude Include="FaceDetector_Orbeus.h" />
     <ClInclude Include="Frame.h" />
     <ClInclude Include="Thumbnail.h" />
     <ClInclude Include="ThumbnailDetails.h" />
@@ -105,15 +109,15 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;_VARIADIC_MAX=10;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..;..\..\..\libs\OpenCV-2.4.5\include;..\..\..\libs\OpenCV-2.4.5\include\opencv;..\..\..\libs\OpenTLD\src\libopentld\tld;..\..\..\libs\boost_1_54_0\include;..\..\..\libs\gtest-1.7.0\include;..\..\..\libs\json_spirit_v4.06\json_spirit;..\..\..\libs\Neurotec_Biometric_4_5_SDK\Include;..\..\..\libs\Neurotec_Biometric_4_5_SDK_Trial\Tutorials\Common\C;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..;..\..\..\libs\OpenCV-2.4.5\include;..\..\..\libs\OpenCV-2.4.5\include\opencv;..\..\..\libs\OpenTLD\src\libopentld\tld;..\..\..\libs\boost_1_54_0\include;..\..\..\libs\gtest-1.7.0\include;..\..\..\libs\json_spirit_v4.06\json_spirit;..\..\..\libs\Neurotec_Biometric_4_5_SDK\Include;..\..\..\libs\Neurotec_Biometric_4_5_SDK_Trial\Tutorials\Common\C;..\..\..\libs\libcurl-7.18\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalLibraryDirectories>..\..\..\libs\Neurotec_Biometric_4_5_SDK\Lib\Win32_x86\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>bioapi20.dll.lib;NBiometrics.dll.lib;NBiometricStandards.dll.lib;NBiometricTools.dll.lib;NCluster.dll.lib;NCore.dll.lib;NDevices.dll.lib;NdmVirtual.dll.lib;Nffv.dll.lib;NLicensing.dll.lib;NMedia.dll.lib;NMediaProc.dll.lib;sqlite3.dll.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\..\libs\Neurotec_Biometric_4_5_SDK\Lib\Win32_x86\;..\..\..\libs\libcurl-7.18;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>bioapi20.dll.lib;NBiometrics.dll.lib;NBiometricStandards.dll.lib;NBiometricTools.dll.lib;NCluster.dll.lib;NCore.dll.lib;NDevices.dll.lib;NdmVirtual.dll.lib;Nffv.dll.lib;NLicensing.dll.lib;NMedia.dll.lib;NMediaProc.dll.lib;sqlite3.dll.lib;libcurl.lib%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -139,7 +143,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..;..\..\..\libs\OpenCV-2.4.3\include;..\..\..\libs\OpenCV-2.4.5\include\opencv;..\..\..\libs\OpenTLD\src\libopentld\tld;..\..\..\libs\boost_1_53_0\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..;..\..\..\libs\OpenCV-2.4.5\include;..\..\..\libs\OpenCV-2.4.5\include\opencv;..\..\..\libs\OpenTLD\src\libopentld\tld;..\..\..\libs\boost_1_53_0\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

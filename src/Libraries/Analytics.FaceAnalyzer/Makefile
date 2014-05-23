@@ -3,8 +3,10 @@ EyeDetector_OpenCV.cpp\
 FaceAnalyzerConfiguration.cpp\
 FaceAnalyzer.cpp\
 Face.cpp\
+FaceDetector.cpp\
 FaceDetector_OpenCV.cpp\
 FaceDetector_Neurotech.cpp\
+FaceDetector_Orbeus.cpp\
 Tracker_OpenTLD.cpp\
 TrackingController.cpp\
 FaceDetectionDetails.cpp\
