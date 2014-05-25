@@ -5,6 +5,8 @@ NEUROTEC ?= /opt/Neurotec_SDK
 # and its dependencies
 DEPLOY ?= /deploy/vatools
 
+TEST_ARGS ?= --analyzers FaceAnalysis --discarded_tracker_frequency 5000 --maximum_concurrent_trackers 10 --face_detector orbeus --orbeus_api_key zdN9xO1srMEFoEsq --orbeus_secret_key bvi5Li9bcQPE3W5S --orbeus_namespace fd_test_2 --orbeus_user_id test
+
 # Architecture of the linux we are building for
 ARCH=$(shell uname -i)
 ifeq ($(ARCH),i386)
@@ -59,18 +61,18 @@ clean :
 	$(RM) -f package.tar.gz
 
 test: testfast
-	( LD_LIBRARY_PATH=_package/lib ; _package/bin/viblio_video_analyzer -f test/test_videos/many-moving.mp4 --analyzers FaceAnalysis --face_thumbnail_path test/output/many-moving --filename_prefix test --discarded_tracker_frequency 5000 --maximum_concurrent_trackers 10 )
-	( LD_LIBRARY_PATH=_package/lib ; _package/bin/viblio_video_analyzer -f test/test_videos/many-static.mp4 --analyzers FaceAnalysis --face_thumbnail_path test/output/many-static --filename_prefix test --discarded_tracker_frequency 5000 --maximum_concurrent_trackers 10 )
+	( LD_LIBRARY_PATH=_package/lib ; _package/bin/viblio_video_analyzer -f test/test_videos/many-moving.mp4 --face_thumbnail_path test/output/many-moving --filename_prefix test $(TEST_ARGS) )
+	( LD_LIBRARY_PATH=_package/lib ; _package/bin/viblio_video_analyzer -f test/test_videos/many-static.mp4 --face_thumbnail_path test/output/many-static --filename_prefix test $(TEST_ARGS) )
 	( ./test/generate_html.py --base_json test/baseline-output/many-moving/test.json --new_json test/output/many-moving/test.json --output_filename test-many-moving.html )
 	( ./test/generate_html.py --base_json test/baseline-output/many-static/test.json --new_json test/output/many-static/test.json --output_filename test-many-static.html )
 	echo "View test-many-moving.html and test-many-static.html"
 
 testfast: all .FORCE
-	( LD_LIBRARY_PATH=_package/lib ; _package/bin/viblio_video_analyzer -f test/test_videos/no-face.mp4 --analyzers FaceAnalysis --face_thumbnail_path test/output/no-face --filename_prefix test --discarded_tracker_frequency 5000 --maximum_concurrent_trackers 10 )
-	( LD_LIBRARY_PATH=_package/lib ; _package/bin/viblio_video_analyzer -f test/test_videos/two-faces.avi --analyzers FaceAnalysis --face_thumbnail_path test/output/two-faces --filename_prefix test --discarded_tracker_frequency 5000 --maximum_concurrent_trackers 10 )
-	( LD_LIBRARY_PATH=_package/lib ; _package/bin/viblio_video_analyzer -f test/test_videos/two-faces-track-test.mp4 --analyzers FaceAnalysis --face_thumbnail_path test/output/two-faces-track-test --filename_prefix test --discarded_tracker_frequency 5000 --maximum_concurrent_trackers 10 )
-	( LD_LIBRARY_PATH=_package/lib ; _package/bin/viblio_video_analyzer -f test/test_videos/three-faces-track-test.mp4 --analyzers FaceAnalysis --face_thumbnail_path test/output/three-faces-track-test --filename_prefix test --discarded_tracker_frequency 5000 --maximum_concurrent_trackers 10 )
-	( LD_LIBRARY_PATH=_package/lib ; _package/bin/viblio_video_analyzer -f test/test_videos/few-faces.flv --analyzers FaceAnalysis --face_thumbnail_path test/output/few-faces --filename_prefix test --discarded_tracker_frequency 5000 --maximum_concurrent_trackers 10 )
+	( LD_LIBRARY_PATH=_package/lib ; _package/bin/viblio_video_analyzer -f test/test_videos/no-face.mp4 --face_thumbnail_path test/output/no-face --filename_prefix test $(TEST_ARGS) )
+	( LD_LIBRARY_PATH=_package/lib ; _package/bin/viblio_video_analyzer -f test/test_videos/two-faces.avi --face_thumbnail_path test/output/two-faces --filename_prefix test $(TEST_ARGS) )
+	( LD_LIBRARY_PATH=_package/lib ; _package/bin/viblio_video_analyzer -f test/test_videos/two-faces-track-test.mp4 --face_thumbnail_path test/output/two-faces-track-test --filename_prefix test $(TEST_ARGS) )
+	( LD_LIBRARY_PATH=_package/lib ; _package/bin/viblio_video_analyzer -f test/test_videos/three-faces-track-test.mp4 --face_thumbnail_path test/output/three-faces-track-test --filename_prefix test $(TEST_ARGS) )
+	( LD_LIBRARY_PATH=_package/lib ; _package/bin/viblio_video_analyzer -f test/test_videos/few-faces.flv --face_thumbnail_path test/output/few-faces --filename_prefix test $(TEST_ARGS) )
 	( ./test/generate_html.py --base_json test/baseline-output/no-face/test.json --new_json test/output/no-face/test.json --output_filename test-no-face.html )
 	( ./test/generate_html.py --base_json test/baseline-output/two-faces/test.json --new_json test/output/two-faces/test.json --output_filename test-two-faces.html )
 	( ./test/generate_html.py --base_json test/baseline-output/two-faces-track-test/test.json --new_json test/output/two-faces-track-test/test.json --output_filename test-two-faces-track-test.html )
@@ -79,7 +81,6 @@ testfast: all .FORCE
 	echo "View test-no-face.html test-two-faces.html test-two-faces-track-test.html test-three-faces-track-test.html test-few-faces.html"
 
 .FORCE:
-
 
 install_linux_deps:
 	apt-get -y install libopencv-dev
