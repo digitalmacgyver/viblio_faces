@@ -5,7 +5,9 @@ NEUROTEC ?= /opt/Neurotec_SDK
 # and its dependencies
 DEPLOY ?= /deploy/vatools
 
-TEST_ARGS ?= --analyzers FaceAnalysis --discarded_tracker_frequency 5000 --maximum_concurrent_trackers 10 --face_detector orbeus --orbeus_api_key zdN9xO1srMEFoEsq --orbeus_secret_key bvi5Li9bcQPE3W5S --orbeus_namespace fd_test_2 --orbeus_user_id test
+TEST_ARGS ?= --analyzers FaceAnalysis --discarded_tracker_frequency 85000 --maximum_concurrent_trackers 10 --face_detector orbeus --orbeus_api_key zdN9xO1srMEFoEsq --orbeus_secret_key bvi5Li9bcQPE3W5S --orbeus_namespace fd_test_2 --orbeus_user_id test
+
+#TEST_ARGS ?= --analyzers FaceAnalysis --discarded_tracker_frequency 5000 --maximum_concurrent_trackers 10 
 
 # Architecture of the linux we are building for
 ARCH=$(shell uname -i)
@@ -73,12 +75,14 @@ testfast: all .FORCE
 	( LD_LIBRARY_PATH=_package/lib ; _package/bin/viblio_video_analyzer -f test/test_videos/two-faces-track-test.mp4 --face_thumbnail_path test/output/two-faces-track-test --filename_prefix test $(TEST_ARGS) )
 	( LD_LIBRARY_PATH=_package/lib ; _package/bin/viblio_video_analyzer -f test/test_videos/three-faces-track-test.mp4 --face_thumbnail_path test/output/three-faces-track-test --filename_prefix test $(TEST_ARGS) )
 	( LD_LIBRARY_PATH=_package/lib ; _package/bin/viblio_video_analyzer -f test/test_videos/few-faces.flv --face_thumbnail_path test/output/few-faces --filename_prefix test $(TEST_ARGS) )
+	( LD_LIBRARY_PATH=_package/lib ; _package/bin/viblio_video_analyzer -f test/test_videos/many-short.mp4 --face_thumbnail_path test/output/many-short --filename_prefix test $(TEST_ARGS) )
 	( ./test/generate_html.py --base_json test/baseline-output/no-face/test.json --new_json test/output/no-face/test.json --output_filename test-no-face.html )
 	( ./test/generate_html.py --base_json test/baseline-output/two-faces/test.json --new_json test/output/two-faces/test.json --output_filename test-two-faces.html )
 	( ./test/generate_html.py --base_json test/baseline-output/two-faces-track-test/test.json --new_json test/output/two-faces-track-test/test.json --output_filename test-two-faces-track-test.html )
 	( ./test/generate_html.py --base_json test/baseline-output/three-faces-track-test/test.json --new_json test/output/three-faces-track-test/test.json --output_filename test-three-faces-track-test.html )
 	( ./test/generate_html.py --base_json test/baseline-output/few-faces/test.json --new_json test/output/few-faces/test.json --output_filename test-few-faces.html )
-	echo "View test-no-face.html test-two-faces.html test-two-faces-track-test.html test-three-faces-track-test.html test-few-faces.html"
+	( ./test/generate_html.py --base_json test/baseline-output/many-short/test.json --new_json test/output/many-short/test.json --output_filename test-many-short.html )
+	echo "View test-no-face.html test-two-faces.html test-two-faces-track-test.html test-three-faces-track-test.html test-few-faces.html test-many-short.html"
 
 .FORCE:
 
@@ -101,4 +105,4 @@ package:
 	( cd packaging; tar zcf ../package.tar.gz . ; rm package.tar.gz )
 
 bump:
-	upgrade.pl -db staging -app vatools -f package.tar.gz
+	upgrade.pl -db staging -app vatools -f package.tar.gz -bump
