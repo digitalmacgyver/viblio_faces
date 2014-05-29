@@ -78,7 +78,10 @@ std::vector<FaceDetectionDetails> FaceDetector_Orbeus::Detect(const Mat &frame, 
 	// for testing only, please use client specific key and secret!
 	query_config["api_key"] = m_apiKey;
 	query_config["api_secret"] = m_apiSecret;
-	query_config["jobs"] = "face_part_aggressive";
+	if(!getDetailedInformation)
+		query_config["jobs"] = "face_part_aggressive";
+	else
+		query_config["jobs"] = "face_part_detail_gender_emotion_age_race_glass_mouth_open_wide_aggressive_beauty";
 	
 	// take the input frame and compress it using the JPEG compressor
 	// Fill in the compression parameter structure.
@@ -117,8 +120,15 @@ std::vector<FaceDetectionDetails> FaceDetector_Orbeus::Detect(const Mat &frame, 
 	base64_codec.Encode(jpgData, &encoded);
 	query_config["base64"] = encoded;
 
-	if (!rekognition_api::APICall(api_addr_base, query_config, &response)) {
-		cerr << "API call failure!" << endl;
+	if (!rekognition_api::APICall(api_addr_base, query_config, &response)) 
+	{
+		BOOST_LOG_TRIVIAL(error) << "Orbeus API call failed";
+		return faces;
+	}
+
+	if( !response.isMember("face_detection") )
+	{
+		BOOST_LOG_TRIVIAL(error) << "No face detection information was provided in the response from the Orbeus API";
 		return faces;
 	}
 
@@ -127,6 +137,10 @@ std::vector<FaceDetectionDetails> FaceDetector_Orbeus::Detect(const Mat &frame, 
 	const Json::Value face_detection = response["face_detection"];
 	for (unsigned int i = 0; i < face_detection.size(); ++i) 
 	{
+		if( !face_detection[i].isMember("boundingbox") || !face_detection[i]["boundingbox"].isMember("tl") ||
+			!face_detection[i]["boundingbox"].isMember("size") || !face_detection[i].isMember("confidence") )
+			continue;
+
 		FaceDetectionDetails currentFaceDeets;
 
 		Rect currentFaceRect;
@@ -139,16 +153,68 @@ std::vector<FaceDetectionDetails> FaceDetector_Orbeus::Detect(const Mat &frame, 
 		currentFaceDeets.faceRect = constrainedRect;
 		currentFaceDeets.faceDetectionConfidence = face_detection[i]["confidence"].asDouble();
 
-		faces.push_back(currentFaceDeets);
-		
-		/*double x, y, w, h;
-		x = face_detection[i]["boundingbox"]["tl"]["x"].asDouble();
-		y = face_detection[i]["boundingbox"]["tl"]["y"].asDouble();
-		w = face_detection[i]["boundingbox"]["size"]["width"].asDouble();
-		h = face_detection[i]["boundingbox"]["size"]["height"].asDouble();
+		if( getDetailedInformation )
+		{
+			currentFaceDeets.hasAdditionalFaceInformation = true;
 
-		cout << "face " << i << ": [" << x << " " << y << " " << w << " " << h
-				<< "]" << endl;*/
+			// pull out the pose
+			if( face_detection[i].isMember("pose") && 
+				face_detection[i]["pose"].isMember("yaw") && face_detection[i]["pose"].isMember("pitch") && face_detection[i]["pose"].isMember("roll") )
+			{
+				currentFaceDeets.yaw = face_detection[i]["pose"]["yaw"].asInt();
+				currentFaceDeets.pitch = face_detection[i]["pose"]["pitch"].asInt();
+				currentFaceDeets.roll = face_detection[i]["pose"]["roll"].asInt();
+			}
+
+			// pull out the position of the nose
+			if( face_detection[i].isMember("nose") &&
+				face_detection[i]["nose"].isMember("x") && face_detection[i]["nose"].isMember("y") )
+			{
+				currentFaceDeets.noseLocation.x = face_detection[i]["nose"]["x"].asInt();
+				currentFaceDeets.noseLocation.y = face_detection[i]["nose"]["y"].asInt();
+				currentFaceDeets.noseLocationConfidence = 50;
+			}
+
+			// pull out the position of the left eye
+			if( face_detection[i].isMember("eye_left") &&
+				face_detection[i]["eye_left"].isMember("x") && face_detection[i]["eye_left"].isMember("y") )
+			{
+				currentFaceDeets.leftEye.x = face_detection[i]["eye_left"]["x"].asInt();
+				currentFaceDeets.leftEye.y = face_detection[i]["eye_left"]["y"].asInt();
+				currentFaceDeets.leftEyeConfidence = 0.5f;
+			}
+
+			// pull out the position of the right eye
+			if( face_detection[i].isMember("eye_right") && 
+				face_detection[i]["eye_right"].isMember("x") && face_detection[i]["eye_right"].isMember("y") )
+			{
+				currentFaceDeets.rightEye.x = face_detection[i]["eye_right"]["x"].asInt();
+				currentFaceDeets.rightEye.y = face_detection[i]["eye_right"]["y"].asInt();
+				currentFaceDeets.rightEyeConfidence = 0.5f;
+			}
+
+			if( currentFaceDeets.rightEyeConfidence > 0.0f && currentFaceDeets.leftEyeConfidence > 0.0f )
+			{
+				// we can only calculate the intereye distance if we have both eye locations
+				if( currentFaceDeets.leftEye.y == currentFaceDeets.rightEye.y )
+					currentFaceDeets.intereyeDistance = float(currentFaceDeets.leftEye.x - currentFaceDeets.rightEye.x);
+				else
+					currentFaceDeets.intereyeDistance = sqrt( pow( currentFaceDeets.leftEye.x - currentFaceDeets.rightEye.x, 2 )
+															 +pow( currentFaceDeets.leftEye.y - currentFaceDeets.rightEye.y, 2 ) );
+			}
+			else
+				currentFaceDeets.intereyeDistance = 0.0f;
+
+			// determine if the person is wearing glasses or not
+			if( face_detection[i].isMember("glasses") )
+			{
+				currentFaceDeets.glassesConfidence = face_detection[i]["glasses"].asDouble();
+				if(currentFaceDeets.glassesConfidence > 0.0f)
+					currentFaceDeets.wearingGlasses = true;
+			}
+		}
+
+		faces.push_back(currentFaceDeets);
 	}
 
 	return faces;
