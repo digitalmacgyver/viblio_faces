@@ -119,7 +119,12 @@ std::vector<FaceDetectionDetails> FaceDetector_Orbeus::Detect(const Mat &frame, 
 
 	if (!rekognition_api::APICall(api_addr_base, query_config, &response)) {
 		cerr << "API call failure!" << endl;
-		return faces;
+		cerr << "Trying call again:" << endl;
+		if (!rekognition_api::APICall(api_addr_base, query_config, &response)) {
+		  cerr << "API call failed a second time, giving up!" << endl;
+		  return faces;
+		}
+		cerr << "API call successful on second attempt!" << endl;
 	}
 
 	// For the format of the results, please refer to our doc:
