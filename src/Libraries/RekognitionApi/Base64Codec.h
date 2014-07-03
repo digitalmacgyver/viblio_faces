@@ -19,6 +19,7 @@ public:
 	virtual ~Base64Codec();
 
 	bool Encode(const std::string& input, std::string* output);
+	bool base64_encode(const std::string& input, std::string* output);
 	bool Decode(const std::string& input, std::string* output);
 };
 

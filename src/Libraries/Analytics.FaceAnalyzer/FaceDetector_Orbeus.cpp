@@ -7,6 +7,9 @@
 #include <stdexcept>
 #include <vector>
 
+#include <iostream>
+#include <fstream>
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -67,6 +70,7 @@ FaceDetector_Orbeus::~FaceDetector_Orbeus()
 	}
 }
 
+
 std::vector<FaceDetectionDetails> FaceDetector_Orbeus::Detect(const Mat &frame, bool getDetailedInformation)
 {
 	vector<FaceDetectionDetails> faces;
@@ -95,8 +99,9 @@ std::vector<FaceDetectionDetails> FaceDetector_Orbeus::Detect(const Mat &frame, 
 	if( newJpgBufferSize != m_jpgBufferSize )
 	{
 		// if these two sizes are different it means we have to reinitialize our jpg buffer for storing the JPEG compressed data
-		if( m_jpgBuffer != NULL)
-			delete [] m_jpgBuffer;
+	  if( m_jpgBuffer != NULL) { 
+	    delete [] m_jpgBuffer;
+	  }
 
 		m_jpgBufferSize = newJpgBufferSize;
 		m_jpgBuffer = new char[m_jpgBufferSize];
@@ -114,7 +119,8 @@ std::vector<FaceDetectionDetails> FaceDetector_Orbeus::Detect(const Mat &frame, 
 
 	rekognition_api::Base64Codec base64_codec;
 	string encoded;
-	base64_codec.Encode(jpgData, &encoded);
+	base64_codec.base64_encode(jpgData, &encoded);
+
 	query_config["base64"] = encoded;
 
 	if (!rekognition_api::APICall(api_addr_base, query_config, &response)) {
@@ -125,6 +131,20 @@ std::vector<FaceDetectionDetails> FaceDetector_Orbeus::Detect(const Mat &frame, 
 		  return faces;
 		}
 		cerr << "API call successful on second attempt!" << endl;
+	}
+
+	if ( !response.isMember("face_detection") ) {
+	  if ( response.isMember("usage") ) {
+	    const Json::Value usageInfo = response["usage"];
+	    if( usageInfo.isMember("status") ) {
+	      BOOST_LOG_TRIVIAL(error) << "No face detection information was provided in the response from the Orbeus API. Status messages was " << usageInfo["status"];
+	    } else {
+	      BOOST_LOG_TRIVIAL(error) << "No face detection information was provided in the response from the Orbeus API";
+	    }
+	  } else {
+	    BOOST_LOG_TRIVIAL(error) << "No face detection information was provided in the response from the Orbeus API";
+	  }
+	  return faces;
 	}
 
 	// For the format of the results, please refer to our doc:
