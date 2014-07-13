@@ -53,7 +53,7 @@ Thumbnail::Thumbnail(FaceAnalyzerConfiguration *faceAnalyzerConfig) :
 	//	eye_detector_check.reset(new EyeDetector_OpenCV(faceAnalyzerConfig->eyeDetectorCascadeFile));
 	//}
 	
-	Thumbnail_enlarge_percentage = 0.95f;
+	Thumbnail_enlarge_percentage = 0.15f;
 	NBool available = false;
 
 	NResult result = N_OK;
@@ -112,8 +112,21 @@ bool Thumbnail::ExtractThumbnail(const cv::Rect &ThumbnailLocation, float &confi
 	
 	float scalefactor = origFrame.getscale();
 	
+	  
 
-	Rect enlarged_thumbnail((int)(ThumbnailLocation.x*scalefactor)-(int)(ThumbnailLocation.width*Thumbnail_enlarge_percentage*scalefactor),(int)(ThumbnailLocation.y*scalefactor)-(int)(ThumbnailLocation.height*scalefactor*Thumbnail_enlarge_percentage),(int)(ThumbnailLocation.width*scalefactor)+(int)(ThumbnailLocation.width*scalefactor*(Thumbnail_enlarge_percentage*2)),(int)(ThumbnailLocation.height*scalefactor)+(int)(ThumbnailLocation.height*scalefactor*Thumbnail_enlarge_percentage*2));
+	Rect enlarged_thumbnail(
+				// Top left pixel.
+				//(int)(ThumbnailLocation.x*scalefactor)-(int)(ThumbnailLocation.width*Thumbnail_enlarge_percentage*scalefactor),
+				(int)(ThumbnailLocation.x*scalefactor)-(int)(ThumbnailLocation.width*Thumbnail_enlarge_percentage*scalefactor/2),
+				// Top right pixel.
+				//(int)(ThumbnailLocation.y*scalefactor)-(int)(ThumbnailLocation.height*scalefactor*Thumbnail_enlarge_percentage),
+				(int)(ThumbnailLocation.y*scalefactor)-(int)(ThumbnailLocation.height*scalefactor*Thumbnail_enlarge_percentage/2),
+				// Width.
+				//(int)(ThumbnailLocation.width*scalefactor)+(int)(ThumbnailLocation.width*scalefactor*(Thumbnail_enlarge_percentage*2)),
+				(int)(ThumbnailLocation.width*scalefactor)+(int)(ThumbnailLocation.width*scalefactor*(Thumbnail_enlarge_percentage)),
+				// Height
+				//(int)(ThumbnailLocation.height*scalefactor)+(int)(ThumbnailLocation.height*scalefactor*Thumbnail_enlarge_percentage*2));
+				(int)(ThumbnailLocation.height*scalefactor)+(int)(ThumbnailLocation.height*scalefactor*Thumbnail_enlarge_percentage));
 	Rect constrainedRect = ConstrainRect(enlarged_thumbnail, Size(origFrame.getcols(), origFrame.getrows()));
 
 	thumbnail = origFrame.GetThumbnail(constrainedRect);
