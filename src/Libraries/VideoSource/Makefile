@@ -4,7 +4,7 @@ CFLAGS=-std=c++0x -I../
 LIBNAME=libVideoSource.a
 
 %.o : %.cpp
-	g++ -c $(CFLAGS) $< -o $@
+	g++ -c $(CFLAGS) $(DEBUG) $(OPTIMIZE) $< -o $@
 
 $(LIBNAME) : $(OBJS)
 	ar rcs $@ $^

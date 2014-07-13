@@ -330,8 +330,6 @@ void DetectorCascade::detect(const Mat &img)
         }
 
         detectionResult->confidentIndices->push_back(i);
-
-
     }
 
     //Cluster

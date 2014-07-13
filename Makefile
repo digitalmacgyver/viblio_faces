@@ -20,34 +20,39 @@ MAKEARGS="NEUROTEC=$(NEUROTEC)" \
 	"NEUROTEC_ARCH=$(NEUROTEC_ARCH)" \
 	"DEPLOY=$(DEPLOY)"
 
+#DEBUG="DEBUG=-g"
+DEBUG="DEBUG="
+OPTIMIZE="OPTIMIZE=-O3"
+#OPTIMIZE="OPTIMIZE="
+
 all : cvblobs tld mftracker analytics FileSystem VideoSource jpeg-compressor RekognitionApi viblio package
 
 cvblobs : 
-	( cd OpenTLD/src/3rdparty/cvblobs ; make )
+	( cd OpenTLD/src/3rdparty/cvblobs ; make $(DEBUG) $(OPTIMIZE) )
 
 tld : 
-	( cd OpenTLD/src/libopentld/tld ; make )
+	( cd OpenTLD/src/libopentld/tld ; make $(DEBUG) $(OPTIMIZE) )
 
 mftracker : 
-	( cd OpenTLD/src/libopentld/mftracker ; make )
+	( cd OpenTLD/src/libopentld/mftracker ; make $(DEBUG) $(OPTIMIZE) )
 
 analytics : 
-	( cd src/Libraries/Analytics.FaceAnalyzer ; make $(MAKEARGS) )
+	( cd src/Libraries/Analytics.FaceAnalyzer ; make $(MAKEARGS) $(DEBUG) $(OPTIMIZE) )
 
 FileSystem : 
-	( cd src/Libraries/FileSystem ; make )
+	( cd src/Libraries/FileSystem ; make $(DEBUG) $(OPTIMIZE) )
 
 VideoSource :
-	( cd src/Libraries/VideoSource ; make )
+	( cd src/Libraries/VideoSource ; make $(DEBUG) $(OPTIMIZE) )
 
 jpeg-compressor :
-	( cd src/Libraries/jpeg-compressor ; make )
+	( cd src/Libraries/jpeg-compressor ; make $(DEBUG) $(OPTIMIZE) )
 
 RekognitionApi :
-	( cd src/Libraries/RekognitionApi ; make )
+	( cd src/Libraries/RekognitionApi ; make $(DEBUG) $(OPTIMIZE) )
 
 viblio : 
-	( cd src/apps/viblio_video_analyzer; make $(MAKEARGS) )
+	( cd src/apps/viblio_video_analyzer; make $(MAKEARGS) $(DEBUG) $(OPTIMIZE) )
 
 clean : 
 	( cd OpenTLD/src/3rdparty/cvblobs ; make clean )

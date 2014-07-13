@@ -68,8 +68,9 @@ bool VideoProcessor::SetupAnalyzers(const JobConfiguration &jobConfig)
 	{
 		if( jobConfig.faceAnalyzerConfig == NULL )
 			BOOST_LOG_TRIVIAL(error) << "Error - Face Analyzer is enabled but configuration information is not present";
-		else
-			m_analyzers.push_back(new Analytics::FaceAnalyzer::FaceAnalysis(jobConfig.faceAnalyzerConfig));
+		else {
+		  m_analyzers.push_back(new Analytics::FaceAnalyzer::FaceAnalysis(jobConfig.faceAnalyzerConfig));
+		}
 	}
 
 	return true;
@@ -83,16 +84,17 @@ bool VideoProcessor::PerformProcessing()
 	Mat currentFrame;
 	uint64_t timestamp;
 	int TotalFrames = m_videoSource->NumberFrames();
+
 	int CurrentFrameNumber;
 	while(true)
 	{
 		currentFrame = m_videoSource->GetNextFrame();
-
 		timestamp = m_videoSource->GetTimestamp();
 		CurrentFrameNumber=m_videoSource->CurrentFrameNo();
+		// DEBUG
 		//cout<<"Processing Frame no : " <<CurrentFrameNumber << " of " << TotalFrames << " Total " <<endl;
 		// Printing the current Timestamp
-		//cout<< "Time stamp : " << timestamp<<endl;
+		//cout << "Time stamp : " << timestamp << endl;
 		if( currentFrame.empty() )
 			break;
 

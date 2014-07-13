@@ -10,7 +10,7 @@ CFLAGS=-std=c++0x
 LIBNAME=libmftracker.a
 
 %.o : %.cpp
-	g++ -c $(CFLAGS) $< -o $@
+	g++ -c $(CFLAGS) $(DEBUG) $(OPTIMIZE) $< -o $@
 
 $(LIBNAME) : $(OBJS)
 	ar rcs $@ $^

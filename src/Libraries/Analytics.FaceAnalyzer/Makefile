@@ -20,7 +20,7 @@ CFLAGS=-std=c++0x -I../ -I../../../OpenTLD/src/libopentld/tld/ -I$(NEUROTEC)/Inc
 LIBNAME=libFaceAnalyzer.a
 
 %.o : %.cpp
-	g++ -c $(CFLAGS) $< -o $@
+	g++ -c $(CFLAGS) $(DEBUG) $(OPTIMIZE) $< -o $@
 
 $(LIBNAME) : $(OBJS)
 	ar rcs $@ $^

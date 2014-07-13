@@ -10,7 +10,7 @@ CFLAGS=-std=c++0x -I../ -DBOOST_LOG_DYN_LINK
 LIBNAME=libRekognitionApi.a
 
 %.o : %.cpp
-	g++ -c $(CFLAGS) $< -o $@
+	g++ -c $(CFLAGS) $(DEBUG) $(OPTIMIZE) $< -o $@
 
 $(LIBNAME) : $(OBJS)
 	ar rcs $@ $^
