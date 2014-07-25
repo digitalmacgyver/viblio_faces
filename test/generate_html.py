@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 
 from __future__ import print_function
-import json
+
+import codecs
+import simplejson as json
 from pprint import pprint
 import markup
 import argparse
@@ -35,11 +37,12 @@ if __name__ == '__main__':
     if results.new_json is None or not os.path.isfile(results.new_json):
         print( usage )
         sys.exit( 1 )
-    json_data1 = open(results.base_json)
+    json_data1 = open(results.base_json, 'r')
     data1 = json.load(json_data1)
 
-    json_data2 = open(results.new_json)
-    data2 = json.load(json_data2)
+    json_data2 = open(results.new_json, 'r')
+    x = json_data2.read()
+    data2 = json.loads( x )
 
     page = markup.page(case='upper')
 
@@ -53,8 +56,10 @@ if __name__ == '__main__':
         images = []
         for y in range(0, len(data1["tracks"][x]["faces"])):
             #pprint(data["tracks"][x]["faces"][y])
-            str = (data1["tracks"][x]["faces"][y]["s3_key"])
-            images.append(os.path.dirname(os.path.realpath(results.base_json)) + '/' + str.split('/')[1])
+            image_name = (data1["tracks"][x]["faces"][y]["s3_key"])
+            # Hack to put the files where I want them, this should be
+            # a parameter.
+            images.append( 'baseline-output/' + os.path.split( os.path.split( results.base_json )[0] )[-1] + '/' + image_name.split( '/' )[1] )
 
         name = (data1["tracks"][x]["track_id"])
         page.div(class_=name)
@@ -69,8 +74,9 @@ if __name__ == '__main__':
     for x in range(0, len(data2["tracks"])):
         images = []
         for y in range(0, len(data2["tracks"][x]["faces"])):
-            str = (data2["tracks"][x]["faces"][y]["s3_key"])
-            images.append(os.path.dirname(os.path.realpath(results.new_json)) + '/' + str.split('/')[1])
+            image_name = (data2["tracks"][x]["faces"][y]["s3_key"])
+            # Hack
+            images.append( 'output/' + os.path.split( os.path.split( results.new_json )[0] )[-1] + '/' + image_name.split( '/' )[1] )
         name = (data2["tracks"][x]["track_id"])
         page.div(class_=name)
         page.img(width=100, height=100, src=images, class_=name)
@@ -78,7 +84,8 @@ if __name__ == '__main__':
     page.div.close()
 
     # Saving the output in a html file
-    f = open(results.output, "w")
+    # Hack
+    f = open('test/'+results.output, "w")
     print(page, file=f)
     f.close()
     json_data1.close()

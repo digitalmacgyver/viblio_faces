@@ -25,7 +25,11 @@ cv::Mat Frame::GetScaledMat()
 			return originalFrame;
 		else
 		{
-		   const int DETECTION_WIDTH = 960;
+		  //const int DETECTION_WIDTH = 960;
+
+		  // Performs much faster without seeming to lose much
+		  // in the way of faces.
+		  const int DETECTION_WIDTH = 480;
 		// Shrink the image while keeping the same aspect ratio
 			int scaledHeight = cvRound(originalFrame.rows/Scale);
 			resize(originalFrame,scaledFrame, Size(DETECTION_WIDTH, scaledHeight));

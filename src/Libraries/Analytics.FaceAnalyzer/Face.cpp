@@ -219,11 +219,24 @@ bool Face::Process( uint64_t frameTimestamp, Frame &frame)
 					{
 						m_thumbnailConfidence.insert (m_thumbnailConfidence.end(), pair<float,ThumbnailDetails>(confidence,thumbnail_detail));
 					}
+					//DEBUG - keep trying till we find a usable thumbnail.
+					last_thumbnail_time=frameTimestamp;
+				} else if ( last_thumbnail_time == 0 ) {
+				  // Always add a thumbnail, but keep looking frame by frame for one with a higher confidence.
+				  thumbnail_detail.confidence = 0.01f;
+				  m_thumbnailConfidence.insert(m_thumbnailConfidence.end(), pair<float,ThumbnailDetails>(0.01f,thumbnail_detail));
 				}
-
-				// even if we don't find a useful thumbnail this time through we will wait Thumbnail_frequency milliseconds before trying
-				// again
-				last_thumbnail_time=frameTimestamp;
+				
+				//if ( last_thumbnail_time > 0 ) {
+				  // If we didn't find a thumbnail, keep looking each frame.
+				  //
+				  // If we already have a thumbnail,
+				  // only check in occasionally to
+				  // find more for performance
+				  // reasons.
+				//  last_thumbnail_time=frameTimestamp;
+				//}
+				
 			}
 		}
 		if( m_faceLocationHistory.size() >= m_faceLocationHistorySize )
@@ -372,6 +385,10 @@ void Face::GetOutput(Jzon::Object*& root)
 
 		imagepath =Thumbnail_path+"/"+Filenameprefix+"_face_"+tracknumber.str()+"_"+oss.str()+".jpg";
 		string pass = Filenameprefix +"/"+ Filenameprefix+"_face_"+tracknumber.str()+"_"+oss.str()+".jpg";
+
+		// Try PNGs for better quality.
+		//imagepath =Thumbnail_path+"/"+Filenameprefix+"_face_"+tracknumber.str()+"_"+oss.str()+".png";
+		//string pass = Filenameprefix +"/"+ Filenameprefix+"_face_"+tracknumber.str()+"_"+oss.str()+".png";
 		string temp;
 
 		// Adding data and details .....
@@ -422,7 +439,10 @@ void Face::GetOutput(Jzon::Object*& root)
 		root1.Add("wearingDarkGlassesConfidence",iter->second.GetDetailedInformation().wearingDarkGlassesConfidence);
 
 		listOfStuff.Add(root1);
-		imwrite( imagepath,k);
+		
+		// Try various quality parameters.
+		//imwrite( imagepath, k, { CV_IMWRITE_PNG_COMPRESSION, 9 } );
+		imwrite( imagepath, k );
 
 	}
 

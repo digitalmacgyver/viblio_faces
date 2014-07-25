@@ -5,7 +5,7 @@ NEUROTEC ?= /opt/Neurotec_SDK
 # and its dependencies
 DEPLOY ?= /deploy/vatools
 
-TEST_ARGS ?= --analyzers FaceAnalysis --discarded_tracker_frequency 30000 --maximum_concurrent_trackers 10 --face_detector orbeus --orbeus_api_key zdN9xO1srMEFoEsq --orbeus_secret_key bvi5Li9bcQPE3W5S --orbeus_namespace fd_test_2 --orbeus_user_id test
+TEST_ARGS ?= --analyzers FaceAnalysis --discarded_tracker_frequency 400 --Thumbnail_generation_frequency 2000 --maximum_concurrent_trackers 10 --face_detector orbeus --orbeus_api_key zdN9xO1srMEFoEsq --orbeus_secret_key bvi5Li9bcQPE3W5S --orbeus_namespace fd_test_2 --orbeus_user_id test
 
 #TEST_ARGS ?= --analyzers FaceAnalysis --discarded_tracker_frequency 5000 --maximum_concurrent_trackers 10 
 
