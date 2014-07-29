@@ -28,6 +28,8 @@
 
 #include <algorithm>
 
+#include <omp.h>
+
 #include "TLDUtil.h"
 
 using namespace cv;
@@ -284,7 +286,6 @@ void DetectorCascade::detect(const Mat &img)
     ensembleClassifier->nextIteration(img);
 
     #pragma omp parallel for
-
     for(int i = 0; i < numWindows; i++)
     {
 

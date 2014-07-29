@@ -22,37 +22,37 @@ MAKEARGS="NEUROTEC=$(NEUROTEC)" \
 
 #DEBUG="DEBUG=-g"
 DEBUG="DEBUG="
-OPTIMIZE="OPTIMIZE=-O3"
+OPTIMIZE="OPTIMIZE=-O3 -fopenmp -lgomp"
 #OPTIMIZE="OPTIMIZE="
 
 all : cvblobs tld mftracker analytics FileSystem VideoSource jpeg-compressor RekognitionApi viblio package
 
 cvblobs : 
-	( cd OpenTLD/src/3rdparty/cvblobs ; make $(DEBUG) $(OPTIMIZE) )
+	( cd OpenTLD/src/3rdparty/cvblobs ; make -j 4 $(DEBUG) $(OPTIMIZE) )
 
 tld : 
-	( cd OpenTLD/src/libopentld/tld ; make $(DEBUG) $(OPTIMIZE) )
+	( cd OpenTLD/src/libopentld/tld ; make -j 4 $(DEBUG) $(OPTIMIZE) )
 
 mftracker : 
-	( cd OpenTLD/src/libopentld/mftracker ; make $(DEBUG) $(OPTIMIZE) )
+	( cd OpenTLD/src/libopentld/mftracker ; make -j 4 $(DEBUG) $(OPTIMIZE) )
 
 analytics : 
-	( cd src/Libraries/Analytics.FaceAnalyzer ; make $(MAKEARGS) $(DEBUG) $(OPTIMIZE) )
+	( cd src/Libraries/Analytics.FaceAnalyzer ; make -j 4 $(MAKEARGS) $(DEBUG) $(OPTIMIZE) )
 
 FileSystem : 
-	( cd src/Libraries/FileSystem ; make $(DEBUG) $(OPTIMIZE) )
+	( cd src/Libraries/FileSystem ; make -j 4 $(DEBUG) $(OPTIMIZE) )
 
 VideoSource :
-	( cd src/Libraries/VideoSource ; make $(DEBUG) $(OPTIMIZE) )
+	( cd src/Libraries/VideoSource ; make -j 4 $(DEBUG) $(OPTIMIZE) )
 
 jpeg-compressor :
-	( cd src/Libraries/jpeg-compressor ; make $(DEBUG) $(OPTIMIZE) )
+	( cd src/Libraries/jpeg-compressor ; make -j 4 $(DEBUG) $(OPTIMIZE) )
 
 RekognitionApi :
-	( cd src/Libraries/RekognitionApi ; make $(DEBUG) $(OPTIMIZE) )
+	( cd src/Libraries/RekognitionApi ; make -j 4 $(DEBUG) $(OPTIMIZE) )
 
 viblio : 
-	( cd src/apps/viblio_video_analyzer; make $(MAKEARGS) $(DEBUG) $(OPTIMIZE) )
+	( cd src/apps/viblio_video_analyzer; make -j 4 $(MAKEARGS) $(DEBUG) $(OPTIMIZE) )
 
 clean : 
 	( cd OpenTLD/src/3rdparty/cvblobs ; make clean )

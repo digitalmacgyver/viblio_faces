@@ -30,6 +30,8 @@
 
 #include <opencv/cv.h>
 
+#include <omp.h>
+
 #include "EnsembleClassifier.h"
 
 
@@ -175,11 +177,10 @@ int EnsembleClassifier::calcFernFeature(int windowIdx, int treeIdx)
     return index;
 }
 
-void EnsembleClassifier::calcFeatureVector(int windowIdx, int *featureVector)
-{
-    for(int i = 0; i < numTrees; i++)
+void EnsembleClassifier::calcFeatureVector(int windowIdx, int *featureVector) {
+  for(int i = 0; i < numTrees; i++)
     {
-        featureVector[i] = calcFernFeature(windowIdx, i);
+      featureVector[i] = calcFernFeature(windowIdx, i);
     }
 }
 

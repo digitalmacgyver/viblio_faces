@@ -152,30 +152,34 @@ std::vector<FaceDetectionDetails> FaceDetector_Orbeus::Detect(const Mat &frame, 
 	const Json::Value face_detection = response["face_detection"];
 	for (unsigned int i = 0; i < face_detection.size(); ++i) 
 	{
-		FaceDetectionDetails currentFaceDeets;
+	  if ( face_detection[i]["confidence"].asDouble() >= 0.8f ) {
+	    FaceDetectionDetails currentFaceDeets;
 
-		Rect currentFaceRect;
-		currentFaceRect.x= face_detection[i]["boundingbox"]["tl"]["x"].asInt() ;
-		currentFaceRect.y = face_detection[i]["boundingbox"]["tl"]["y"].asInt() ; 
-		currentFaceRect.width = face_detection[i]["boundingbox"]["size"]["width"].asInt();
-		currentFaceRect.height = face_detection[i]["boundingbox"]["size"]["height"].asInt();
-		Rect constrainedRect = ConstrainRect(currentFaceRect, Size(frame.cols, frame.rows));
-
-		currentFaceDeets.faceRect = constrainedRect;
-		currentFaceDeets.faceDetectionConfidence = face_detection[i]["confidence"].asDouble();
-
-		faces.push_back(currentFaceDeets);
+	    Rect currentFaceRect;
+	    currentFaceRect.x= face_detection[i]["boundingbox"]["tl"]["x"].asInt() ;
+	    currentFaceRect.y = face_detection[i]["boundingbox"]["tl"]["y"].asInt() ; 
+	    currentFaceRect.width = face_detection[i]["boundingbox"]["size"]["width"].asInt();
+	    currentFaceRect.height = face_detection[i]["boundingbox"]["size"]["height"].asInt();
+	    Rect constrainedRect = ConstrainRect(currentFaceRect, Size(frame.cols, frame.rows));
+	    
+	    currentFaceDeets.faceRect = constrainedRect;
+	    currentFaceDeets.faceDetectionConfidence = face_detection[i]["confidence"].asDouble();
+	    
+	    faces.push_back(currentFaceDeets);
 		
-		/*double x, y, w, h;
-		x = face_detection[i]["boundingbox"]["tl"]["x"].asDouble();
-		y = face_detection[i]["boundingbox"]["tl"]["y"].asDouble();
-		w = face_detection[i]["boundingbox"]["size"]["width"].asDouble();
-		h = face_detection[i]["boundingbox"]["size"]["height"].asDouble();
-
-		cout << "face " << i << ": [" << x << " " << y << " " << w << " " << h
-				<< "]" << endl;*/
+	    /*double x, y, w, h;
+	      x = face_detection[i]["boundingbox"]["tl"]["x"].asDouble();
+	      y = face_detection[i]["boundingbox"]["tl"]["y"].asDouble();
+	      w = face_detection[i]["boundingbox"]["size"]["width"].asDouble();
+	      h = face_detection[i]["boundingbox"]["size"]["height"].asDouble();
+	      
+	      cout << "face " << i << ": [" << x << " " << y << " " << w << " " << h
+	      << "]" << endl;*/
+	  } else {
+	    BOOST_LOG_TRIVIAL(info) << "Skipping face number: " << i << " with detection confidence: " << face_detection[i]["confidence"].asDouble() << endl;
+	  }
 	}
-
+	    
 	return faces;
 }
 
